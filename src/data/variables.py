@@ -6,17 +6,19 @@ from dataclasses import dataclass
 class Question:
     number: str
     name: str
+    group: str
     prompt: str
     responses: list[str]
 
 
 @dataclass
 class QuestionPatterns:
-    number: str = re.compile("(Q\d+)")
-    name: str = re.compile("([A-Z].*)\\n")
-    prompt: str = re.compile("([\s\S]*)(?=1\\.-)")  #fixme: hardcoded 1 works
-    # prompt: str = re.compile("([\s\S]*)(?=\d\\.-)")  #fixme: \d doesn't for some reason, only finds from 4.-
-    responses: str = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
+    number = re.compile("(Q\d+)")  # todo: account for other variable groups e.g. Gxx
+    name = re.compile("([A-Z].*)\\n")
+    group = re.compile("(.*):\s")
+    prompt = re.compile("([\s\S]*)(?=1\\.-)")  #fixme: hardcoded 1 works
+    # prompt = re.compile("([\s\S]*)(?=\d\\.-)")  #fixme: \d doesn't for some reason, only finds from 4.-
+    responses = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
     # fixme: not filtering our '' for some reason
 
 
@@ -67,6 +69,25 @@ def pipeline(pages: list[str]) -> list[str]:
 def split_question_into_parts(question: str) -> Question:
     number, rest = [a.strip() for a in re.split(QuestionPatterns.number, question) if a]
     name, rest = [b.strip() for b in re.split(QuestionPatterns.name, rest, maxsplit=1) if b]
+    group, _ = identify_question_group(name)
     prompt, rest = [c.strip() for c in re.split(QuestionPatterns.prompt, rest, maxsplit=1) if c]
     responses = [d.strip() for d in re.split(QuestionPatterns.responses, rest)]
-    return Question(number=number, name=name, prompt=prompt, responses=[r for r in responses if r])
+    return Question(
+        number=number,
+        name=name,
+        group=group,
+        prompt=prompt,
+        responses=[r for r in responses if r]
+    )
+
+
+def identify_question_group(question_name: str) -> tuple[str, str]:
+    splits: list[str] = re.split(QuestionPatterns.group, question_name, maxsplit=1)
+    if len(splits) == 1:
+        group, subquestion = splits[0], splits[0]
+    else:
+        group, subquestion = splits[1:]
+    return group, subquestion
+
+
+#todo: search through question names for Xxx: Yy groups

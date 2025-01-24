@@ -3,7 +3,7 @@ import pickle
 import pandas as pd
 import pytest
 
-from data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts
+from data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts, identify_question_group
 
 
 def test_strip_title():
@@ -28,7 +28,6 @@ def test_split_on_questions():
 def test_split_question_into_parts(num, subject):
     questions = pipeline(load_page(10))
     question = split_question_into_parts(questions[num - 1])
-
     expected_responses = [
         "1.- Very important",
         "2.- Rather important",
@@ -42,9 +41,21 @@ def test_split_question_into_parts(num, subject):
 
     assert question.number == f"Q{num}"
     assert question.name == f"Important in life: {subject}"
+    assert question.group == f"Important in life: {subject}"
     assert question.prompt.startswith("For each of the following aspects,")
     assert question.prompt.endswith(subject)
     assert question.responses == expected_responses
+
+
+@pytest.mark.parametrize("name, group_exp", [
+    ("Important in life: blah blah blah", "Important in life"),
+    ("blah blah blah", "blah blah blah"),
+
+])
+def test_identify_question_group(name, group_exp):
+    group, sub = identify_question_group(name)
+    assert group == group_exp
+    assert sub == "blah blah blah"
 
 
 def test_integration():
