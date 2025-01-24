@@ -19,7 +19,6 @@ class QuestionPatterns:
     prompt = re.compile("([\s\S]*)(?=1\\.-)")  #fixme: hardcoded 1 works
     # prompt = re.compile("([\s\S]*)(?=\d\\.-)")  #fixme: \d doesn't for some reason, only finds from 4.-
     responses = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
-    # fixme: not filtering our '' for some reason
 
 
 def strip_title(page: str) -> str:
@@ -44,8 +43,7 @@ def split_on_questions(page: str) -> list[str]:
 
     question_pattern = re.compile(r"(?=\nQ\d+ [A-Z])")
     split_page = re.split(question_pattern, page)
-    return [s.strip("\n ") for s in  split_page]
-    # return split_page
+    return [s.strip("\n ") for s in split_page]
 
 
 def filter_out_non_questions(strings: list[str]) -> list[str]:
