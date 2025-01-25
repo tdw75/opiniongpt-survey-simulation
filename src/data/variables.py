@@ -16,8 +16,8 @@ class QuestionPatterns:
     number = re.compile("(Q\d+)")  # todo: account for other variable groups e.g. Gxx
     name = re.compile("([A-Z].*)\\n")
     group = re.compile("(.*):\s")
-    prompt = re.compile("([\s\S]*)(?=1\\.-)")  #fixme: hardcoded 1 works
-    # prompt = re.compile("([\s\S]*)(?=\d\\.-)")  #fixme: \d doesn't for some reason, only finds from 4.-
+    # prompt = re.compile("([\s\S]*?)(?=1\\.-)")
+    prompt = re.compile("([\s\S]*?)(?=\d\.-)")
     responses = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
 
 
@@ -87,5 +87,3 @@ def identify_question_group(question_name: str) -> tuple[str, str]:
         group, subquestion = splits[1:]
     return group, subquestion
 
-
-#todo: search through question names for Xxx: Yy groups

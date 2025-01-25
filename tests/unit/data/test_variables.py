@@ -3,7 +3,7 @@ import pickle
 import pandas as pd
 import pytest
 
-from data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts, identify_question_group
+from src.data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts, identify_question_group
 
 
 def test_strip_title():
@@ -24,33 +24,59 @@ def test_split_on_questions():
     assert split_questions[4].startswith("Q4 Important in life: Politics")
 
 
-@pytest.mark.parametrize("num, subject", [(1, "Family"), (3, "Leisure time"), (4, "Politics")])
-def test_split_question_into_parts(num, subject):
-    questions = pipeline(load_page(10))
-    question = split_question_into_parts(questions[num - 1])
-    expected_responses = [
-        "1.- Very important",
-        "2.- Rather important",
-        "3.- Not very important",
-        "4.- Not at all important",
+def load_page(num: int):
+    with open(f"test_data_files/pages/page{num}.pkl", "rb") as f:
+        return pickle.load(f)
+
+
+class TestSplitQuestionsIntoParts:
+
+    pages = [load_page(i) for i in range(10, 13)]
+    questions = pipeline(pages)
+    invalid_responses = [
         "-1-.- Don´t know",
         "-2-.- No answer",
         "-4-.- Not asked in this country",
         "-5-.- Missing; Not available"
     ]
 
-    assert question.number == f"Q{num}"
-    assert question.name == f"Important in life: {subject}"
-    assert question.group == f"Important in life: {subject}"
-    assert question.prompt.startswith("For each of the following aspects,")
-    assert question.prompt.endswith(subject)
-    assert question.responses == expected_responses
+    @pytest.mark.parametrize("num, subject", [
+        (1, "Family"),
+        (3, "Leisure time"),
+        (4, "Politics"),
+    ])
+    def test_important_in_life(self, num, subject):
+        question = split_question_into_parts(self.questions[num - 1])
+        expected_responses = [
+            "1.- Very important", "2.- Rather important", "3.- Not very important", "4.- Not at all important"
+        ]
+
+        assert question.number == f"Q{num}"
+        assert question.name == f"Important in life: {subject}"
+        assert question.group == "Important in life"
+        assert question.prompt.startswith("For each of the following aspects,")
+        assert question.prompt.endswith(subject)
+        assert question.responses == expected_responses + self.invalid_responses
+
+    @pytest.mark.parametrize("num, subject", [
+        (11, "Imagination"),
+        (13, "Thrift saving money and things"),
+    ])
+    def test_important_child_qualities(self, num, subject):
+        question = split_question_into_parts(self.questions[num - 1])
+        expected_responses = ["2.- Not mentioned", "1.- Important"]
+
+        assert question.number == f"Q{num}"
+        assert question.name == f"Important child qualities: {subject}"
+        assert question.group == "Important child qualities"
+        assert question.prompt.startswith("Here is a list of qualities ")
+        assert question.prompt.endswith(subject)
+        assert question.responses == expected_responses + self.invalid_responses
 
 
 @pytest.mark.parametrize("name, group_exp", [
     ("Important in life: blah blah blah", "Important in life"),
     ("blah blah blah", "blah blah blah"),
-
 ])
 def test_identify_question_group(name, group_exp):
     group, sub = identify_question_group(name)
@@ -69,8 +95,3 @@ def test_integration():
     assert questions[2].startswith("Q3 Important in life: Leisure time")
     assert questions[11].startswith("Q12 Important child qualities: Tolerance and respect for other people")
     assert pd.Series(questions).str.match("Q\d+").all()
-
-
-def load_page(num: int):
-    with open(f"test_data_files/pages/page{num}.pkl", "rb") as f:
-        return pickle.load(f)
