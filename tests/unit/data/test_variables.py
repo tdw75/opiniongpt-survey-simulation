@@ -3,20 +3,20 @@ import pickle
 import pandas as pd
 import pytest
 
-from src.data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts, \
-    identify_question_group, Question
+from src.data.variables import strip_header, split_on_questions, pipeline, split_question_into_parts, \
+    identify_question_group, Question, responses_to_map, HeaderPatterns
 
 
-def test_strip_title():
+def test_strip_header():
     page10 = load_page(10)
-    page_without_title = strip_title(page10)
+    page_without_title = strip_header(page10, HeaderPatterns.main)
     assert page_without_title.startswith("  \n \nCore Variable s")
 
 
 def test_split_on_questions():
 
     page10 = load_page(10)
-    stripped_page = strip_title(page10)
+    stripped_page = strip_header(page10, HeaderPatterns.main)
     split_questions = split_on_questions(stripped_page)
     assert split_questions[0].startswith("Core Variable s")
     assert split_questions[1].startswith("Q1 Important in life: Family")

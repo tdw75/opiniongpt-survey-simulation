@@ -21,18 +21,17 @@ class QuestionPatterns:
     responses = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
 
 
-def strip_title(page: str) -> str:
-    """
-    Removes the page header from the input string and then strips leading whitespace/new lines from the output
-    """
-    header_pattern = re.compile("\s+\n \n\d+ \n \nThe WORLD VALUES SURVEY ASSOCIATION\s+\nwww.worldvaluessurvey.org")
-    stripped_page = re.sub(header_pattern, '', page)
-    return stripped_page
+@dataclass
+class HeaderPatterns:
+    main = re.compile("\s+\n \n\d+ \n \nThe WORLD VALUES SURVEY ASSOCIATION\s+\nwww.worldvaluessurvey.org")
+    sub = re.compile(r"([A-Z].*\s+\(Q\d+ *-Q\d+\))")
 
 
-def strip_subheading(page: str) -> str:
-    subheading_pattern = re.compile(r"([A-Z].*\s+\(Q\d+ *-Q\d+\))")
-    stripped_page = re.sub(subheading_pattern, '', page)
+def strip_header(page: str, pattern) -> str:
+    """
+    Removes the page heading/subheading from the input string
+    """
+    stripped_page = re.sub(pattern, '', page)
     return stripped_page
 
 
@@ -63,8 +62,8 @@ def filter_out_non_questions(strings: list[str]) -> list[str]:
 
 def pipeline(pages: dict[int, str]) -> list[str]:
     # todo: add question splitting to pipeline, then update unit test
-    stripped_pages = [strip_title(page) for page in pages.values()]
-    stripped_pages = [strip_subheading(page) for page in stripped_pages]
+    stripped_pages = [strip_header(page, HeaderPatterns.main) for page in pages.values()]
+    stripped_pages = [strip_header(page, HeaderPatterns.sub) for page in stripped_pages]
     all_pages = concatenate_pages(stripped_pages)
     questions = split_on_questions(all_pages)
     questions = filter_out_non_questions(questions)
