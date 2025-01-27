@@ -3,7 +3,8 @@ import pickle
 import pandas as pd
 import pytest
 
-from src.data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts, identify_question_group
+from src.data.variables import strip_title, split_on_questions, pipeline, split_question_into_parts, \
+    identify_question_group, Question
 
 
 def test_strip_title():
@@ -31,7 +32,7 @@ def load_page(num: int):
 
 class TestSplitQuestionsIntoParts:
 
-    pages = [load_page(i) for i in range(10, 13)]
+    pages = {i: load_page(i) for i in range(10, 13)}
     questions = pipeline(pages)
     invalid_responses = [
         "-1-.- Don´t know",
@@ -50,6 +51,7 @@ class TestSplitQuestionsIntoParts:
         expected_responses = [
             "1.- Very important", "2.- Rather important", "3.- Not very important", "4.- Not at all important"
         ]
+        question = Question(**question)
 
         assert question.number == f"Q{num}"
         assert question.name == f"Important in life: {subject}"
@@ -65,6 +67,7 @@ class TestSplitQuestionsIntoParts:
     def test_important_child_qualities(self, num, subject):
         question = split_question_into_parts(self.questions[num - 1])
         expected_responses = ["2.- Not mentioned", "1.- Important"]
+        question = Question(**question)
 
         assert question.number == f"Q{num}"
         assert question.name == f"Important child qualities: {subject}"
@@ -76,7 +79,7 @@ class TestSplitQuestionsIntoParts:
 
 @pytest.mark.parametrize("name, group_exp", [
     ("Important in life: blah blah blah", "Important in life"),
-    ("blah blah blah", "blah blah blah"),
+    ("blah blah blah", ""),
 ])
 def test_identify_question_group(name, group_exp):
     group, sub = identify_question_group(name)
@@ -85,11 +88,8 @@ def test_identify_question_group(name, group_exp):
 
 
 def test_integration():
-    pages = [load_page(i) for i in range(10, 13)]
+    pages = {i: load_page(i) for i in range(10, 13)}
     questions = pipeline(pages)
-    for idx, q in enumerate(questions):
-        print("="*20, idx)
-        print(q)
 
     assert questions[0].startswith("Q1 Important in life: Family")
     assert questions[2].startswith("Q3 Important in life: Leisure time")
