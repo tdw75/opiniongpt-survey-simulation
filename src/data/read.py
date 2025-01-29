@@ -25,7 +25,8 @@ def pickle_pages(directory: str, pages: dict[int, str]) -> None:
 
 def unpickle_pages(directory: str, page_nums: list[int]) -> dict[int, str]:
     pages = {}
-    for n in page_nums:
-        with open(os.path.join(directory, f"page{n}.pkl"), "rb") as f:
+    file_names = {n: f"page{n}.pkl" for n in page_nums}
+    for n, name in file_names.items():
+        with open(os.path.join(directory, name), "rb") as f:
             pages[n] = pickle.load(f)
     return pages
