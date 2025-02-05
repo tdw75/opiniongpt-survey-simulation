@@ -112,7 +112,6 @@ def test_responses_to_map():
     assert response_map == expected
 
 
-
 def test_integration():
     pages = {i: load_page(i) for i in range(10, 13)}
     questions = pipeline(pages)
