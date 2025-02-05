@@ -1,3 +1,4 @@
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -6,6 +7,9 @@ import pandas as pd
 
 @dataclass
 class BaseSubGroup(ABC):
+
+    def __init__(self):
+        self.NAME = pascal_to_snake(self.__name__)
 
     @classmethod
     def filter_condition(cls, df: pd.DataFrame) -> pd.Series:
@@ -20,3 +24,12 @@ class BaseSubGroup(ABC):
     @abstractmethod
     def VALUES(self) -> set[str]:
         raise NotImplementedError
+
+    @classmethod
+    @property
+    def NAME(cls):
+        return pascal_to_snake(cls.__name__)
+
+
+def pascal_to_snake(string: str) -> str:
+    return re.sub("(?!^)([A-Z]+)", r"_\1", string).lower()
