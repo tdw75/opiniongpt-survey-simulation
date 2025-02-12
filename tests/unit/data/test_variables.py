@@ -87,6 +87,31 @@ def test_identify_question_group(name, group_exp):
     assert sub == "blah blah blah"
 
 
+def test_responses_to_map():
+    responses = [
+        '1.- Very important',
+        '2.- Rather important',
+        '3.- Not very important',
+        '4.- Not at all important',
+        '-1-.- Don´t know',
+        '-2-.- No answer',
+        '-4-.- Not asked in this country',
+        '-5-.- Missing; Not available'
+    ]
+    expected = {
+        1: "Very important",
+        2: "Rather important",
+        3: "Not very important",
+        4: "Not at all important",
+       -1: "Don´t know",
+       -2: "No answer",
+       -4: "Not asked in this country",
+       -5: "Missing; Not available"
+    }
+    response_map = responses_to_map(responses)
+    assert response_map == expected
+
+
 def test_integration():
     pages = {i: load_page(i) for i in range(10, 13)}
     questions = pipeline(pages)

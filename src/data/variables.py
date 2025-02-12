@@ -16,7 +16,6 @@ class QuestionPatterns:
     number = re.compile("(Q\d+)")  # todo: account for other variable groups e.g. Gxx
     name = re.compile("([A-Z].*)\\n")
     group = re.compile("(.*):\s")
-    # prompt = re.compile("([\s\S]*?)(?=1\\.-)")
     prompt = re.compile("([\s\S]*?)(?=\d\.-)")
     responses = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
 
@@ -93,3 +92,22 @@ def identify_question_group(question_name: str) -> tuple[str, str]:
         group, subquestion = splits[1:]
     return group, subquestion
 
+
+def responses_to_map(responses: list[str]) -> dict[int, str]:
+    pattern = re.compile("(-?\d+).+?([A-Z].*)")
+    response_tuples = [re.split(pattern, r)[1:-1] for r in responses]
+    return {int(k): v for k, v in response_tuples}
+
+
+def get_invalid_responses(response_map: dict[int, str]) -> dict[int, str]:
+    """
+    Invalid responses are encoded with negative integers. Returns all such responses from the inpout dictionary
+    """
+    return {k: v for k, v in response_map.items() if k < 0}
+
+
+def get_valid_responses(response_map: dict[int, str]) -> dict[int, str]:
+    """
+    Valid responses are encoded with non-negative integers. Returns all such responses from the inpout dictionary
+    """
+    return {k: v for k, v in response_map.items() if k >= 0}
