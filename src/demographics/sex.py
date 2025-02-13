@@ -12,10 +12,13 @@ class Sex(BaseSubGroup, ABC):
 @dataclass
 class Male(Sex):
     VALUES = {1}
+    PERSONA = "a person that identifies as male"
+
 
 
 @dataclass
 class Female(Sex):
     VALUES = {2}
+    PERSONA = "a person that identifies as female"
 
 
