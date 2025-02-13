@@ -1,3 +1,4 @@
+import os.path
 import pickle
 
 import pandas as pd
@@ -25,14 +26,14 @@ def test_split_on_questions():
     assert split_questions[4].startswith("Q4 Important in life: Politics")
 
 
-def load_page(num: int):
-    with open(f"test_data_files/pages/page{num}.pkl", "rb") as f:
+def load_page(num: int, directory: str = "test_data_files/pages"):
+    with open(os.path.join(directory, f"page{num}.pkl"), "rb") as f:
         return pickle.load(f)
 
 
 class TestSplitQuestionsIntoParts:
 
-    pages = {i: load_page(i) for i in range(10, 13)}
+    pages = {i: load_page(i) for i in range(10, 16)}
     questions = pipeline(pages)
     invalid_responses = [
         "-1-.- Don´t know",
@@ -56,8 +57,8 @@ class TestSplitQuestionsIntoParts:
         assert question.number == f"Q{num}"
         assert question.name == f"Important in life: {subject}"
         assert question.group == "Important in life"
-        assert question.prompt.startswith("For each of the following aspects,")
-        assert question.prompt.endswith(subject)
+        assert question.item_stem.startswith("For each of the following aspects,")
+        assert question.item_stem.endswith("not important at all?")
         assert question.responses == expected_responses + self.invalid_responses
 
     @pytest.mark.parametrize("num, subject", [
@@ -72,9 +73,25 @@ class TestSplitQuestionsIntoParts:
         assert question.number == f"Q{num}"
         assert question.name == f"Important child qualities: {subject}"
         assert question.group == "Important child qualities"
-        assert question.prompt.startswith("Here is a list of qualities ")
-        assert question.prompt.endswith(subject)
+        assert question.item_stem.startswith("Here is a list of qualities ")
+        assert question.item_stem.endswith("Please choose up to five.")
         assert question.responses == expected_responses + self.invalid_responses
+
+    def test_working_mother(self):
+        question = split_question_into_parts(self.questions[27])
+        expected_responses = [
+            "1.- Agree strongly", "2.- Agree", "3.- Disagree", "4.- Strongly disagree"
+        ]
+        invalid_responses = self.invalid_responses.copy()
+        invalid_responses[2] = '-4-.- Not asked'
+        question = Question(**question)
+
+        assert question.number == f"Q28"
+        assert question.name == "Pre-school child suffers with working mother"
+        assert question.group == ""
+        assert question.item_stem.startswith("For each of the following statements I read out")
+        assert question.item_stem.endswith("the children suffer")
+        assert question.responses == expected_responses + invalid_responses
 
 
 @pytest.mark.parametrize("name, group_exp", [
