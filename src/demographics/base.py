@@ -8,9 +8,6 @@ import pandas as pd
 @dataclass
 class BaseSubGroup(ABC):
 
-    def __init__(self):
-        self.NAME = pascal_to_snake(self.__name__)
-
     @classmethod
     def filter_condition(cls, df: pd.DataFrame) -> pd.Series:
         return df[cls.COLUMN].isin(cls.VALUES)
@@ -23,6 +20,11 @@ class BaseSubGroup(ABC):
     @property
     @abstractmethod
     def VALUES(self) -> set[str]:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def PERSONA(self) -> set[str]:
         raise NotImplementedError
 
     @classmethod
