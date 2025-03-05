@@ -35,7 +35,8 @@ def save_metadata(directory: str, metadata: dict) -> None:
 
 def main(directory: str = None, temperature: float = 1):
 
-    directory = directory or folder
+    directory = directory or "../data_files/mock_data"
+
     model = load_model(temperature)
     data = load_data(directory)
     preds = pd.DataFrame(model(data.values), columns=data.columns)
@@ -51,6 +52,4 @@ def generate_test_data(directory: str):
 
 
 if __name__ == "__main__":
-    folder = "../data_files/mock_data"
-    # generate_test_data(folder)
     fire.Fire(main)
