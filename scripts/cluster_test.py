@@ -1,5 +1,5 @@
 import json
-import os.path
+import os
 
 import fire
 import numpy as np
@@ -44,12 +44,13 @@ def main(directory: str = None, temperature: float = 1):
 
 
 def generate_test_data(directory: str):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     df = pd.DataFrame({"q1": range(10), "q2": range(10, 0, -1)})
     df.to_csv(os.path.join(directory, "test_data.csv"))
 
 
 if __name__ == "__main__":
-    folder = "test"
+    folder = "../data_files/mock_data"
     # generate_test_data(folder)
     fire.Fire(main)
-    # main(folder, 1.5)
