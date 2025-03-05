@@ -7,7 +7,8 @@ class Question:
     number: str
     name: str
     group: str
-    prompt: str
+    subtopic: str
+    item_stem: str
     responses: list[str]
 
 
@@ -16,7 +17,7 @@ class QuestionPatterns:
     number = re.compile("(Q\d+)")  # todo: account for other variable groups e.g. Gxx
     name = re.compile("([A-Z].*)\\n")
     group = re.compile("(.*):\s")
-    prompt = re.compile("([\s\S]*?)(?=\d\.-)")
+    item_stem = re.compile("([\s\S]*?)(?=\d\.-)")
     responses = re.compile("(-?\d+\\.-.*|-?\d+-\\.-.*)")
 
 
@@ -72,14 +73,16 @@ def pipeline(pages: dict[int, str]) -> list[str]:
 def split_question_into_parts(question: str) -> dict:
     number, rest = [a.strip() for a in re.split(QuestionPatterns.number, question) if a]
     name, rest = [b.strip() for b in re.split(QuestionPatterns.name, rest, maxsplit=1) if b]
-    group, _ = identify_question_group(name)
-    prompt, rest = [c.strip() for c in re.split(QuestionPatterns.prompt, rest, maxsplit=1) if c]
+    group, sub = identify_question_group(name)
+    item_stem, rest = [c.strip() for c in re.split(QuestionPatterns.item_stem, rest, maxsplit=1) if c]
+    item_stem = item_stem.replace(sub, "").rstrip(" \n-–:")
     responses = [d.strip() for d in re.split(QuestionPatterns.responses, rest)]
     return dict(
         number=number,
         name=name,
         group=group,
-        prompt=prompt,
+        subtopic=sub,
+        item_stem=item_stem,
         responses=[r for r in responses if r]
     )
 
