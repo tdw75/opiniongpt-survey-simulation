@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 
-class TestModel:
+class MockModel:
 
     def __init__(self, temperature: float):
         self.temperature = temperature
@@ -15,12 +15,8 @@ class TestModel:
         return x * self.temperature
 
 
-def load_model(temperature: float) -> TestModel:
-    return TestModel(temperature)
-
-
 def load_data(directory: str) -> pd.DataFrame:
-    return pd.read_csv(os.path.join(directory, "test_data.csv"), index_col=0)
+    return pd.read_csv(os.path.join(directory, "mock_model_data.csv"), index_col=0)
 
 
 def save_data(directory: str, data: dict) -> None:
@@ -33,11 +29,11 @@ def save_metadata(directory: str, metadata: dict) -> None:
         json.dump(metadata, f)
 
 
-def main(directory: str = None, temperature: float = 1):
+def test_run(directory: str = None, temperature: float = 1):
 
-    directory = directory or "../data_files/mock_data"
+    directory = directory or "test_data_files/mock_data"
 
-    model = load_model(temperature)
+    model = MockModel(temperature)
     data = load_data(directory)
     preds = pd.DataFrame(model(data.values), columns=data.columns)
     save_data(directory, {"responses": preds.to_dict(orient="list")})
@@ -48,8 +44,8 @@ def generate_test_data(directory: str):
     if not os.path.exists(directory):
         os.makedirs(directory)
     df = pd.DataFrame({"q1": range(10), "q2": range(10, 0, -1)})
-    df.to_csv(os.path.join(directory, "test_data.csv"))
+    df.to_csv(os.path.join(directory, "mock_model_data.csv"))
 
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    fire.Fire(test_run)
