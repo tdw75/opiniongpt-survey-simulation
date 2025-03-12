@@ -35,6 +35,8 @@ The possible responses are:
 2: Rather important
 3: Not very important
 4: Not at all important
+
+If you are unsure you can answer with -1: Don't know
 """
     assert message == expected_message
 
