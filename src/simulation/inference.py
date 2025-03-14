@@ -15,7 +15,7 @@ def simulate_whole_survey(
         single_prompt = list(survey.values())[0]  # todo: change to whole survey
         responses = simulate_set_of_responses_single_question(model, tokenizer, single_prompt, 5)
     else:
-        raise ValueError(), # todo: add error message
+        raise ValueError  # todo: add error message
 
     return responses
 
