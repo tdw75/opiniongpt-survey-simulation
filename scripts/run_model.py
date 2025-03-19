@@ -19,6 +19,17 @@ LOAD_MODEL = {
     "llama": load_llama,
 }
 
+def huggingface_login() -> None:
+    from dotenv import load_dotenv
+    from huggingface_hub import login
+
+    load_dotenv()
+    HF_TOKEN = os.environ.get("HF_TOKEN")
+    if HF_TOKEN:
+        login(token=HF_TOKEN)
+        print("Successfully logged in to Hugging Face!")
+    else:
+        print("Token is not set. Please save a token in the .env file.")
 
 def main(model_name: str, directory: str, device: str = "cuda:2"):
 
@@ -46,4 +57,5 @@ def save_survey(simulated_survey: dict[str, dict], directory: str):
 
 
 if __name__ == "__main__":
+    huggingface_login()
     fire.Fire(main)
