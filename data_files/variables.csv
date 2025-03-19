@@ -1,0 +1,653 @@
+,number,name,group,subtopic,item_stem,responses
+0,Q1,Important in life: Family,Important in life,Family,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+1,Q2,Important in life: Friends,Important in life,Friends,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+2,Q3,Important in life: Leisure time,Important in life,Leisure time,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+3,Q4,Important in life: Politics,Important in life,Politics,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+4,Q5,Important in life: Work,Important in life,Work,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+5,Q6,Important in life: Religion,Important in life,Religion,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+6,Q7,Important child qualities: Good manners,Important child qualities,Good manners,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+7,Q8,Important child qualities: Independence,Important child qualities,Independence,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+8,Q9,Important child qualities: Hard work,Important child qualities,Hard work,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+9,Q10,Important child qualities: Feeling of responsibility,Important child qualities,Feeling of responsibility,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+10,Q11,Important child qualities: Imagination,Important child qualities,Imagination,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+11,Q12,Important child qualities: Tolerance and respect for other people,Important child qualities,Tolerance and respect for other people,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+12,Q13,Important child qualities: Thrift saving money and things,Important child qualities,Thrift saving money and things,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+13,Q14,Important child qualities: Determination perseverance,Important child qualities,Determination perseverance,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five. – 
+Determination, perseverance","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+14,Q15,Important child qualities: Religious faith,Important child qualities,Religious faith,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+15,Q16,Important child qualities: Unselfishness,Important child qualities,Unselfishness,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five. – 
+Not being selfish (unselfishness)","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+16,Q17,Important child qualities: Obedience,Important child qualities,Obedience,"Here is a list of qualities that children can be encouraged to learn at home. Which, if 
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+17,Q18,Neighbors: Drug addicts,Neighbors,Drug addicts,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+18,Q19,Neighbors: People of a different race,Neighbors,People of a different race,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+19,Q20,Neighbors: People who have AIDS,Neighbors,People who have AIDS,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+20,Q21,Neighbors: Immigrants/foreign workers,Neighbors,Immigrants/foreign workers,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+21,Q22,Neighbors: Homosexuals,Neighbors,Homosexuals,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+22,Q23,Neighbors: People of a different religion,Neighbors,People of a different religion,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+23,Q24,Neighbors: Heavy drinkers,Neighbors,Heavy drinkers,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+24,Q25,Neighbors: Unmarried couples living together,Neighbors,Unmarried couples living together,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+25,Q26,Neighbors: People who speak a different language,Neighbors,People who speak a different language,"On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+26,Q27,One of main goals in life has been to make my parents proud,,One of main goals in life has been to make my parents proud,"For each of the following statements I read out, can you tell me how much you agree 
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my 
+main goals in life has been to make my parents proud","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+27,Q28,Pre-school child suffers with working mother,,Pre-school child suffers with working mother,"For each of the following statements I read out, can you tell me how much you agree 
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - When a 
+mother works for pay, the children suffer","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+28,Q29,Men make better political leaders than women do,,Men make better political leaders than women do,"For each of the following statements I read out, can you tell me how much you agree 
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - On the whole, 
+men make better political leaders than women do","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+29,Q30,University is more important for a boy than for a girl,,University is more important for a boy than for a girl,"For each of the following statements I read out, can you tell me how much you agree 
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - A university 
+education is more important for a boy than for a girl","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+30,Q31,Men make better business executives than women do,,Men make better business executives than women do,"For each of the following statements I read out, can you tell me how strongly you agree 
+or disagree with each. Do you strongly agree, agree, disagree, or strongly disagree? - 
+On the whole, men make better business executives than women do","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+31,Q32,Being a housewife just as fulfilling,,Being a housewife just as fulfilling,"For each of the following statements I read out, can you tell me how much you agree 
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - Being a 
+housewife is just as fulfilling as working for pay","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+32,Q36,Homosexual couples are as good parents as other couples,,Homosexual couples are as good parents as other couples,"Do you agree, disagree or neither agree nor disagree with the following statements?","['1.- Agree strongly', '2.- Agree', '3.- Neither agree nor disagree', '4.- Disagree', '5.- Disagree strongly', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+33,Q37,Duty towards society to have children,,Duty towards society to have children,"Do you agree, disagree or neither agree nor disagree with the following statements? – 
+It is a duty towards society to have children","['1.- Agree strongly', '2.- Agree', '3.- Neither agree nor disagree', '4.- Disagree', '5.- Disagree strongly', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+34,Q38,It is children duty to take care of ill parent,,It is children duty to take care of ill parent,"Do you agree, disagree or neither agree nor disagree with the following statements? -
+Adult children have the duty to provide long -term care for their parents","['1.- Agree strongly', '2.- Agree', '3.- Neither agree nor disagree', '4.- Disagree', '5.- Disagree strongly', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+35,Q39,People who don´t work turn lazy,,People who don´t work turn lazy,"Do you agree or disagree with the following statements? - People who don’t work turn 
+lazy","['1.- Strongly agree', '2.- Agree', '3.- Neither agree or disagree', '4.- Disagree', '5.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+36,Q40,Work is a duty towards society,,Work is a duty towards society,Do you agree or disagree with the following statements?,"['1.- Strongly agree', '2.- Agree', '3.- Neither agree or disagree', '4.- Disagree', '5.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+37,Q41,Work should  always come first even if it means less spare time,,Work should  always come first even if it means less spare time,"Do you agree or disagree with the following statements? – 
+Work should always come first, even if it means less spare time","['1.- Agree strongly', '2.- Agree', '3.- Neither agree nor disagree', '4.- Disagree', '5.- Disagree strongly', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+38,Q42,Basic kinds of attitudes concerning society,,Basic kinds of attitudes concerning society,"On this card are three basic kinds of attitudes concerning the society we live in. Please 
+choose the one which best describes your own opinion.","['1.- The entire way our society is organized must be radically changed by revolutionary', 'action', '2.- Our society must be gradually improved by reforms', '3.- Our present society must be valiantly defended against all subversive forces', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+39,Q43,Future changes: Less importance placed on work,Future changes,Less importance placed on work,"I'm going to read out a list of various changes in our way of life that might take place in 
+the near future. Please tell me for each one, if it were to happen, whether you think it 
+would be a good thing, a bad thing, or don't you mind? – 
+ in our lives","['1.- Good thing', '2.- Don´t mind', '3.- Bad thing', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+40,Q44,Future changes: More emphasis on technology,Future changes,More emphasis on technology,"I'm going to read out a list of various changes in our way of life that might take place in 
+the near future. Please tell me for each one, if it were to happen, whether you think it 
+would be a good thing, a bad thing, or don't you mind? – 
+More emphasis on the development of technology","['1.- Good thing', '2.- Don´t mind', '3.- Bad thing', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+41,Q45,Future changes: Greater respect for authority,Future changes,Greater respect for authority,"I'm going to read out a list of various changes in our way of life that might take place in 
+the near future. Please tell me for each one, if it were to happen, whether you think it 
+would be a good thing, a bad thing, or don't you mind?","['1.- Good thing', '2.- Don´t mind', '3.- Bad thing', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+42,Q46,Feeling of happiness,,Feeling of happiness,"Taking all things together, would you say you are","['1.- Very happy', '2.- Quite happy', '3.- Not very happy', '4.- Not at all happy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+43,Q47,State of health (subjective),,State of health (subjective),"All in all, how would you describe your state of health these days? Would you say it 
+is...","['1.- Very good', '2.- Good', '3.- Fair', '4.- Poor', '5.- Very poor', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Unknown']"
+44,Q48,How much freedom of choice and control,,How much freedom of choice and control,"Some people feel they have completely free choice and control over their lives, while 
+other people feel that what they do has no real effect on what happens to them. Please 
+use this scale where 1 means ""none at all"" and 10 means ""a great deal"" to indicate how 
+much freedom of choice and control you feel you ha ve over the way your life turns out.  
+ 1","['0.- A great deal', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+45,Q49,Satisfaction with your life,,Satisfaction with your life,"All things considered, how satisfied are you with your life as a whole these days?  
+ 1","['0.- Completely satisfied', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- Completely dissatisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+46,Q50,Satisfaction with financial situation of household,,Satisfaction with financial situation of household,"How satisfied are you with the financial situation of your household? If '1' means you 
+are completely dissatisfied on this scale, and '10' means you are completely satisfied, 
+where would you put your satisfaction with your household's financial situation?  
+ 1","['0.- Satisfied', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- Dissatisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+47,Q51,Frequency you/family (last 12 month): Gone without enough food to eat,Frequency you/family (last 12 month),Gone without enough food to eat,"In the last 12 months, how often have you or your family","['1.- Often', '2.- Sometimes', '3.- Rarely', '4.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+48,Q52,Frequency you/family (last 12 month): Felt unsafe from crime in your own home,Frequency you/family (last 12 month),Felt unsafe from crime in your own home,"In the last 12 months, how often have you or your family","['1.- Often', '2.- Sometimes', '3.- Rarely', '4.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+49,Q53,Frequency you/family (last 12 month): Gone without needed medicine or treatment,Frequency you/family (last 12 month),Gone without needed medicine or treatment,"that you needed  
+ In the last 12 months, how often have you or your family:  
+ that you needed","['1.- Often', '2.- Sometimes', '3.- Rarely', '4.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+50,Q54,Frequency you/family (last 12 month): Gone without a cash income,Frequency you/family (last 12 month),Gone without a cash income,"In the last 12 months, how often have you or your family","['1.- Often', '2.- Sometimes', '3.- Rarely', '4.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+51,Q55,"In the last 12 month, how often have you or your family: Gone without a safe shelter","In the last 12 month, how often have you or your family",Gone without a safe shelter,"over your head  
+ In the last 12 months, how often have you or your family:  
+ over your head","['1.- Often', '2.- Sometimes', '3.- Rarely', '4.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+52,Q56,Standard of living comparing with your parents,,Standard of living comparing with your parents,"Comparing your standard of living with your parents’ standard of living when they were 
+about your age, would you say that you are better off, worse off or about the same?","['1.- Better off', '2.- Worse off', '3.- Or about the same', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+53,Q57,Most people can be trusted,,Most people can be trusted,"Generally speaking, would you say that most people can be trusted or that you need to 
+be very careful in dealing with people?","['1.- Most people can be trusted', '2.- Need to be very careful', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing']"
+54,Q58,How much you trust: Your family,How much you trust,Your family,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+for each whether you trust people from this group completely, somewhat, not very much 
+or not at all?","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+55,Q59,Trust: Your neighborhood,Trust,Your neighborhood,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+for each whether you trust people from this group completely, somewhat, not very much 
+or not at all?","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+56,Q60,Trust: People you know personally,Trust,People you know personally,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+for each whether you trust people from this group completely, somewhat, not very much 
+or not at all?","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+57,Q61,Trust: People you meet for the first time,Trust,People you meet for the first time,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+for each whether you trust people from this group completely, somewhat, not very much 
+or not at all?","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+58,Q62,Trust: People of another religion,Trust,People of another religion,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+for each whether you trust people from this group completely, somewhat, not very 
+much or not at all?","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+59,Q63,Trust: People of another nationality,Trust,People of another nationality,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+for each whether you trust people from this group completely, somewhat, not very 
+much or not at all?","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+60,Q64,Confidence: Churches,Confidence,Churches,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?  
+The  (mosque, temple etc.)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+61,Q65,Confidence: Armed Forces,Confidence,Armed Forces,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The armed forces","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+62,Q66,Confidence: The Press,Confidence,The Press,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The press","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+63,Q67,Confidence: Television,Confidence,Television,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+64,Q68,Confidence: Labor Unions,Confidence,Labor Unions,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? Labour Unions","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+65,Q69,Confidence: The Police,Confidence,The Police,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The police","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+66,Q70,Confidence: Justice System/Courts,Confidence,Justice System/Courts,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The courts","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+67,Q71,Confidence: The Government,Confidence,The Government,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The government (in your nation’s 
+capital)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+68,Q72,Confidence: The Political Parties,Confidence,The Political Parties,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? Political Parties","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+69,Q73,Confidence: Parliament,Confidence,Parliament,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+70,Q74,Confidence: The Civil Services,Confidence,The Civil Services,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+71,Q75,Confidence: Universities,Confidence,Universities,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+72,Q76,Confidence: Election,Confidence,Election,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? s","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+73,Q77,Confidence: Major Companies,Confidence,Major Companies,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+74,Q78,Confidence: Banks,Confidence,Banks,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all?","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+75,Q79,Confidence: The Environmental Protection Movement,Confidence,The Environmental Protection Movement,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? Environmental organizations","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+76,Q80,Confidence: The Women´s Movement,Confidence,The Women´s Movement,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? Women´s organizations","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+77,Q81,Confidence: Charitable or humanitarian organizations,Confidence,Charitable or humanitarian organizations,"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? Charitable or humanitarian 
+organizations","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+78,Q83,Confidence: The United Nations (UN),Confidence,The United Nations (UN),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The United Nations","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+79,Q84,Confidence: International Monetary Found (IMF),Confidence,International Monetary Found (IMF),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The International Monetary Fund 
+(IMF)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+80,Q85,Confidence: International Criminal Court (ICC),Confidence,International Criminal Court (ICC),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? International Criminal Court 
+(ICC)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+81,Q86,Confidence: North Atlantic Treaty Organization (NATO),Confidence,North Atlantic Treaty Organization (NATO),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The North Atlantic Treaty 
+Organization (NATO)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+82,Q87,Confidence: The World Bank (WB),Confidence,The World Bank (WB),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The World Bank","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+83,Q88,Confidence: The World Health Organization (WHO),Confidence,The World Health Organization (WHO),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The World Health Organization 
+(WHO)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+84,Q89,Confidence: The World Trade Organization (WTO),Confidence,The World Trade Organization (WTO),"I am going to name a number of organizations. For each one, could you tell me how 
+much confidence you have in them: is it a great deal of confidence, quite a lot of 
+confidence, not very much confidence or none at all? The World Trade Organization 
+(WTO)","['1.- A great deal', '2.- Quite a lot', '3.- Not very much', '4.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+85,Q90,International organizations: being effective vs being democratic,International organizations,being effective vs being democratic,"Nowadays there’s a lot of talk about international organizations. People sometimes say 
+that international organizations should prioritize improving people’s lives, even if this 
+may imply that decisions are not made democratically. What do you think should 
+international organizations prioritize, being effective or being democratic? If your views 
+are somewhat mixed, choose the appropriate number in between.","['1.- Being effective', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Being democratic', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+86,Q91,Countries with the permanent seats on the UN Security Council,,Countries with the permanent seats on the UN Security Council,"Here are some questions about international organizations. Many people don't know the 
+answers to these questions, but if you do please tell me. Five countries have permanent 
+seats on the Security Council of the United Nations. Which ones of the following is not 
+a member ?","['1.- France', '2.- China', '3.- India', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+87,Q92,Where are the headquarters of the International Monetary Fund (IMF) located?,,Where are the headquarters of the International Monetary Fund (IMF) located?,"Here are some questions about international organizations. Many people don't know the 
+answers to these questions, but if you do please tell me. Where are the headquarters of 
+the International Monetary Fund (IMF) located?","['1.- Washington DC', '2.- London', '3.- Geneva', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+88,Q93,Which of the following problems does the organization Amnesty International,,Which of the following problems does the organization Amnesty International,"deal with?  
+ Here are some questions about international organizations. Many people don't know the 
+answers to these questions, but if you do please tell me. Which of the following problems 
+does the organization Amnesty International deal with?","['1.- Climate change', '2.- Human rights', '3.- Destruction of historic monuments', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+89,Q106,Income equality vs larger income differences,,Income equality vs larger income differences,"Now I'd like you to tell me your views on various issues. How would you place your 
+views on this scale? 1 means you agree completely with the statement on the left; 10 
+means you agree completely with the statement on the right; and if your views fall 
+somew here in between, you can choose any number in between.","['1.- Incomes more equal', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Larger income differences', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+90,Q107,Private vs state ownership of business,,Private vs state ownership of business,"Now I'd like you to tell me your views on various issues. How would you place your 
+views on this scale? 1 means you agree completely with the statement on the left; 10 
+means you agree completely with the statement on the right; and if your views fall 
+somew here in between, you can choose any number in between.","['1.- Private ownership of business should be increased', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Government ownership of business should be increased', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+91,Q108,Government´s vs individual´s responsibility,,Government´s vs individual´s responsibility,"Now I'd like you to tell me your views on various issues. How would you place your 
+views on this scale? 1 means you agree completely with the statement on the left; 10 
+means you agree completely with the statement on the right; and if your views fall 
+somewhere in between, you can choose any number in between.","['1.- The government should take more responsibility to ensure that everyone is', 'provided for', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- People should take more responsibility to provide for themselves', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+92,Q109,Competition good or harmful,,Competition good or harmful,"Now I'd like you to tell me your views on various issues. How would you place your 
+views on this scale? 1 means you agree completely with the statement on the left; 10 
+means you agree completely with the statement on the right; and if your views fall 
+somew here in between, you can choose any number in between.","['1.- Competition is good', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Competition is harmful', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+93,Q110,Success: hard work vs luck,Success,hard work vs luck,"Now I'd like you to tell me your views on various issues. How would you place your 
+views on this scale? 1 means you agree completely with the statement on the left; 10 
+means you agree completely with the statement on the right; and if your views fall 
+somew here in between, you can chose any number in between.","['1.- In the long run, hard work usually brings a better life', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Hard work doesn´t generally bring success - it´s more a matter of luck and', 'connections', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+94,Q111,Protecting environment vs. Economic growth,,Protecting environment vs. Economic growth,"Here are two statements people sometimes make when discussing the environment and 
+economic growth. Which of them comes closer to your own point of view? A. Protecting 
+the environment should be given priority, even if it causes slower economic growth and 
+some loss of jobs B. Economic growth and creating jobs should be the top priority, even 
+if the environment suffers to som e extent","['1.- A: Protect environment', '2.- B: Economic growth', '3.- Other answer', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+95,Q112,Perceptions of corruption in the country,,Perceptions of corruption in the country,"Now I'd like you to tell me your views on corruption – when people pay a bribe, give a 
+gift or do a favor to other people in order to get the things they need done or the services 
+they need. How would you place your views on corruption in your country on a 10 -point 
+scale where “1” means “there is no corruption in this country” and “10” means “there 
+is abundant corruption in this country”. If your views are somewhat mixed, choose the 
+appropriate number in between.","['1.- 1', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- 10', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+96,Q113,Involved in corruption: State authorities,Involved in corruption,State authorities,"Among the following groups of people, how many do you believe are involved in 
+corruption? Tell me for each group if you believe it is none of them, few of them, most 
+of them or all of them?","['1.- None of them', '2.- Few of them', '3.- Most of them', '4.- All of them', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+97,Q114,Involved in corruption: Business executives,Involved in corruption,Business executives,"Among the following groups of people, how many do you believe are involved in 
+corruption? Tell me for each group if you believe it is none of them, few of them, most 
+of them or all of them?","['1.- None of them', '2.- Few of them', '3.- Most of them', '4.- All of them', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+98,Q115,Involved in corruption: Local authorities,Involved in corruption,Local authorities,"Among the following groups of people, how many do you believe are involved in 
+corruption? Tell me for each group if you believe it is none of them, few of them, most 
+of them or all of them?","['1.- None of them', '2.- Few of them', '3.- Most of them', '4.- All of them', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+99,Q116,Involved in corruption: Civil service providers,Involved in corruption,Civil service providers,"Among the following groups of people, how many do you believe are involved in 
+corruption? Tell me for each group if you believe it is none of them, few of them, most 
+of them or all of them?  (police, judiciary, civil servants, doctors, 
+teachers)","['1.- None of them', '2.- Few of them', '3.- Most of them', '4.- All of them', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+100,Q117,Involved in corruption: Journalists and media,Involved in corruption,Journalists and media,"Among the following groups of people, how many do you believe are involved in 
+corruption? Tell me for each group if you believe it is none of them, few of them, most 
+of them or all of them?","['1.- None of them', '2.- Few of them', '3.- Most of them', '4.- All of them', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+101,Q118,"Frequency ordinary people pay a bribe, give a gift or do a favor to local",,"Frequency ordinary people pay a bribe, give a gift or do a favor to local","officials/service providers in order to get services  
+ We want to know about your experience with local officials and service providers, like 
+police officers, lawyers, doctors, teachers and civil servants in your community. How 
+often do you think ordinary people like yourself or people from your neighbourhood 
+have to pay a bribe, give a gift or do a favor to these people in order to get the services 
+you need? Does it happen never, rarely, frequently or always?","['1.- Never', '2.- Rarely', '3.- Frequently', '4.- Always', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+102,Q119,"Degree of agreement: On the whole, women are less corrupt than men",Degree of agreement,"On the whole, women are less corrupt than men","Can you tell me how strongly you agree or disagree with the following statement: On 
+the whole, women are less corrupt than men","['0.- Hard to say', '1.- Strongly agree', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+103,Q120,Risk to be held accountable for giving or receiving a bribe,,Risk to be held accountable for giving or receiving a bribe,"How high is the risk in this country to be held accountable for giving or receiving a 
+bribe, gift or favour in return for public service? To indicate your opinion, use a 10 -
+point scale where “1” means “no risk at all” and “10” means “very high risk”.","['1.- No risk at all', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Very high risk', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+104,Q121,Impact of immigrants on the development of the country,,Impact of immigrants on the development of the country,"Now we would like to know your opinion about the people from other countries who come 
+to live in this country - the immigrants. How would you evaluate the impact of these 
+people on the development of this country?","['1.- Rather bad', '2.- Quite bad', '3.- Neither good, nor bad', '4.- Quite good', '5.- Very good', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+105,Q122,Immigration in your country: Fills useful jobs in the workforce,Immigration in your country,Fills useful jobs in the workforce,"From your point of view, what have been the effects of immigrants on the development of 
+this country? - Fill useful jobs in the workforce","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+106,Q123,Immigration in your country: Strengthens cultural diversity,Immigration in your country,Strengthens cultural diversity,"From your point of view, what have been the effects of immigrants on the development 
+of this country? - Strengthen cultural diversity","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+107,Q124,Immigration in your country: Increases the crime rate,Immigration in your country,Increases the crime rate,"From your point of view, what have been the effects of immigrants on the development of 
+this country? - Increase the crime rate","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+108,Q125,Immigration in your country: Gives asylum to political refugees,Immigration in your country,Gives asylum to political refugees,"From your point of view, what have been the effects of immigrants on the development 
+of this country? - Give asylum to political refugees","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+109,Q126,Immigration in your country: Increases the risks of terrorism,Immigration in your country,Increases the risks of terrorism,"From your point of view, what have been the effects of immigrants on the development of 
+this country?  - Increase the risks of terrorism","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+110,Q127,Immigration in your country: Helps poor people establish new lives,Immigration in your country,Helps poor people establish new lives,"From your point of view, what have been the effects of immigrants on the development 
+of this country? Help poor people establish new lives","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+111,Q128,Immigration in your country: Increases unemployment,Immigration in your country,Increases unemployment,"From your point of view, what have been the effects of immigrants on the development of 
+this country? Increase unemployment","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+112,Q129,Immigration in your country: Leads to social conflict,Immigration in your country,Leads to social conflict,"From your point of view, what have been the effects of immigrants on the development of 
+this country? Lead to social conflict","['0.- Disagree', '1.- Hard to say', '2.- Agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+113,Q130,Immigration policy preference,,Immigration policy preference,"How about people from other countries coming here to work. Which one of the following 
+do you think the government should do?","['1.- Let anyone come who wants to', '2.- Let people come as long as there are jobs available', '3.- Place strict limits on the number of foreigners who can come here', '4.- Prohibit people coming here from other countries', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+114,Q131,Secure in neighborhood,,Secure in neighborhood,Could you tell me how secure do you feel these days in your neighborhood?,"['1.- Very Secure', '2.- Quite secure', '3.- Not very secure', '4.- Not at all secure', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+115,Q132,Frequency in your neighborhood: Robberies,Frequency in your neighborhood,Robberies,How frequently do the following things occur in your neighborhood?,"['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+116,Q133,Frequency in your neighborhood: Alcohol consumed in the streets,Frequency in your neighborhood,Alcohol consumed in the streets,How frequently do the following things occur in your neighborhood?,"['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+117,Q134,Frequency in your neighborhood: Police or military interfere with people’s private,Frequency in your neighborhood,Police or military interfere with people’s private,"life 
+ How frequently do the following things occur in your neighborhood? Police or military 
+interfere with people’s private life","['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+118,Q135,Frequency in your neighborhood: Racist behavior,Frequency in your neighborhood,Racist behavior,How frequently do the following things occur in your neighborhood?,"['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+119,Q136,Frequency in your neighborhood: Drug sale in streets,Frequency in your neighborhood,Drug sale in streets,How frequently do the following things occur in your neighborhood?,"['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+120,Q137,Frequency in your neighborhood: Street violence and fights,Frequency in your neighborhood,Street violence and fights,"How frequently do the following things occur in your neighborhood? Street violence 
+and fights","['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+121,Q138,Frequency in your neighborhood: Sexual harassment,Frequency in your neighborhood,Sexual harassment,How frequently do the following things occur in your neighborhood?,"['1.- Very Frequently', '2.- Quite frequently', '3.- Not frequently', '4.- Not at all frequently', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+122,Q139,Things done for reasons of security: Didn’t carry much money,Things done for reasons of security,Didn’t carry much money,"Which of the following things have you done for reasons of security? Didn’t carry much 
+money","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+123,Q140,Things done for reasons of security: Preferred not to go out at night,Things done for reasons of security,Preferred not to go out at night,"Which of the following things have you done for reasons of security? Preferred not to 
+go out at night","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+124,Q141,"Things done for reasons of security: Carried a knife, gun or other weapon",Things done for reasons of security,"Carried a knife, gun or other weapon","Which of the following things have you done for reasons of security? Carried a knife, gun 
+or other weapon","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+125,Q142,Worries: Losing my job or not finding a job,Worries,Losing my job or not finding a job,"To what degree are you worried about the following situations? Losing my job or not 
+finding a job","['1.- Very much', '2.- A great deal', '3.- Not much', '4.- Not at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+126,Q143,Worries: Not being able to give one´s children a good education,Worries,Not being able to give one´s children a good education,"To what degree are you worried about the following situations? Not being able to give 
+one's children a good education","['1.- Very much', '2.- A great deal', '3.- Not much', '4.- Not at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+127,Q144,Respondent was victim of a crime during the past year,,Respondent was victim of a crime during the past year,Have you been the victim of a crime during the past year?,"['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+128,Q145,Respondent´s family was victim of a crime during last year,,Respondent´s family was victim of a crime during last year,"And what about your immediate family --has someone in your family been the victim of 
+a crime during the last year?","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+129,Q146,Worries: A war involving my country,Worries,A war involving my country,"To what degree are you worried about the following situations? A war involving my 
+country","['1.- Very much', '2.- A great deal', '3.- Not much', '4.- Not at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+130,Q147,Worries: A terrorist attack,Worries,A terrorist attack,To what degree are you worried about the following situations?,"['1.- Very much', '2.- A great deal', '3.- Not much', '4.- Not at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+131,Q148,Worries: A civil war,Worries,A civil war,To what degree are you worried about the following situations?,"['1.- Very much', '2.- A great deal', '3.- Not much', '4.- Not at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+132,Q149,Freedom and Equality - Which more important,,Freedom and Equality - Which more important,"Most people consider both freedom and equality to be important, but if you had to 
+choose between them, which one would you consider more important?","['1.- Freedom', '2.- Equality', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+133,Q150,Freedom and security - Which more important,,Freedom and security - Which more important,"Most people consider both freedom and security to be important, but if you had to 
+choose between them, which one would you consider more important?","['1.- Freedom', '2.- Security', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+134,Q151,Willingness to fight for country,,Willingness to fight for country,"Of course, we all hope that there will not be another war, but if it were to come to that, 
+would you be willing to fight for your country?","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+135,Q152,Aims of country: first choice,Aims of country,first choice,"People sometimes talk about what the aims of this country should be for the next ten 
+years. On this card are listed some of the goals which different people would give top 
+priority. Would you please say which one of these you consider the most important?","['1.- A high level of economic growth', '2.- Strong defence forces', '3.- People have more say about how things are done', '4.- Trying to make our cities and countryside more beautiful', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+136,Q153,Aims of country: second choice,Aims of country,second choice,"People sometimes talk about what the aims of this country should be for the next ten 
+years. On this card are listed some of the goals which different people would give top 
+priority. Would you please say which one of these you consider the second most 
+impor tant?","['1.- A high level of economic growth', '2.- Making sure this country has strong defence forces', '3.- Seeing that people have more say about how  are done at their jobs and in their', 'communities', '4.- Trying to make our cities and countryside more beautiful', ""-1-.- Don't know"", '-2-.- No second answer', '-3-.- Not applicable (no first answer)', '-4-.- Not asked']"
+137,Q154,Aims of respondent: first choice,Aims of respondent,first choice,"If you had to choose, which one of the things on this card would you say is most 
+important?","['1.- Maintaining order in the nation', '2.- Giving people more say in important government decisions', '3.- Fighting rising prices', '4.- Protecting freedom of speech', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+138,Q155,Aims of respondent: second choice,Aims of respondent,second choice,And which would be the next most important?,"['1.- Maintaining order in the nation', '2.- Giving people more say in important government decisions', '3.- Fighting rising prices', '4.- Protecting freedom of speech', '-1-.- Don´t know', '-2-.- No answer', '-3-.- Not applicable; No first answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+139,Q156,Most important: first choice,Most important,first choice,"Here is another list. In your opinion, which one of these is most important?","['1.- A stable economy', '2.- Progress toward a less impersonal and more humane society', '3.- Progress toward a society in which Ideas count more than money', '4.- The fight against crime', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+140,Q157,Most important: second choice,Most important,second choice,"Here is another list. In your opinion, which one of these is most important? And what 
+would be the next most important?","['1.- A stable economy', '2.- Progress toward a less impersonal and more humane  society', '3.- Progress toward a society in which Ideas count more than money', '4.- The fight against crime', '-1-.- Don´t know', '-2-.- No answer', '-3-.- Not applicable (Not first choice)', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+141,Q158,"Science and technology are making our lives healthier, easier, and more",,"Science and technology are making our lives healthier, easier, and more","comfortable  
+ Now, I would like to read some statements and ask how much you agree or disagree with 
+each of these statements. For these questions, a 1 means that you “completely disagree” 
+and a 10 means that you “completely agree.” Science and technology are making our 
+lives healthier, easier, and more comfortable","['1.- Completely disagree', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+142,Q159,"Because of science and technology, there will be more opportunities for the next",,"Because of science and technology, there will be more opportunities for the next","generation  
+ Now, I would like to read some statements and ask how much you agree or disagree with 
+each of these statements. For these questions, a 1 means that you “completely disagree” 
+and a 10 means that you “completely agree.” Because of science and technology, there 
+will be more opportunities for the next generation","['1.- Completely disagree', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+143,Q160,We depend too much on science and not enough on fait h,,We depend too much on science and not enough on fait h,"Now, I would like to read some statements and ask how much you agree or disagree with 
+each of these statements. For these questions, a 1 means that you “completely disagree” 
+and a 10 means that you “completely agree.” We depend too much on science and not 
+enough on faith","['1.- Completely disagree', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+144,Q161,One of the bad effects of science is that it breaks down people’s ideas of right and,,One of the bad effects of science is that it breaks down people’s ideas of right and,"wrong  
+ Now, I would like to read some statements and ask how much you agree or disagree 
+with each of these statements. For these questions, a 1 means that you “completely 
+disagree” and a 10 means that you “completely agree”: One of the bad effects of 
+science is that it breaks down people’s ideas of right and wrong","['1.- Completely disagree', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+145,Q162,It is not important for me to know about science in my daily life,,It is not important for me to know about science in my daily life,"Now, I would like to read some statements and ask how much you agree or disagree with 
+each of these statements. For these questions, a 1 means that you “completely disagree” 
+and a 10 means that you “completely agree”: It is not important for me to know about 
+science in my daily life","['1.- Completely disagree', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely agree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+146,Q163,"The world is better off, or worse off, because of science and technology",,"The world is better off, or worse off, because of science and technology","All things considered, would you say that the world is better off, or worse off, because 
+of science and technology? Please tell me which comes closest to your view on this scale: 
+1 means that “the world is a lot worse off,” and 10 means that “the world is a lot better 
+off.”","['1.- A lot worse off', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- A lot better off', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+147,Q164,Importance of God,,Importance of God,"How important is God in your life?. Please use this scale to indicate. 10 means “very 
+important” and 1 means “not at all important”.","['1.- Not at all important', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Very important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing']"
+148,Q165,Believe in: God,Believe in,God,"In which of the following things do you believe, if you believe in any?","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+149,Q166,Believe in: life after death,Believe in,life after death,"In which of the following things do you believe, if you believe in any? - Life after death","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+150,Q167,Believe in: hell,Believe in,hell,"In which of the following things do you believe, if you believe in any? - Hell","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+151,Q168,Believe in: heaven,Believe in,heaven,"In which of the following things do you believe, if you believe in any? - Heaven","['1.- Yes', '2.- No', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+152,Q169,"Whenever science and religion conflict,  religion is always right",,"Whenever science and religion conflict,  religion is always right","Please tell us if you strongly agree, agree, disagree, or strongly disagree with the 
+following statements: Whenever science and religion conflict, religion is always right","['1.- Strongly agree', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+153,Q170,The only acceptable religion  is my religion,,The only acceptable religion  is my religion,"Please tell us if you strongly agree, agree, disagree, or strongly disagree with the 
+following statements: The only acceptable religion is my religion","['1.- Strongly agree', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+154,Q171,How often do you attend religious services,,How often do you attend religious services,"Apart from weddings, funerals and christenings, about how often do you attend religious 
+services these days?","['1.- More than once a week', '2.- Once a week', '3.- Once a month', '4.- Only on special holy days', '5.- Once a year', '6.- Less often', '7.- Never, practically never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+155,Q173,Religious person,,Religious person,"Independently of whether you go to church or not, would you say you are…","['1.- A religious person', '2.- Not a religious person', '3.- An atheist', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+156,Q174,Meaning of religion: To follow religious norms and ceremonies vs To do good to,Meaning of religion,To follow religious norms and ceremonies vs To do good to,"other people  
+ With which one of the following statements do you agree most? The meaning of religion 
+is…","['1.- Follow religious norms and ceremonies', '2.- Do good to other people', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+157,Q175,Meaning of religion: To make sense of life after death vs To make sense of life in,Meaning of religion,To make sense of life after death vs To make sense of life in,"this world  
+ And with which of the following statements do you agree most? The meaning of religion 
+is…","['1.- Make sense of life after death', '2.- Make sense of life in this world', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+158,Q176,Degree of agreement: Nowadays one often has trouble deciding which moral rules,Degree of agreement,Nowadays one often has trouble deciding which moral rules,"are the right ones to follow  
+ How much do you agree or disagree with the statement that nowadays one often has 
+trouble deciding which moral rules are the right ones to follow?","['1.- Completely agree', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+159,Q177,Justifiable: Claiming government benefits to which you are not entitled,Justifiable,Claiming government benefits to which you are not entitled,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card. - Claiming 
+government benefits to which you are not entitled","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+160,Q178,Justifiable: Avoiding a fare on public transport,Justifiable,Avoiding a fare on public transport,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.  - Avoiding a fare 
+on public transport","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+161,Q179,Justifiable: Stealing property,Justifiable,Stealing property,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.  
+Stealing propert y","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+162,Q180,Justifiable: Cheating on taxes,Justifiable,Cheating on taxes,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.  
+ if you have a chance","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+163,Q181,Justifiable: Someone accepting a bribe in the course of their duties,Justifiable,Someone accepting a bribe in the course of their duties,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+164,Q182,Justifiable: Homosexuality,Justifiable,Homosexuality,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+165,Q183,Justifiable: Prostitution,Justifiable,Prostitution,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+166,Q184,Justifiable: Abortion,Justifiable,Abortion,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+167,Q185,Justifiable: Divorce,Justifiable,Divorce,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+168,Q186,Justifiable: Sex before marriage,Justifiable,Sex before marriage,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+169,Q187,Justifiable: Suicide,Justifiable,Suicide,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+170,Q188,Justifiable: Euthanasia,Justifiable,Euthanasia,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+171,Q189,Justifiable: For a man to beat his wife,Justifiable,For a man to beat his wife,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+172,Q190,Justifiable: Parents beating children,Justifiable,Parents beating children,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+173,Q191,Justifiable: Violence against other people,Justifiable,Violence against other people,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+174,Q192,"Justifiable: Terrorism as a political, ideological or religious mean",Justifiable,"Terrorism as a political, ideological or religious mean","Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+175,Q193,Justifiable: Having casual se x,Justifiable,Having casual se x,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.  
+Having casual sex","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+176,Q194,Justifiable: Political violence,Justifiable,Political violence,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+177,Q195,Justifiable: Death penalty,Justifiable,Death penalty,"Please tell me for each of the following statements whether you think it can always be 
+justified, never be justified, or something in between, using this card.","['1.- Never justifiable', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Always justifiable', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+178,Q196,Government has the right: Keep people under video surveillance in public areas,Government has the right,Keep people under video surveillance in public areas,"Do you think this country’s government should or should not have the right to do the 
+following","['1.- Definitely should have the right', '2.- Probably should have the right', '3.- Probably should not have the right', '4.- Definitely should not have the right', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+179,Q197,Government has the right: Monitor all e -mails and any other information,Government has the right,Monitor all e -mails and any other information,"exchanged on the Internet  
+ Do you think this country’s government should or should not have the right to do the 
+following: Monitor all emails and any other information exchanged on the Internet","['1.- Definitely should have the right', '2.- Probably should have the right', '3.- Probably should not have the right', '4.- Definitely should not have the right', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+180,Q198,Government has the right: Collect information about anyone living in this,Government has the right,Collect information about anyone living in this,"country  without their knowledge  
+ Do you think that this country’s government should or should not have the right to do 
+the following:  country without their 
+knowledge","['1.- Definitely should have the right', '2.- Probably should have the right', '3.- Probably should not have the right', '4.- Definitely should not have the right', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+181,Q199,Interest in politics,,Interest in politics,How interested would you say you are in politics?,"['1.- Very interested', '2.- Somewhat interested', '3.- Not very interested', '4.- Not at all interested', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+182,Q200,How often discusses political matters with friends,,How often discusses political matters with friends,"When you get together with your friends, would you say you discuss political matters 
+frequently, occasionally or never?","['1.- Frequently', '2.- Occasionally', '3.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+183,Q201,Information source: Daily newspaper,Information source,Daily newspaper,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+184,Q202,Information source: TV news,Information source,TV news,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-3-.- Not applicable', '-4-.- Not asked', '-5-.- Missing; Not available']"
+185,Q203,Information source: Radio news,Information source,Radio news,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+186,Q204,Information source: Mobile phone,Information source,Mobile phone,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+187,Q205,Information source: Email,Information source,Email,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+188,Q206,Information source: Internet,Information source,Internet,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+189,Q207,"Information source: Social media (Facebook, Twitter, etc.)",Information source,"Social media (Facebook, Twitter, etc.)","People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never: Social media (Facebook, Twitter, 
+etc.)","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+190,Q208,Information source: Talk with friends or colleagues,Information source,Talk with friends or colleagues,"People learn what is going on in this country and the world from various sources. For 
+each of the following sources, please indicate whether you use it to obtain information 
+daily, weekly, monthly, less than monthly or never","['1.- Daily', '2.- Weekly', '3.- Monthly', '4.- Less than monthly', '5.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+191,Q209,Political action: Signing a petition,Political action,Signing a petition,"Now I'd like you to look at this card. I'm going to read out some different forms of 
+political action that people can take, and I'd like you to tell me, for each one, whether 
+you have actually done any of these things, whether you might do it or would never, 
+under any circumstances, do it.","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in survey', '-5-.- Missing; Not available']"
+192,Q210,Political action: joining in boycotts,Political action,joining in boycotts,"Now I'd like you to look at this card. I'm going to read out some different forms of 
+political action that people can take, and I'd like you to tell me, for each one, whether 
+you have actually done any of these things, whether you might do it or would never, 
+under any circumstances, do it. Joining in boycotts","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+193,Q211,Political action: attending lawful/peaceful demonstrations,Political action,attending lawful/peaceful demonstrations,"Now I'd like you to look at this card. I'm going to read out some different forms of 
+political action that people can take, and I'd like you to tell me, for each one, whether 
+you have actually done any of these things, whether you might do it or would never, 
+under any circumstances, do it. Attending peaceful demonstrations","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+194,Q212,Political action: joining unofficial strikes,Political action,joining unofficial strikes,"Now I'd like you to look at this card. I'm going to read out some different forms of 
+political action that people can take, and I'd like you to tell me, for each one, whether 
+you have actually done any of these things, whether you might do it or would never, 
+under any circumstances, do it. Joining strikes","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+195,Q213,Social activism: Donating to a group or campaign,Social activism,Donating to a group or campaign,"What about these forms of political action and social activism that people can take?. 
+Please, tell me for each of them if you have done any of these things, whether you might 
+do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+196,Q214,Social activism: Contacting a government official,Social activism,Contacting a government official,"What about these forms of political action and social activism that people can take?. 
+Please, tell me for each of them if you have done any of these things, whether you might 
+do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+197,Q215,Social activism: Encouraging others to take action about political issues,Social activism,Encouraging others to take action about political issues,"What about these forms of political action and social activism that people can take?. 
+Please, tell me for each of them if you have done any of these things, whether you might 
+do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+198,Q216,Social activism: Encouraging others to vote,Social activism,Encouraging others to vote,"What about these forms of political action and social activism that people can take?. 
+Please, tell me for each of them if you have done any of these things, whether you 
+might do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+199,Q217,Political actions online: Searching information about politics and political events,Political actions online,Searching information about politics and political events,"Now I’d like you to look at this card. I’m going to read out some other forms of political 
+action that people can take using Internet and social media tools like Facebook, Twitter 
+etc., and I’d like you to tell me, for each one, whether you have done any of these things, 
+whether you might  do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- INAP: No internet/no social media']"
+200,Q218,Political actions online: Signing an electronic petition,Political actions online,Signing an electronic petition,"Now I’d like you to look at this card. I’m going to read out some other forms of political 
+action that people can take using Internet and social media tools like Facebook, Twitter 
+etc., and I’d like you to tell me, for each one, whether you have done any of these things, 
+whether you might do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- INAP: No internet/no social media']"
+201,Q219,Political actions online: Encouraging other people to take any form of political,Political actions online,Encouraging other people to take any form of political,"action  
+ Now I’d like you to look at this card. I’m going to read out some other forms of political 
+action that people can take using Internet and social media tools like Facebook, Twitter 
+etc., and I’d like you to tell me, for each one, whether you have done any of these things, 
+whether you might do it or would never under any circumstances do  it: Encouraging 
+other people to take any form of political action","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- INAP: No internet/no social media']"
+202,Q220,"Political actions online: Organizing political activities, events, protests",Political actions online,"Organizing political activities, events, protests","Now I’d like you to look at this card. I’m going to read out some other forms of political 
+action that people can take using Internet and social media tools like Facebook, Twitter 
+etc., and I’d like you to tell me, for each one, whether you have done any o f these things, 
+whether you might do it or would never under any circumstances do it","['1.- Have done', '2.- Might do', '3.- Would never do', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- INAP: No internet/no social media']"
+203,Q221,Vote in elections: local level,Vote in elections,local level,Vote in elections: Local level,"['1.- Always', '2.- Usually', '3.- Never', '4.- Not allowed to vote', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+204,Q222,Vote in elections: National level,Vote in elections,National level,Vote in elections,"['1.- Always', '2.- Usually', '3.- Never', '4.- Not allowed to vote', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+205,Q224,How often in country´s elections: Votes are counted fairly,How often in country´s elections,Votes are counted fairly,"In your view, how often do the following things occur in this country’s elections? Votes 
+are counted fairly","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+206,Q225,How often in country´s elections: Opposition candidates are prevented from,How often in country´s elections,Opposition candidates are prevented from,"running  
+ In your view, how often do the following things occur in this country’s elections? 
+ running","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing;Unknown']"
+207,Q226,How often in country´s elections: TV news favors the governing party,How often in country´s elections,TV news favors the governing party,"In your view, how often do the following things occur in this country’s elections? TV 
+news favors the governing party","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+208,Q227,How often in country´s elections: Voters are bribed,How often in country´s elections,Voters are bribed,"In your view, how often do the following things occur in this country’s elections? Voters 
+are bribed","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+209,Q228,How often in country´s elections: Journalists provide fair coverage of elections,How often in country´s elections,Journalists provide fair coverage of elections,"In your view, how often do the following things occur in this country’s elections?","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing;Unknown']"
+210,Q229,How often in country´s elections: Election officials are fai r,How often in country´s elections,Election officials are fai r,"In your view, how often do the following things occur in this country’s elections? 
+Election officials are fair","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+211,Q230,How often in country´s elections: Rich people buy elections,How often in country´s elections,Rich people buy elections,"In your view, how often do the following things occur in this country’s elections? Rich 
+people buy elections","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing;Unknown']"
+212,Q231,How often in country´s elections: Voters are threatened with  violence at the polls,How often in country´s elections,Voters are threatened with  violence at the polls,"In your view, how often do the following things occur in this country’s elections? 
+Voters are threatened with violence at the polls","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+213,Q232,How often in country´s elections: Voters are offered a genuine choice in the,How often in country´s elections,Voters are offered a genuine choice in the,"elections  
+ In your view, how often do the following things occur in this country’s elections? Voters 
+are offered a genuine choice in the elections","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+214,Q233,How often in country´s elections: Women have equal opportunities to run the office,How often in country´s elections,Women have equal opportunities to run the office,"In your view, how often do the following things occur in this country’s elections?","['1.- Very often', '2.- Fairly often', '3.- Not often', '4.- Not at all often', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+215,Q235,Political system: Having a strong leader who does not have to bother with,Political system,Having a strong leader who does not have to bother with,"parliament and elections  
+ I'm going to describe various types of political systems and ask what you think about 
+each as a way of governing this country. For each one, would you say it is a very good, 
+fairly good, fairly bad or very bad way of governing this country?  
+ parliament and elections","['1.- Very good', '2.- Fairly good', '3.- Fairly b ad', '4.- Very bad', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+216,Q236,"Political system: Having experts, not government, make decisions according to",Political system,"Having experts, not government, make decisions according to","what they think is best for the country  
+ I'm going to describe various types of political systems and ask what you think about 
+each as a way of governing this country. For each one, would you say it is a very good, 
+fairly good, fairly bad or very bad way of governing this country?  
+ what they think is best for 
+the country","['1.- Very good', '2.- Fairly good', '3.- Fairly bad', '4.- Very bad', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+217,Q237,Political system: Having the army rule,Political system,Having the army rule,"I'm going to describe various types of political systems and ask what you think about 
+each as a way of governing this country. For each one, would you say it is a very good, 
+fairly good, fairly bad or very bad way of governing this country?","['1.- Very good', '2.- Fairly good', '3.- Fairly bad', '4.- Very bad', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+218,Q238,Political system: Having a democratic political system,Political system,Having a democratic political system,"I'm going to describe various types of political systems and ask what you think about 
+each as a way of governing this country. For each one, would you say it is a very good, 
+fairly good, fairly bad or very bad way of governing this country?","['1.- Very good', '2.- Fairly good', '3.- Fairly bad', '4.- Very bad', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+219,Q239,Political system: Having a system governed by religious law in which there are no,Political system,Having a system governed by religious law in which there are no,"political parties or elections  
+ I'm going to describe various types of political systems and ask what you think about 
+each as a way of governing this country. For each one, would you say it is a very good, 
+fairly good, fairly bad or very bad way of governing this country?  
+ political parties or 
+elections","['1.- Very good', '2.- Fairly good', '3.- Bad', '4.- Very bad', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+220,Q240,Left-right political scale,,Left-right political scale,"In political matters, people talk of ""the left"" and ""the right."" How would you place your 
+views on this scale, generally speaking?","['1.- Left', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Right', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+221,Q241,Democracy: Governments tax the rich and subsidize the poor,Democracy,Governments tax the rich and subsidize the poor,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+222,Q242,Democracy: Religious authorities interpret the laws,Democracy,Religious authorities interpret the laws,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democr acy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+223,Q243,Democracy: People choose their leaders in free elections,Democracy,People choose their leaders in free elections,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+224,Q244,Democracy: People receive state aid for unemployment,Democracy,People receive state aid for unemployment,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+225,Q245,Democracy: The army takes over when government is incompetent,Democracy,The army takes over when government is incompetent,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+226,Q246,Democracy: Civil rights protect people’s liberty against oppression,Democracy,Civil rights protect people’s liberty against oppression,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy. - Civil rights protect people’s liberty from state oppression","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+227,Q247,Democracy: The state makes people´s incomes equal,Democracy,The state makes people´s incomes equal,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+228,Q248,Democracy: People obey their rulers,Democracy,People obey their rulers,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+229,Q249,Democracy: Women have the same rights as men,Democracy,Women have the same rights as men,"Please tell me for each of the following things how essential you think it is as a 
+characteristic of democracy. Use this scale where 1 means “not at all an essential 
+characteristic of democracy” and 10 means it definitely is “an essential characteristic 
+of democracy.","['0.- It is against democracy (spontaneous)', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+230,Q250,Importance of democracy,,Importance of democracy,"How important is it for you to live in a country that is governed democratically? On this 
+scale where 1 means it is “not at all important” and 10 means “absolutely important” 
+what position would you choose?","['1.- Not at all important', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Absolutely important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+231,Q251,How democratically is this country being governed today,,How democratically is this country being governed today,"And how democratically is this country being governed today?. Again using a scale from 
+1 to 10, where 1 means that it is “not at all democratic” and 10 means that it is 
+“completely democratic,” what position would you choose?","['1.- Not at all democratic', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely democratic', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+232,Q252,Satisfaction with the political system performance,,Satisfaction with the political system performance,"How satisfied are you with how the political system is functioning in your country 
+these days? On the scale from 1 to 10 below, 1 means not satisfied at all and 10 means 
+completely satisfied.","['1.- Not satisfied at all', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Completely satisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+233,Q253,Respect for individual human rights nowadays,,Respect for individual human rights nowadays,How much respect is there for individual human rights nowadays in this country?,"['1.- A great deal of respect', '2.- Fairly much  respect', '3.- Not much respect', '4.- No respect at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+234,Q254,National pride,,National pride,How proud are you to be of nationality of this country?,"['1.- Very proud', '2.- Quite proud', '3.- Not very proud', '4.- Not at all proud', '5.- I am not [nationality]', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+235,Q255,"Feel close to your village, town or city",,"Feel close to your village, town or city","People have different views about themselves and how they relate to the world. Using 
+this card, would you tell me how close do you feel to…?  
+Your village, town or city","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+236,Q256,"Feel close to your district, region",,"Feel close to your district, region","People have different views about themselves and how they relate to the world. Using 
+this card, would you tell me how strongly you agree or disagree with each of the 
+following statements about how you see yourself?  
+Your county, region, district","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+237,Q257,Feel close to your country,,Feel close to your country,"People have different views about themselves and how they relate to the world. Using 
+this card, would you tell me how strongly you agree or disagree with each of the 
+following statements about how you see yourself?  
+Country","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+238,Q258,Feel close to your continent,,Feel close to your continent,"People have different views about themselves and how they relate to the world. Using 
+this card, would you tell me how close do you feel to…?  
+Continent; e.g. Europe, Asia etc.","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+239,Q259,Feel close to the world,,Feel close to the world,"People have different views about themselves and how they relate to the world. Using 
+this card, would you tell me how strongly you agree or disagree with each of the 
+following statements about how you see yourself?  
+World","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
