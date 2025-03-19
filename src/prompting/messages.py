@@ -1,6 +1,6 @@
 import pandas as pd
 
-from data.variables import get_valid_responses, responses_to_map
+from src.data.variables import get_valid_responses
 
 
 def build_messages(survey_df: pd.DataFrame) -> dict[str, str]:

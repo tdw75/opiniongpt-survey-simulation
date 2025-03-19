@@ -5,11 +5,14 @@ import sys
 import fire
 import pandas as pd
 
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
+
 from src.prompting.messages import build_messages
 from src.simulation.inference import simulate_whole_survey
 from src.simulation.models import load_opinion_gpt, load_llama
 
-print(sys.path)
 
 LOAD_MODEL = {
     "opinion_gpt": load_opinion_gpt,
