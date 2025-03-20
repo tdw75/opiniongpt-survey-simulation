@@ -15,8 +15,10 @@ def build_messages(survey_df: pd.DataFrame) -> dict[str, str]:
         question_group = survey_df[survey_df["group"] == group]
         item_stem = question_group["item_stem"].unique().item()
         responses = question_group["responses"].unique().item()
-        subtopics = zip(question_group["number"], question_group["subtopic"])
-        prompts[group] = build_prompt_message(item_stem, responses, *subtopics)
+        # todo: handle case where no subtopics, just question again
+        # todo: add unit test
+        subtopics = [f"{num} {top}" for num, top in zip(question_group["number"], question_group["subtopic"])]
+        prompts[group] = build_prompt_message(item_stem, responses, subtopics)
 
     return prompts
 
