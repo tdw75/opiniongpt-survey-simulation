@@ -9,7 +9,7 @@ bias_to_subreddit = {
     "conservative": "AskConservatives",
     "german": "AskAGerman",
     "american": "AskAnAmerican",
-    "latin_american": "AskLatinAmerica",
+    "latin_america": "AskLatinAmerica",
     "middle_east": "AskMiddleEast",
     "men": "AskMen",
     "women": "AskWomen",
