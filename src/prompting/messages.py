@@ -1,6 +1,7 @@
 import pandas as pd
 
-from src.data.variables import get_valid_responses
+from src.data.variables import get_valid_responses, responses_to_map
+from ast import literal_eval
 
 
 def build_messages(survey_df: pd.DataFrame) -> dict[str, str]:
@@ -14,11 +15,13 @@ def build_messages(survey_df: pd.DataFrame) -> dict[str, str]:
     for group in survey_df["group"].unique():
         question_group = survey_df[survey_df["group"] == group]
         item_stem = question_group["item_stem"].unique().item()
-        responses = question_group["responses"].unique().item()
+
+        # todo: literal_eval might be inefficient here / might be redundantly repeated
+        responses = literal_eval(question_group["responses"].unique().item())
         # todo: handle case where no subtopics, just question again
         # todo: add unit test
         subtopics = [f"{num} {top}" for num, top in zip(question_group["number"], question_group["subtopic"])]
-        prompts[group] = build_prompt_message(item_stem, responses, subtopics)
+        prompts[group] = build_prompt_message(item_stem, responses_to_map(responses), subtopics)
 
     return prompts
 

@@ -42,6 +42,7 @@ def load_opinion_gpt(device: str = "cuda:2", model_id: str = "unsloth/Phi-3-mini
 def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
     if model.active_adapter != target_adapter:
         model.set_adapter(target_adapter)
+        print(f"Changed active adapter to {target_adapter}")
     return model
 
 
