@@ -20,9 +20,8 @@ bias_to_subreddit = {
 adapters = list(bias_to_subreddit.keys())
 
 
-def load_opinion_gpt(device: str = "cuda:2") -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+def load_opinion_gpt(device: str = "cuda:2", model_id: str = "unsloth/Phi-3-mini-4k-instruct") -> tuple[PreTrainedModel, PreTrainedTokenizer]:
 
-    model_id = "unsloth/Phi-3-mini-4k-instruct"
     lora_id = "HU-Berlin-ML-Internal/opiniongpt-phi3-{adapter}"
     model = AutoModelForCausalLM.from_pretrained(model_id)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -33,26 +32,27 @@ def load_opinion_gpt(device: str = "cuda:2") -> tuple[PreTrainedModel, PreTraine
         model, lora_id.format(adapter=default_adapter), adapter_name=default_adapter
     ).to(device)
 
-    for adapter in adapters[1:]:
-        # todo: do I need to load all adapters each time?
+    for adapter in adapters[1:]:  # all adapters loaded and then accessed as needed
         print(f"Loading adapter: {adapter}")
         model.load_adapter(lora_id.format(adapter=adapter), adapter)
 
-    # todo: why is the target adapter always German???
-    target_adapter = "german"
+    return model, tokenizer
 
-    if model.active_adapter != "american":
+
+def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
+    if model.active_adapter != target_adapter:
         model.set_adapter(target_adapter)
+    return model
+
+
+def load_llama(device: str = "cuda:2", model_id: str = "meta-llama/Meta-Llama-3-8B-Instruct") -> tuple[LlamaForCausalLM, LlamaTokenizer]:
+
+    model = AutoModelForCausalLM.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
 
     return model, tokenizer
 
 
-def load_llama(device: str = "cuda:2") -> tuple[LlamaForCausalLM, LlamaTokenizer]:
-
-    # todo: add hugging face model id
-
-    model_id = ""
-    model = LlamaForCausalLM.from_pretrained(model_id)
-    tokenizer = LlamaTokenizer.from_pretrained(model_id)
-
-    return model, tokenizer
+def change_persona(model, target_persona: str):
+    # todo: implement changing personas for LLaMa
+    raise NotImplementedError

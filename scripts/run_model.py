@@ -11,13 +11,18 @@ sys.path.append(os.getcwd())
 
 from src.prompting.messages import build_messages
 from src.simulation.inference import simulate_whole_survey
-from src.simulation.models import load_opinion_gpt, load_llama
+from src.simulation.models import load_opinion_gpt, load_llama, change_adapter, change_persona
 
 
 LOAD_MODEL = {
     "opinion_gpt": load_opinion_gpt,
     "llama": load_llama,
 }
+CHANGE_SUBGROUP = {
+    "opinion_gpt": change_adapter,
+    "llama": change_persona,
+}
+
 
 def huggingface_login() -> None:
     from dotenv import load_dotenv
@@ -31,12 +36,13 @@ def huggingface_login() -> None:
     else:
         print("Token is not set. Please save a token in the .env file.")
 
-def main(model_name: str, directory: str, device: str = "cuda:2"):
+def main(model_name: str, directory: str, subgroup: str, device: str = "cuda:2"):
 
     n_respondents = 1000
     by = "questions"
 
-    model, tokenizer = LOAD_MODEL[model_name](device)
+    model, tokenizer = LOAD_MODEL[model_name](device)  # todo: separate model loading from inference (maybe loop through subgroups)
+    model = CHANGE_SUBGROUP[model_name](model, subgroup)
     survey_questions = load_survey(directory)
     respondents = simulate_whole_survey(model, tokenizer, survey_questions, by=by)
     survey_run = {
