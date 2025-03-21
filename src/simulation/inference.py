@@ -7,7 +7,7 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 # - aggregation level/style (e.g. simulate one question, simulate whole respondent)
 
 def simulate_whole_survey(
-        model: PreTrainedModel, tokenizer: PreTrainedTokenizer, survey: dict[str, str], by: str
+    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, survey: dict[str, str], by: str
 ) -> dict:
     if by == "respondents":
         responses = simulate_group_of_respondents(model, tokenizer, 1000, survey)
@@ -45,23 +45,24 @@ def simulate_single_respondent(
 def simulate_response_single_question(
     model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prompt: str
 ) -> str:
+    # todo: parametrize active adapter (or outside of function)
     inputs = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
-    input_len = len(inputs)
+    input_len = len(inputs)  # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
 
     # todo: inject hyperparameters/config
     generation_kwargs = dict(
         input_ids=inputs,
-        max_new_tokens=256,
-        min_new_tokens=10,
+        max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
+        min_new_tokens=4,
         no_repeat_ngram_size=3,
         do_sample=True,
         temperature=1
     )
 
     output = model.generate(**generation_kwargs)
-    output = output[input_len:]
-    # todo: remove input before decoding
+    # output = output[input_len:]  # todo: deactivated for debugging
     response = tokenizer.decode(output[0], skip_special_tokens=True)
+    print(response)
     # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
 
