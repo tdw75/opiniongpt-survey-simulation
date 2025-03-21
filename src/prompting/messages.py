@@ -12,7 +12,7 @@ def build_messages(survey_df: pd.DataFrame) -> dict[str, str]:
 
     prompts = {}
 
-    for group in survey_df["group"].unique():
+    for group in survey_df["group"].dropna().unique():
         question_group = survey_df[survey_df["group"] == group]
         item_stem = question_group["item_stem"].unique().item()
 

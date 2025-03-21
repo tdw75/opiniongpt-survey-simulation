@@ -53,13 +53,16 @@ def main(model_name: str, directory: str, subgroup: str, filename: str = "variab
 
 
 def load_survey(directory: str, file_name: str) -> dict[str, str]:
-    survey = pd.read_csv(os.path.join(directory, file_name))
-    return build_messages(survey)
+    survey_df = pd.read_csv(os.path.join(directory, file_name))
+    survey = build_messages(survey_df)
+    print("Successfully loaded survey!")
+    return survey
 
 
 def save_survey(simulated_survey: dict[str, dict], directory: str):
     with open(os.path.join(directory, "survey_run.json"), "w") as f:
         json.dump(simulated_survey, f)
+        print("Successfully saved simulated responses!")
 
 
 if __name__ == "__main__":
