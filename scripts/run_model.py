@@ -36,14 +36,14 @@ def huggingface_login() -> None:
     else:
         print("Token is not set. Please save a token in the .env file.")
 
-def main(model_name: str, directory: str, subgroup: str, device: str = "cuda:2"):
+def main(model_name: str, directory: str, subgroup: str, filename: str = "variables.csv", device: str = "cuda:2"):
 
     n_respondents = 1000
     by = "questions"
 
     model, tokenizer = LOAD_MODEL[model_name](device)  # todo: separate model loading from inference (maybe loop through subgroups)
     model = CHANGE_SUBGROUP[model_name](model, subgroup)
-    survey_questions = load_survey(directory)
+    survey_questions = load_survey(directory, filename)
     respondents = simulate_whole_survey(model, tokenizer, survey_questions, by=by)
     survey_run = {
         "metadata": {"model_name": model_name, "by": by},  # todo: add rest of metadata
@@ -52,8 +52,8 @@ def main(model_name: str, directory: str, subgroup: str, device: str = "cuda:2")
     save_survey(survey_run, directory)
 
 
-def load_survey(directory: str) -> dict[str, str]:
-    survey = pd.read_csv(os.path.join(directory, "variables.csv"))
+def load_survey(directory: str, file_name: str) -> dict[str, str]:
+    survey = pd.read_csv(os.path.join(directory, file_name))
     return build_messages(survey)
 
 
