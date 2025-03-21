@@ -12,7 +12,7 @@ def simulate_whole_survey(
     if by == "respondents":
         responses = simulate_group_of_respondents(model, tokenizer, 1000, survey)
     elif by == "questions":  # todo: change hardcoded num=5
-        single_prompt = list(survey.values())[0]  # todo: change to whole survey
+        single_prompt = list(survey.values())[0]  # todo: change to whole survey, loop through all questions maybe?
         responses = simulate_set_of_responses_single_question(model, tokenizer, single_prompt, 5)
     else:
         raise ValueError  # todo: add error message
@@ -87,6 +87,6 @@ def simulate_set_of_responses_single_question(
 
     responses = []
     for i in range(n):
-        responses[i] = simulate_response_single_question(model, tokenizer, prompt)
+        responses.append(simulate_response_single_question(model, tokenizer, prompt))
 
     return responses
