@@ -11,16 +11,20 @@ def build_messages(survey_df: pd.DataFrame) -> dict[str, str]:
     # todo: add unit test
 
     prompts = {}
+    survey_df["group"] = survey_df["group"].combine_first(survey_df["number"])
 
     for group in survey_df["group"].dropna().unique():
+        # todo: handle case where no subtopics only a single question; 'group' column is currently empty so it currently skips
+
         question_group = survey_df[survey_df["group"] == group]
         item_stem = question_group["item_stem"].unique().item()
-
-        # todo: literal_eval might be inefficient here / might be redundantly repeated
+        numbers = question_group["number"].values
         responses = literal_eval(question_group["responses"].unique().item())
-        # todo: handle case where no subtopics, just question again
-        prompts[group] = build_prompt_message(
-            item_stem, responses_to_map(responses), question_group["number"].values, question_group["subtopic"].values
+        # todo: literal_eval might be inefficient here / might be redundantly repeated
+
+        key = numbers.min() if numbers.shape[0] == 1 else f"{numbers.min()}-{numbers.max()}"
+        prompts[key] = build_prompt_message(
+            item_stem, responses_to_map(responses), numbers, question_group["subtopic"].values
         )
 
     return prompts
