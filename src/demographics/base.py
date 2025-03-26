@@ -24,7 +24,7 @@ class BaseSubGroup(ABC):
 
     @property
     @abstractmethod
-    def PERSONA(self) -> set[str]:
+    def PERSONA(self) -> str:
         raise NotImplementedError
 
     @classmethod

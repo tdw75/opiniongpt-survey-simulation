@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from demographics.base import BaseSubGroup
+from src.demographics.base import BaseSubGroup
 
 
 @dataclass
@@ -9,7 +9,7 @@ class PoliticalLeaning(BaseSubGroup, ABC):
     COLUMN = ""
 
 
-class Progressive(PoliticalLeaning):
+class Liberal(PoliticalLeaning):
     VALUES = {"Left", "2", "3"}
     PERSONA = "a person with a progressive or politically left-wing view of the word"
 
