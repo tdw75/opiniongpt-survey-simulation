@@ -1,0 +1,29 @@
+,number,name,group,subtopic,item_stem,responses
+0,Q1,Important in life: Family,Important in life,Family,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+1,Q2,Important in life: Friends,Important in life,Friends,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+2,Q3,Important in life: Leisure time,Important in life,Leisure time,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+3,Q4,Important in life: Politics,Important in life,Politics,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+4,Q5,Important in life: Work,Important in life,Work,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+5,Q6,Important in life: Religion,Important in life,Religion,"For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
+6,Q18,Neighbors: Drug addicts,Neighbors,Drug addicts,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+7,Q19,Neighbors: People of a different race,Neighbors,People of a different race,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+8,Q20,Neighbors: People who have AIDS,Neighbors,People who have AIDS,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+9,Q21,Neighbors: Immigrants/foreign workers,Neighbors,Immigrants/foreign workers,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+10,Q22,Neighbors: Homosexuals,Neighbors,Homosexuals,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+11,Q23,Neighbors: People of a different religion,Neighbors,People of a different religion,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+12,Q25,Neighbors: Unmarried couples living together,Neighbors,Unmarried couples living together,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+13,Q26,Neighbors: People who speak a different language,Neighbors,People who speak a different language,"On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors?","['1.- Mentioned', '2.- Not mentioned', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"

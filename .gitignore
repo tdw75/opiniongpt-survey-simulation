@@ -155,9 +155,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# data
-data_files/
-
 example
 
 # PyCharm

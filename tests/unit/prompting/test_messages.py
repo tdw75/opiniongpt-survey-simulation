@@ -6,7 +6,7 @@ from prompting.messages import build_prompt_message
 
 
 def test_build_prompt_message():
-    survey = pd.read_csv("test_data_files/variables.csv")
+    survey = pd.read_csv("test_data_files/sample_variables.csv")
     question = survey.loc[0]
     subjects = survey.loc[0:5, "subject"].values
     responses = {
