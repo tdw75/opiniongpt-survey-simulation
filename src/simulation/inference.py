@@ -1,19 +1,33 @@
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
+from src.prompting.system import SURVEY_CONTEXT
+
 
 # todo: model config
 # - model_name
 # - prompting behaviour (e.g. persona, )
 # - aggregation level/style (e.g. simulate one question, simulate whole respondent)
 
+
 def simulate_whole_survey(
-    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, survey: dict[str, str], by: str
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    survey: dict[str, str],
+    by: str,
+    system_prompt: str = None,
 ) -> dict:
+    system_prompt = system_prompt or SURVEY_CONTEXT
     if by == "respondents":
-        responses = simulate_group_of_respondents(model, tokenizer, 1000, survey)
-    elif by == "questions":  # todo: change hardcoded num=5
-        single_prompt = list(survey.values())[0]  # todo: change to whole survey, loop through all questions maybe?
-        responses = simulate_set_of_responses_single_question(model, tokenizer, single_prompt, 5)
+        responses = simulate_group_of_respondents(
+            model, tokenizer, survey, system_prompt, 1000
+        )
+    elif by == "questions":  # todo: change hardcoded n
+        single_question = list(survey.items())[0]
+        single_question = {single_question[0]: single_question[1]}
+        # todo: change to whole survey, loop through all questions maybe?
+        responses = simulate_set_of_responses_multiple_questions(
+            model, tokenizer, single_question, system_prompt, 10
+        )
     else:
         raise ValueError  # todo: add error message
 
@@ -21,33 +35,45 @@ def simulate_whole_survey(
 
 
 def simulate_single_respondent(
-    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, survey: dict[str, str]
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    survey: dict[str, str],
+    system_prompt: str,
 ) -> dict[str, str]:
 
     # todo: function for both OpinionGPT and persona prompting
-    # if model == LLaMa: add persona prompt or is_persona flag
+    # if model == LLaMa: add persona to system prompt or is_persona flag
     text_responses = {}
 
     previous_responses = """"""
 
-    for question, prompt in survey.items():
-        # todo: prompt with previous responses as one run, prepend 'previous_responses' to prompt
-        response = simulate_response_single_question(model, tokenizer, prompt)
+    for number, question in survey.items():
+        # todo: add previous_responses to 'assistant' prompt
 
-        # todo: append question number and item stem to 'previous_responses'
-        # todo: append response output to 'previous_responses'
-        text_responses[question] = response
-        # # todo: extract numeric keys for responses
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": number},
+        ]
+        response = simulate_response_single_question(model, tokenizer, messages)
+        # todo: update previous_responses with question, number and response
+        text_responses[number] = response
+        # todo: extract numeric keys for responses
 
     return text_responses
 
 
 def simulate_response_single_question(
-    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prompt: str
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    messages: list[dict[str, str]],
 ) -> str:
     # todo: parametrize active adapter (or outside of function)
-    inputs = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
-    input_len = len(inputs)  # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
+    # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
+
+    input_text = tokenizer.apply_chat_template(messages, tokenize=False)
+    inputs = tokenizer(input_text, return_tensors="pt").input_ids.to(model.device)
+    # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
+    input_len = len(inputs)
 
     # todo: inject hyperparameters/config
     generation_kwargs = dict(
@@ -56,37 +82,69 @@ def simulate_response_single_question(
         min_new_tokens=4,
         no_repeat_ngram_size=3,
         do_sample=True,
-        temperature=1
+        temperature=1,
     )
 
     output = model.generate(**generation_kwargs)
     # output = output[input_len:]  # todo: deactivated for debugging
     response = tokenizer.decode(output[0], skip_special_tokens=True)
+    # todo: remove input with split instead of using length? which is more expensive
     print(response)
     # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
 
 
+def simulate_set_of_responses_multiple_questions(
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    survey: dict[str, str],
+    system_prompt: str,
+    n: int = 1000,
+):
+
+    responses: dict[str, list[str]] = {}
+
+    for number, question in survey.items():  # todo: add tqdm
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": question},
+        ]
+        responses[number] = simulate_set_of_responses_single_question(model, tokenizer, messages, n)
+
+    return responses
+
+
 def simulate_group_of_respondents(
-    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, n_respondents: int, survey: dict[str, str]
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    survey: dict[str, str],
+    system_prompt: str,
+    n_respondents: int = 1000,
 ) -> dict[int, dict]:
 
     # todo: allow toggling between persona prompting and opinionGPT
     #  - separate script?? maybe different load_model but same run_inference
 
     respondents = {}
-    for i in range(n_respondents):
-        respondents[i] = simulate_single_respondent(model, tokenizer, survey)
+    for i in range(n_respondents):  # todo: add tqdm
+        respondents[i] = simulate_single_respondent(
+            model, tokenizer, survey, system_prompt
+        )
 
     return respondents
 
 
 def simulate_set_of_responses_single_question(
-    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prompt: str, n: int = 1000
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    messages: list[dict[str, str]],
+    n: int = 1000,
 ) -> list[str]:
 
     responses = []
     for i in range(n):
-        responses.append(simulate_response_single_question(model, tokenizer, prompt))
+        responses.append(
+            simulate_response_single_question(model, tokenizer, messages)
+        )
 
     return responses

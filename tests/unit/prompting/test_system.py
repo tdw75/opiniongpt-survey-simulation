@@ -1,5 +1,5 @@
-from demographics.sex import Female
-from prompting.personas import build_persona_message
+from src.demographics.sex import Female
+from src.prompting.system import build_persona_message
 
 
 def test_build_persona_message():
