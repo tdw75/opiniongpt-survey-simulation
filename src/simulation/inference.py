@@ -71,6 +71,8 @@ def simulate_response_single_question(
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
     input_text = tokenizer.apply_chat_template(messages, tokenize=False)
+    print("=" * 10, "INPUT", "=" * 10)
+    print(input_text)
     inputs = tokenizer(input_text, return_tensors="pt").input_ids.to(model.device)
     # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
     input_len = len(inputs)
@@ -89,6 +91,7 @@ def simulate_response_single_question(
     # output = output[input_len:]  # todo: deactivated for debugging
     response = tokenizer.decode(output[0], skip_special_tokens=True)
     # todo: remove input with split instead of using length? which is more expensive
+    print("-" * 10, "RESPONSE", "-" * 10)
     print(response)
     # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
@@ -109,7 +112,9 @@ def simulate_set_of_responses_multiple_questions(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": question},
         ]
-        responses[number] = simulate_set_of_responses_single_question(model, tokenizer, messages, n)
+        responses[number] = simulate_set_of_responses_single_question(
+            model, tokenizer, messages, n
+        )
 
     return responses
 
@@ -143,8 +148,6 @@ def simulate_set_of_responses_single_question(
 
     responses = []
     for i in range(n):
-        responses.append(
-            simulate_response_single_question(model, tokenizer, messages)
-        )
+        responses.append(simulate_response_single_question(model, tokenizer, messages))
 
     return responses
