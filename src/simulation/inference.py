@@ -70,16 +70,19 @@ def simulate_response_single_question(
     # todo: parametrize active adapter (or outside of function)
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
-    input_text = tokenizer.apply_chat_template(messages, tokenize=False)
+    inputs = tokenizer.apply_chat_template(
+        messages, tokenize=True, return_dict=True, return_tensors="pt"
+    )
+    inputs = {k: v.to(model.device) for k, v in inputs.items()}
     print("=" * 10, "INPUT", "=" * 10)
-    print(input_text)
-    inputs = tokenizer(input_text, return_tensors="pt").input_ids.to(model.device)
+    # inputs = tokenizer(input_text, return_tensors="pt").input_ids.to(model.device)
     # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
     input_len = len(inputs)
 
     # todo: inject hyperparameters/config
     generation_kwargs = dict(
-        input_ids=inputs,
+        input_ids=inputs["input_ids"],
+        attention_mask=inputs["attention_mask"],
         max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
         min_new_tokens=4,
         no_repeat_ngram_size=3,
