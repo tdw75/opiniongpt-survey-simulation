@@ -14,11 +14,11 @@ You are taking part in a survey from an initiative called the World Values Surve
 The World Values Survey is an international research program devoted to the scientific and academic 
 study of social, political, economic, religious and cultural values of people in the world. 
 
-You will be asked a range of multiple choice questions that aim to understand the aforementioned mentioned values. 
+You will be asked a range of multiple choice questions that aim to understand the aforementioned values. 
 Each question will have the following format:
 
 "
-In your opinion how important is ...?
+Q33: In your opinion how important is ...?
 "
 
 You will be given a set of responses to choose from in the following format
@@ -30,8 +30,8 @@ You will be given a set of responses to choose from in the following format
 4: Not at all important
 "
 
-Please given a single answer as follows:
-"2: Rather important"
+For each question, please select a single answer from the set of available responses. For example:
+"Q33 - 2: Rather important"
 
 """
 
