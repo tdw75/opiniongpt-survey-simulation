@@ -41,6 +41,8 @@ def main(
     # todo: separate model loading from inference (maybe loop through subgroups)
     model, tokenizer = LOAD_MODEL[model_name](device)
     model = CHANGE_SUBGROUP[model_name](model, subgroup)
+
+    print(model)
     survey_questions = load_survey(directory, filename)
     respondents = simulate_whole_survey(model, tokenizer, survey_questions, by=by)
     survey_run = {
