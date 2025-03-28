@@ -1,4 +1,4 @@
-from demographics.base import BaseSubGroup
+from src.demographics.base import BaseSubGroup
 
 
 def build_persona_message(subgroup: type[BaseSubGroup]) -> str:
