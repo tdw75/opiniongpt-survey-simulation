@@ -3,7 +3,7 @@ import os
 
 import pandas as pd
 
-from messages import build_messages
+from src.prompting.messages import build_messages
 
 
 def huggingface_login() -> None:
