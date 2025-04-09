@@ -1,6 +1,8 @@
+from typing import Any
+
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from src.prompting.system import SURVEY_CONTEXT
+from src.prompting.system import build_survey_context_message
 
 
 # todo: model config
@@ -14,9 +16,11 @@ def simulate_whole_survey(
     tokenizer: PreTrainedTokenizer,
     survey: dict[str, str],
     by: str,
+    hyperparams: dict[str, Any],
     system_prompt: str = None,
 ) -> dict:
-    system_prompt = system_prompt or SURVEY_CONTEXT
+    system_prompt = system_prompt or build_survey_context_message()
+    print(model)
     if by == "respondents":
         responses = simulate_group_of_respondents(
             model, tokenizer, survey, system_prompt, 1000
@@ -26,7 +30,7 @@ def simulate_whole_survey(
         single_question = {single_question[0]: single_question[1]}
         # todo: change to whole survey, loop through all questions maybe?
         responses = simulate_set_of_responses_multiple_questions(
-            model, tokenizer, single_question, system_prompt, 10
+            model, tokenizer, single_question, system_prompt, hyperparams, 10
         )
     else:
         raise ValueError  # todo: add error message
@@ -39,6 +43,7 @@ def simulate_single_respondent(
     tokenizer: PreTrainedTokenizer,
     survey: dict[str, str],
     system_prompt: str,
+    hyperparams: dict
 ) -> dict[str, str]:
 
     # todo: function for both OpinionGPT and persona prompting
@@ -54,7 +59,7 @@ def simulate_single_respondent(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": number},
         ]
-        response = simulate_response_single_question(model, tokenizer, messages)
+        response = simulate_response_single_question(model, tokenizer, messages, hyperparams)
         # todo: update previous_responses with question, number and response
         text_responses[number] = response
         # todo: extract numeric keys for responses
@@ -66,6 +71,7 @@ def simulate_response_single_question(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     messages: list[dict[str, str]],
+    hyperparams: dict[str, Any] = None,
 ) -> str:
     # todo: parametrize active adapter (or outside of function)
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
@@ -89,6 +95,8 @@ def simulate_response_single_question(
         do_sample=True,
         temperature=1,
     )
+    if hyperparams:
+        generation_kwargs.update(hyperparams)
 
     output = model.generate(**generation_kwargs)
     # output = output[input_len:]  # todo: deactivated for debugging
@@ -105,6 +113,7 @@ def simulate_set_of_responses_multiple_questions(
     tokenizer: PreTrainedTokenizer,
     survey: dict[str, str],
     system_prompt: str,
+    hyperparams: dict[str, Any],
     n: int = 1000,
 ):
 
@@ -116,7 +125,7 @@ def simulate_set_of_responses_multiple_questions(
             {"role": "user", "content": question},
         ]
         responses[number] = simulate_set_of_responses_single_question(
-            model, tokenizer, messages, n
+            model, tokenizer, messages, hyperparams, n
         )
 
     return responses
@@ -146,11 +155,12 @@ def simulate_set_of_responses_single_question(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     messages: list[dict[str, str]],
+    hyperparams: dict[str, Any],
     n: int = 1000,
 ) -> list[str]:
 
     responses = []
     for i in range(n):
-        responses.append(simulate_response_single_question(model, tokenizer, messages))
+        responses.append(simulate_response_single_question(model, tokenizer, messages, hyperparams))
 
     return responses

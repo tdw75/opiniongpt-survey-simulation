@@ -33,6 +33,7 @@ def main(
     subgroup: str,
     filename: str = "variables.csv",
     device: str = "cuda:2",
+    **kwargs,
 ):
 
     n_respondents = 1000
@@ -44,7 +45,7 @@ def main(
 
     print(model)
     survey_questions = load_survey(directory, filename)
-    respondents = simulate_whole_survey(model, tokenizer, survey_questions, by=by)
+    respondents = simulate_whole_survey(model, tokenizer, survey_questions, by, hyperparams=kwargs)
     survey_run = {
         "metadata": {"model_name": model_name, "by": by},  # todo: add rest of metadata
         "respondents": respondents,
