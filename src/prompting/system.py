@@ -16,21 +16,25 @@ def build_survey_context_message() -> str:
     multiple choice questions.
      
     Each question will have the following format:
+    
     "
     For each of the following statements I read out, can you tell me how much you agree
     with each. Do you agree strongly, agree, disagree, or disagree strongly?
-    Q33: In your opinion how important is ...?
+    Q33: On the whole, men make better political leaders than women do
+    Q34: When a mother works for pay, the children suffer
     
     Available responses:
-    1: Very important
-    2: Rather important
-    3: Not very important
-    4: Not at all important
+    1: Agree strongly
+    2: Agree
+    3: Disagree
+    4: Strongly disagree
     "
     
     For each question, just select a single answer from the set of available responses. 
     For example:
-    "Response: Q33 - 2: Rather important"
+    "Response: 
+    Q33 - 4: Strongly disagree"
+    Q34 - 3: Disagree"
     """
 
 
