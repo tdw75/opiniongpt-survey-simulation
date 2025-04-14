@@ -5,7 +5,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from messages import extract_user_prompts_from_survey_individual
+from src.prompting.messages import extract_user_prompts_from_survey_individual
 from src.prompting.messages import extract_user_prompts_from_survey_grouped
 
 
