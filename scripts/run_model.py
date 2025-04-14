@@ -30,6 +30,7 @@ LOAD_MODEL = {
 CHANGE_SUBGROUP = {
     "opinion_gpt": change_adapter,
     "llama": change_persona,
+    "phi": change_persona,
 }
 
 
