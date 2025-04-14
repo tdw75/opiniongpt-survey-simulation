@@ -56,4 +56,4 @@ def load_llama(device: str = "cuda:2", model_id: str = "meta-llama/Meta-Llama-3-
 
 def change_persona(model, target_persona: str):
     # todo: implement changing personas for LLaMa
-    raise NotImplementedError
+    return model

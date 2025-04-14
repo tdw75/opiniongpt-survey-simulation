@@ -8,7 +8,12 @@ print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
 from src.simulation.inference import simulate_whole_survey
-from src.simulation.models import load_opinion_gpt, load_llama, change_adapter, change_persona
+from src.simulation.models import (
+    load_opinion_gpt,
+    load_llama,
+    change_adapter,
+    change_persona,
+)
 from src.simulation.utils import huggingface_login, load_survey, save_survey
 
 
@@ -22,15 +27,25 @@ CHANGE_SUBGROUP = {
 }
 
 
-def main(model_name: str, directory: str, subgroup: str, filename: str = "variables.csv", device: str = "cuda:2"):
+def main(
+    model_name: str,
+    directory: str,
+    subgroup: str,
+    filename: str = "variables.csv",
+    device: str = "cuda:2",
+    **kwargs,
+):
 
     n_respondents = 1000
-    by = "questions"
+    by = "questions"  # todo: parametrise
 
-    model, tokenizer = LOAD_MODEL[model_name](device)  # todo: separate model loading from inference (maybe loop through subgroups)
+    # todo: separate model loading from inference (maybe loop through subgroups)
+    model, tokenizer = LOAD_MODEL[model_name](device)
     model = CHANGE_SUBGROUP[model_name](model, subgroup)
+
+    print(model)
     survey_questions = load_survey(directory, filename)
-    respondents = simulate_whole_survey(model, tokenizer, survey_questions, by=by)
+    respondents = simulate_whole_survey(model, tokenizer, survey_questions, by, hyperparams=kwargs)
     survey_run = {
         "metadata": {"model_name": model_name, "by": by},  # todo: add rest of metadata
         "respondents": respondents,
