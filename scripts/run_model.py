@@ -13,6 +13,7 @@ from src.simulation.models import (
     load_llama,
     change_adapter,
     change_persona,
+    load_phi,
 )
 from src.simulation.utils import (
     huggingface_login,
@@ -24,6 +25,7 @@ from src.simulation.utils import (
 LOAD_MODEL = {
     "opinion_gpt": load_opinion_gpt,
     "llama": load_llama,
+    "phi": load_phi,
 }
 CHANGE_SUBGROUP = {
     "opinion_gpt": change_adapter,
