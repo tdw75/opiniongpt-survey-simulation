@@ -14,8 +14,12 @@ from src.simulation.models import (
     change_adapter,
     change_persona,
 )
-from src.simulation.utils import huggingface_login, load_survey, save_survey
-
+from src.simulation.utils import (
+    huggingface_login,
+    load_survey,
+    save_survey,
+    generate_run_id,
+)
 
 LOAD_MODEL = {
     "opinion_gpt": load_opinion_gpt,
@@ -36,21 +40,21 @@ def main(
     **kwargs,
 ):
 
-    n_respondents = 1000
     by = "questions"  # todo: parametrise
-
     # todo: separate model loading from inference (maybe loop through subgroups)
     model, tokenizer = LOAD_MODEL[model_name](device)
     model = CHANGE_SUBGROUP[model_name](model, subgroup)
 
     print(model)
     survey_questions = load_survey(directory, filename)
-    respondents = simulate_whole_survey(model, tokenizer, survey_questions, by, hyperparams=kwargs)
-    survey_run = {
-        "metadata": {"model_name": model_name, "by": by},  # todo: add rest of metadata
+    respondents = simulate_whole_survey(
+        model, tokenizer, survey_questions, by, hyperparams=kwargs
+    )
+    survey_run = {  # todo: add rest of metadata
+        "metadata": {"model_name": model_name, "by": by, **kwargs},
         "respondents": respondents,
     }
-    save_survey(survey_run, directory)
+    save_survey(survey_run, directory, run_id=generate_run_id(model_name))
 
 
 if __name__ == "__main__":
