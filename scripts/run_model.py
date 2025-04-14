@@ -36,6 +36,7 @@ def main(
     directory: str,
     subgroup: str,
     filename: str = "variables.csv",
+    question_format: str = "individual",
     device: str = "cuda:2",
     **kwargs,
 ):
@@ -46,7 +47,7 @@ def main(
     model = CHANGE_SUBGROUP[model_name](model, subgroup)
 
     print(model)
-    survey_questions = load_survey(directory, filename)
+    survey_questions = load_survey(directory, filename, question_format)
     respondents = simulate_whole_survey(
         model, tokenizer, survey_questions, by, hyperparams=kwargs
     )
