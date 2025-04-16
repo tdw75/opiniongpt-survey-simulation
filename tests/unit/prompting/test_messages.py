@@ -2,22 +2,31 @@ import pickle
 
 import pandas as pd
 import os
-
 import pytest
+from src.prompting.messages import (
+    build_user_prompt_message_grouped,
+    format_subtopics,
+    extract_user_prompts_from_survey_grouped,
+    build_user_prompt_message_individual, extract_user_prompts_from_survey_individual,
+)
 
-from src.prompting.messages import build_prompt_message, format_subtopics, build_messages
 
-
-def test_build_messages(expected_messages):
+def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
     # todo: handle case where no subtopics only a single question; 'group' column is currently empty so it currently skips
     survey = pd.read_csv("test_data_files/sample_variables.csv")
     indices = [*range(6)] + [*range(21, 26)]
-    messages = build_messages(survey.loc[indices])
-    assert messages == expected_messages
+    messages = extract_user_prompts_from_survey_grouped(survey.loc[indices])
+    assert messages == expected_messages_grouped
 
 
+def test_extract_user_prompts_from_survey_individual(expected_messages_individual):
+    survey = pd.read_csv("test_data_files/sample_variables.csv")
+    indices = [0, 3, 22, 25]
+    messages = extract_user_prompts_from_survey_individual(survey.loc[indices])
+    assert messages == expected_messages_individual
 
-def test_build_prompt_message(expected_messages):
+
+def test_build_user_prompt_message_grouped(expected_messages_grouped):
     survey = pd.read_csv("test_data_files/sample_variables.csv")
     question = survey.loc[0]
     subjects = survey.loc[0:5, "subtopic"].values
@@ -27,11 +36,33 @@ def test_build_prompt_message(expected_messages):
         2: "Rather important",
         3: "Not very important",
         4: "Not at all important",
-        -1: "INVALID"
+        -1: "INVALID",
     }
 
-    message = build_prompt_message(question["item_stem"], responses, numbers, subjects)
-    assert message == expected_messages["Q1-Q6"]
+    message = build_user_prompt_message_grouped(
+        question["item_stem"], responses, numbers, subjects
+    )
+    assert message == expected_messages_grouped["Q1-Q6"]
+
+
+@pytest.mark.parametrize("idx, number", [(0, "Q1"), (3, "Q4")])
+def test_build_user_prompt_message_individual(expected_messages_individual, idx, number):
+    survey = pd.read_csv("test_data_files/sample_variables.csv")
+    question = survey.loc[idx]
+    responses = {
+        1: "Very important",
+        2: "Rather important",
+        3: "Not very important",
+        4: "Not at all important",
+        -1: "INVALID",
+    }
+
+    message = build_user_prompt_message_individual(
+        f"{question['item_stem']}\n{question['subtopic']}",
+        responses,
+        question["number"],
+    )
+    assert message == expected_messages_individual[number]
 
 
 def test_format_subtopics():
@@ -55,8 +86,8 @@ def load_page(num: int, directory: str = "test_data_files/pages"):
 
 
 @pytest.fixture
-def expected_messages() -> dict[str, str]:
-    q1_q6 ="""
+def expected_messages_grouped() -> dict[str, str]:
+    q1_q6 = """
 For each of the following aspects, indicate how important it is in your life. Would you 
 say it is very important, rather important, not very important or not important at all?
 
@@ -93,7 +124,7 @@ The possible responses are:
 
 If you are unsure you can answer with '-1: Don't know'
 """
-    q27 ="""
+    q27 = """
 For each of the following statements I read out, can you tell me how much you agree 
 with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my 
 main goals in life has been to make my parents proud
@@ -110,3 +141,60 @@ The possible responses are:
 If you are unsure you can answer with '-1: Don't know'
 """
     return {"Q1-Q6": q1_q6, "Q22-Q26": q22_q26, "Q27": q27}
+
+
+@pytest.fixture
+def expected_messages_individual() -> dict[str, str]:
+    q1 = """
+Q1: For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?
+Family
+
+The possible responses are:
+1: Very important
+2: Rather important
+3: Not very important
+4: Not at all important
+
+If you are unsure you can answer with '-1: Don't know'
+"""
+    q4 = """
+Q4: For each of the following aspects, indicate how important it is in your life. Would you 
+say it is very important, rather important, not very important or not important at all?
+Politics
+
+The possible responses are:
+1: Very important
+2: Rather important
+3: Not very important
+4: Not at all important
+
+If you are unsure you can answer with '-1: Don't know'
+"""
+    q23 = """
+Q23: On this list are various groups of people. Could you please mention any that you would 
+not like to have as neighbors?
+People of a different religion
+
+The possible responses are:
+1: Mentioned
+2: Not mentioned
+
+If you are unsure you can answer with '-1: Don't know'
+"""
+
+    q27 = """
+Q27: For each of the following statements I read out, can you tell me how much you agree 
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my 
+main goals in life has been to make my parents proud
+
+The possible responses are:
+1: Agree strongly
+2: Agree
+3: Disagree
+4: Strongly disagree
+
+If you are unsure you can answer with '-1: Don't know'
+"""
+
+    return {"Q1": q1, "Q4": q4, "Q23": q23, "Q27": q27}

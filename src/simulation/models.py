@@ -54,6 +54,14 @@ def load_llama(device: str = "cuda:2", model_id: str = "meta-llama/Meta-Llama-3-
     return model, tokenizer
 
 
+def load_phi(device: str = "cuda:2", model_id: str = "unsloth/Phi-3-mini-4k-instruct") -> tuple[LlamaForCausalLM, LlamaTokenizer]:
+
+    model = AutoModelForCausalLM.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+    return model, tokenizer
+
+
 def change_persona(model, target_persona: str):
     # todo: implement changing personas for LLaMa
     return model

@@ -4,6 +4,8 @@ from datetime import datetime
 
 
 import pandas as pd
+
+from src.prompting.messages import extract_user_prompts_from_survey_individual
 from src.prompting.messages import extract_user_prompts_from_survey_grouped
 
 
@@ -20,9 +22,14 @@ def huggingface_login() -> None:
         print("Token is not set. Please save a token in the .env file.")
 
 
-def load_survey(directory: str, file_name: str) -> dict[str, str]:
+def load_survey(directory: str, file_name: str, question_format: str) -> dict[str, str]:
     survey_df = pd.read_csv(os.path.join(directory, file_name))
-    survey = extract_user_prompts_from_survey_grouped(survey_df)
+    if question_format == "grouped":
+        survey = extract_user_prompts_from_survey_grouped(survey_df)
+    elif question_format == "individual":
+        survey = extract_user_prompts_from_survey_individual(survey_df)
+    else:
+        raise ValueError(f"Invalid question format: {question_format}")
     print("Successfully loaded survey!")
     return survey
 
