@@ -1,8 +1,10 @@
-from enum import Enum
-
 from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaTokenizer, LlamaForCausalLM, PreTrainedTokenizer, \
-    PreTrainedModel
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    PreTrainedTokenizer,
+    PreTrainedModel,
+)
 
 bias_to_subreddit = {
     "liberal": "AskALiberal",
@@ -20,12 +22,23 @@ bias_to_subreddit = {
 adapters = list(bias_to_subreddit.keys())
 
 
-def load_opinion_gpt(device: str = "cuda:2", model_id: str = "unsloth/Phi-3-mini-4k-instruct") -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+def load_model(
+    base_model_name, subgroup: str, is_lora: bool, device: str = "cuda:2"
+) -> tuple[PeftModel | PreTrainedModel, PreTrainedTokenizer]:
+    model, tokenizer = load_base(base_model_name)
+    if is_lora:
+        model = load_opinion_gpt(model, device)
+        return change_adapter(model, subgroup), tokenizer
+    else:
+        model = model.to(device)
+        # todo: implement persona prompting
+        print("No LoRA adapters used")
+        return change_persona(model, subgroup), tokenizer
+
+
+def load_opinion_gpt(model: PreTrainedModel, device: str = "cuda:2") -> PeftModel:
 
     lora_id = "HU-Berlin-ML-Internal/opiniongpt-phi3-{adapter}"
-    model = AutoModelForCausalLM.from_pretrained(model_id)
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-
     default_adapter = adapters[0]
 
     model = PeftModel.from_pretrained(
@@ -36,7 +49,7 @@ def load_opinion_gpt(device: str = "cuda:2", model_id: str = "unsloth/Phi-3-mini
         print(f"Loading adapter: {adapter}")
         model.load_adapter(lora_id.format(adapter=adapter), adapter)
 
-    return model, tokenizer
+    return model
 
 
 def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
@@ -46,22 +59,20 @@ def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
     return model
 
 
-def load_llama(device: str = "cuda:2", model_id: str = "meta-llama/Meta-Llama-3-8B-Instruct") -> tuple[LlamaForCausalLM, LlamaTokenizer]:
-
+def load_base(model_id: str) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+    model_id = MODEL_DIRECTORY.get(model_id, model_id)
     model = AutoModelForCausalLM.from_pretrained(model_id)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
-
-    return model, tokenizer
-
-
-def load_phi(device: str = "cuda:2", model_id: str = "unsloth/Phi-3-mini-4k-instruct") -> tuple[LlamaForCausalLM, LlamaTokenizer]:
-
-    model = AutoModelForCausalLM.from_pretrained(model_id)
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-
+    print(f"Successfully loaded model: {model_id}")
     return model, tokenizer
 
 
 def change_persona(model, target_persona: str):
     # todo: implement changing personas for LLaMa
     return model
+
+
+MODEL_DIRECTORY = {
+    "phi": "unsloth/Phi-3-mini-4k-instruct",
+    "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
+}

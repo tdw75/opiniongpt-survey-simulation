@@ -2,8 +2,6 @@ from typing import Any
 
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from src.prompting.system import build_survey_context_message
-
 
 # todo: model config
 # - model_name
@@ -16,10 +14,9 @@ def simulate_whole_survey(
     tokenizer: PreTrainedTokenizer,
     survey: dict[str, str],
     by: str,
+    system_prompt: str,
     hyperparams: dict[str, Any],
-    system_prompt: str = None,
 ) -> dict:
-    system_prompt = system_prompt or build_survey_context_message()
     print(model)
     if by == "respondents":
         responses = simulate_group_of_respondents(
@@ -43,7 +40,7 @@ def simulate_single_respondent(
     tokenizer: PreTrainedTokenizer,
     survey: dict[str, str],
     system_prompt: str,
-    hyperparams: dict
+    hyperparams: dict,
 ) -> dict[str, str]:
 
     # todo: function for both OpinionGPT and persona prompting
@@ -59,7 +56,9 @@ def simulate_single_respondent(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": number},
         ]
-        response = simulate_response_single_question(model, tokenizer, messages, hyperparams)
+        response = simulate_response_single_question(
+            model, tokenizer, messages, hyperparams
+        )
         # todo: update previous_responses with question, number and response
         text_responses[number] = response
         # todo: extract numeric keys for responses
@@ -161,6 +160,8 @@ def simulate_set_of_responses_single_question(
 
     responses = []
     for i in range(n):
-        responses.append(simulate_response_single_question(model, tokenizer, messages, hyperparams))
+        responses.append(
+            simulate_response_single_question(model, tokenizer, messages, hyperparams)
+        )
 
     return responses

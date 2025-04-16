@@ -3,18 +3,14 @@ import sys
 
 import fire
 
+
 print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
+from src.prompting.system import build_survey_context_message
 from src.simulation.inference import simulate_whole_survey
-from src.simulation.models import (
-    load_opinion_gpt,
-    load_llama,
-    change_adapter,
-    change_persona,
-    load_phi,
-)
+from src.simulation.models import load_model, MODEL_DIRECTORY
 from src.simulation.utils import (
     huggingface_login,
     load_survey,
@@ -22,22 +18,12 @@ from src.simulation.utils import (
     generate_run_id,
 )
 
-LOAD_MODEL = {
-    "opinion_gpt": load_opinion_gpt,
-    "llama": load_llama,
-    "phi": load_phi,
-}
-CHANGE_SUBGROUP = {
-    "opinion_gpt": change_adapter,
-    "llama": change_persona,
-    "phi": change_persona,
-}
-
 
 def main(
-    model_name: str,
+    base_model_name: str,
     directory: str,
     subgroup: str,
+    is_lora: bool,
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
@@ -46,19 +32,25 @@ def main(
 
     by = "questions"  # todo: parametrise
     # todo: separate model loading from inference (maybe loop through subgroups)
-    model, tokenizer = LOAD_MODEL[model_name](device)
-    model = CHANGE_SUBGROUP[model_name](model, subgroup)
-
+    model, tokenizer = load_model(base_model_name, subgroup, is_lora, device)
     print(model)
+
     survey_questions = load_survey(directory, filename, question_format)
+    system_prompt = build_survey_context_message()
     respondents = simulate_whole_survey(
-        model, tokenizer, survey_questions, by, hyperparams=kwargs
+        model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs
     )
     survey_run = {  # todo: add rest of metadata
-        "metadata": {"model_name": model_name, "by": by, **kwargs},
+        "metadata": {
+            "model_id": MODEL_DIRECTORY[base_model_name],
+            "model_type": "OpinionGPT" if is_lora else "instruct",
+            "system_prompt": system_prompt,
+            "by": by,
+            **kwargs,
+        },
         "respondents": respondents,
     }
-    save_survey(survey_run, directory, run_id=generate_run_id(model_name))
+    save_survey(survey_run, directory, run_id=generate_run_id(base_model_name))
 
 
 if __name__ == "__main__":
