@@ -18,10 +18,9 @@ def build_survey_context_message() -> str:
     Each question will have the following format:
     
     "
-    For each of the following statements I read out, can you tell me how much you agree
+    Q33: For each of the following statements I read out, can you tell me how much you agree
     with each. Do you agree strongly, agree, disagree, or disagree strongly?
-    Q33: On the whole, men make better political leaders than women do
-    Q34: When a mother works for pay, the children suffer
+    On the whole, men make better political leaders than women do
     
     Available responses:
     1: Agree strongly
@@ -34,7 +33,6 @@ def build_survey_context_message() -> str:
     For example:
     "Response: 
     Q33 - 4: Strongly disagree"
-    Q34 - 3: Disagree"
     """
 
 
