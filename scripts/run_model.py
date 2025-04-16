@@ -3,12 +3,12 @@ import sys
 
 import fire
 
-from system import build_survey_context_message
 
 print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
+from src.prompting.system import build_survey_context_message
 from src.simulation.inference import simulate_whole_survey
 from src.simulation.models import load_model, MODEL_DIRECTORY
 from src.simulation.utils import (
@@ -17,6 +17,7 @@ from src.simulation.utils import (
     save_survey,
     generate_run_id,
 )
+
 
 def main(
     base_model_name: str,
@@ -45,7 +46,7 @@ def main(
             "model_type": "OpinionGPT" if is_lora else "instruct",
             "system_prompt": system_prompt,
             "by": by,
-            **kwargs
+            **kwargs,
         },
         "respondents": respondents,
     }
