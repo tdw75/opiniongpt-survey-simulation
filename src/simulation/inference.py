@@ -165,15 +165,17 @@ def simulate_set_of_responses_single_question(
     n: int = 1000,
 ) -> list[str]:
 
+    print("=" * 10, "INPUT", "=" * 10)
+    print(messages)
+
     responses = []
     for i in range(n):
-        print("=" * 10, "INPUT", "=" * 10)
-        print(messages)
+
         response = simulate_response_single_question(
             model, tokenizer, messages, hyperparams
         )
         responses.append(response)
-        print("-" * 10, "RESPONSE", "-" * 10)
+        print("-" * 10, f"RESPONSE {i}", "-" * 10)
         print(response)
 
     return responses
