@@ -12,6 +12,7 @@ say it is very important, rather important, not very important or not important 
 5,Q6,Important in life: Religion,Important in life,Religion,"For each of the following aspects, indicate how important it is in your life. Would you 
 say it is very important, rather important, not very important or not important at all?","['1.- Very important', '2.- Rather important', '3.- Not very important', '4.- Not at all important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
 6,Q7,Important child qualities: Good manners,Important child qualities,Good manners,"Here is a list of qualities that children can be encouraged to learn at home. Which, if
+any, do you consider to be especially important? Please choose up to five.","['2.- Not mentioned', '1.- Important', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked in this country', '-5-.- Missing; Not available']"
 7,Q27,One of main goals in life has been to make my parents proud,,One of main goals in life has been to make my parents proud,"For each of the following statements I read out, can you tell me how much you agree
 with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my
 main goals in life has been to make my parents proud","['1.- Agree strongly', '2.- Agree', '3.- Disagree', '4.- Strongly disagree', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
