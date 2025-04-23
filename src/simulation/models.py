@@ -62,7 +62,7 @@ def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
 def load_base(model_id: str) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     model_id = MODEL_DIRECTORY.get(model_id, model_id)
     model = AutoModelForCausalLM.from_pretrained(model_id)
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, padding_side="left")
     print(f"Successfully loaded model: {model_id}")
     return model, tokenizer
 

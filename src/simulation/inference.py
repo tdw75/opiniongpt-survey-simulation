@@ -1,5 +1,6 @@
 from typing import Any
 
+import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 
@@ -54,7 +55,7 @@ def simulate_single_respondent(
 
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": number},
+            {"role": "user", "content": question},
         ]
         response = simulate_response_single_question(
             model, tokenizer, messages, hyperparams
@@ -72,28 +73,40 @@ def simulate_response_single_question(
     messages: list[dict[str, str]],
     hyperparams: dict[str, Any] = None,
 ) -> str:
+    """
+    function that actually calls the LLM
+    """
     # todo: parametrize active adapter (or outside of function)
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
     inputs = tokenizer.apply_chat_template(
-        messages, tokenize=True, return_dict=True, return_tensors="pt"
+        messages,
+        tokenize=True,
+        return_tensors="pt",
+        padding=True,
+        add_generation_prompt=True,
+        return_dict=True,
     )
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
     print("=" * 10, "INPUT", "=" * 10)
     # inputs = tokenizer(input_text, return_tensors="pt").input_ids.to(model.device)
     # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
-    input_len = len(inputs)
+    input_length = inputs["input_ids"].shape[-1]
 
-    # todo: inject hyperparameters/config
-    generation_kwargs = dict(
-        input_ids=inputs["input_ids"],
-        attention_mask=inputs["attention_mask"],
-        max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
-        min_new_tokens=4,
-        no_repeat_ngram_size=3,
-        do_sample=True,
-        temperature=1,
-    )
+    with torch.no_grad():
+        # todo: inject hyperparameters/config
+        generation_kwargs = dict(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs["attention_mask"],
+            max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
+            min_new_tokens=4,
+            no_repeat_ngram_size=3,
+            do_sample=True,
+            temperature=1,
+        )
     if hyperparams:
         generation_kwargs.update(hyperparams)
 
