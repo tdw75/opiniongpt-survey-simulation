@@ -91,9 +91,6 @@ def simulate_response_single_question(
         return_dict=True,
     )
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
-    print("=" * 10, "INPUT", "=" * 10)
-    # inputs = tokenizer(input_text, return_tensors="pt").input_ids.to(model.device)
-    # todo: change to len of input ids not input object, check if padded - only want length of valid tokens
     input_length = inputs["input_ids"].shape[-1]
 
     with torch.no_grad():
@@ -112,10 +109,7 @@ def simulate_response_single_question(
 
     output = model.generate(**generation_kwargs)
     # output = output[input_len:]  # todo: deactivated for debugging
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
-    # todo: remove input with split instead of using length? which is more expensive
-    print("-" * 10, "RESPONSE", "-" * 10)
-    print(response)
+    response = tokenizer.decode(output[0][input_length:], skip_special_tokens=True)
     # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
 
@@ -173,8 +167,13 @@ def simulate_set_of_responses_single_question(
 
     responses = []
     for i in range(n):
-        responses.append(
-            simulate_response_single_question(model, tokenizer, messages, hyperparams)
+        print("=" * 10, "INPUT", "=" * 10)
+        print(messages)
+        response = simulate_response_single_question(
+            model, tokenizer, messages, hyperparams
         )
+        responses.append(response)
+        print("-" * 10, "RESPONSE", "-" * 10)
+        print(response)
 
     return responses
