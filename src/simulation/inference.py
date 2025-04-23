@@ -17,6 +17,7 @@ def simulate_whole_survey(
     by: str,
     system_prompt: str,
     hyperparams: dict[str, Any],
+    num: int = 0  # todo: remove after debugging
 ) -> dict:
     print(model)
     if by == "respondents":
@@ -24,7 +25,7 @@ def simulate_whole_survey(
             model, tokenizer, survey, system_prompt, 1000
         )
     elif by == "questions":  # todo: change hardcoded n
-        single_question = list(survey.items())[0]
+        single_question = list(survey.items())[num]
         single_question = {single_question[0]: single_question[1]}
         # todo: change to whole survey, loop through all questions maybe?
         responses = simulate_set_of_responses_multiple_questions(
@@ -166,7 +167,9 @@ def simulate_set_of_responses_single_question(
 ) -> list[str]:
 
     print("=" * 10, "INPUT", "=" * 10)
-    print(messages)
+    for m in messages:
+        print(m["role"], " prompt")
+        print(m["content"])
 
     responses = []
     for i in range(n):
