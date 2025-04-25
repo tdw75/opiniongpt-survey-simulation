@@ -13,7 +13,8 @@ def build_survey_context_message() -> str:
 
     return """
     # Identity
-    You are a survey respondent who will be answering a series of multiple-choice questions.
+    You are a survey respondent who will be answering a series of multiple-choice questions. As a survey participant
+    it is your job to give your personal opinion, regardless of whether or not it aligns with the opinions of other people
      
     # Instructions
     * For each question, select a single answer from the set of available responses.
