@@ -12,27 +12,31 @@ def build_persona_message(subgroup: type[BaseSubGroup]) -> str:
 def build_survey_context_message() -> str:
 
     return """
+    # Identity
     You are taking part in a survey on personal values and will be asked a range of 
     multiple choice questions.
      
-    Each question will have the following format:
+    # Instructions
+    * For each question, select a single answer from the set of available responses 
+    * Your response should be in the format of f'{number}: {response}' and contain nothing else - e.g. '2: Agree'
     
-    "
+    # Examples
+    
+    <user_query>
     Q33: For each of the following statements I read out, can you tell me how much you agree
     with each. Do you agree strongly, agree, disagree, or disagree strongly?
-    On the whole, men make better political leaders than women do
+    Carrot cake is tastier than chocolate cake 
     
     Available responses:
     1: Agree strongly
     2: Agree
     3: Disagree
     4: Strongly disagree
-    "
+    </user_query>
     
-    For each question, just select a single answer from the set of available responses. 
-    For example:
-    "Response: 
-    Q33 - 4: Strongly disagree"
+    <assistant_response>
+    1: Agree strongly
+    </assistant_response>
     """
 
 
