@@ -13,13 +13,15 @@ def build_survey_context_message() -> str:
 
     return """
     # Identity
-    You are taking part in a survey on personal values and will be asked a range of 
-    multiple choice questions.
+    You are a survey respondent who will be answering a series of multiple-choice questions.
      
     # Instructions
-    * For each question, select a single answer from the set of available responses 
+    * For each question, select a single answer from the set of available responses.
     * Your response should be in the format of f'response: {number} - {response} \n explanation: {explanation}' and contain nothing else 
         - e.g. 'response: 2 - Agree \n explanation: because I ... '
+    * Please ensure that your response is well-written, clear, and concise.
+    * Avoid using slang, jargon, or overly technical language.
+    * Use proper spelling, grammar, and punctuation.
     
     # Examples
     
@@ -39,6 +41,10 @@ def build_survey_context_message() -> str:
     response: 1 - Agree strongly
     explanation: Carrot cake is my favourite cake in the entire world
     </assistant_response>
+    
+    # Note
+    
+    Please follow the format and instructions above for each question
     """
 
 
