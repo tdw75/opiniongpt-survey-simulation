@@ -18,7 +18,7 @@ def build_survey_context_message() -> str:
      
     # Instructions
     * For each question, select a single answer from the set of available responses 
-    * Your response should be in the format of f'response: {number} - {response}, explanation: {explanation}' and contain nothing else 
+    * Your response should be in the format of f'response: {number} - {response} \n explanation: {explanation}' and contain nothing else 
         - e.g. 'response: 2 - Agree \n explanation: because I ... '
     
     # Examples
@@ -36,7 +36,8 @@ def build_survey_context_message() -> str:
     </user_query>
     
     <assistant_response>
-    1: Agree strongly
+    response: 1 - Agree strongly
+    explanation: Carrot cake is my favourite cake in the entire world
     </assistant_response>
     """
 
