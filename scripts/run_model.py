@@ -14,8 +14,9 @@ from src.simulation.models import load_model, MODEL_DIRECTORY
 from src.simulation.utils import (
     huggingface_login,
     load_survey,
-    save_survey,
+    save_results,
     generate_run_id,
+    get_single_question,
 )
 
 
@@ -47,11 +48,13 @@ def main(
             "model_type": "OpinionGPT" if is_lora else "instruct",
             "system_prompt": system_prompt,
             "by": by,
+            "run_id": (run_id := generate_run_id(base_model_name)),
             **kwargs,
         },
+        "questions": survey_questions,
         "respondents": respondents,
     }
-    save_survey(survey_run, directory, run_id=generate_run_id(base_model_name))
+    save_results(survey_run, directory, run_id)
 
 
 if __name__ == "__main__":
