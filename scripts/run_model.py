@@ -43,7 +43,7 @@ def main(
         survey_questions, question_num
     )  # todo: delete after debugging
     system_prompt = build_survey_context_message()
-    respondents = simulate_whole_survey(
+    responses = simulate_whole_survey(
         model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs
     )
     survey_run = {  # todo: add rest of metadata
@@ -56,7 +56,7 @@ def main(
             **kwargs,
         },
         "questions": survey_questions,
-        "respondents": respondents,
+        "responses": responses,
     }
     print_results(survey_run)
     save_results(survey_run, directory, run_id)
