@@ -75,4 +75,5 @@ def change_persona(model, target_persona: str):
 MODEL_DIRECTORY = {
     "phi": "unsloth/Phi-3-mini-4k-instruct",
     "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
+    "phi4": "unsloth/Phi-4-mini-instruct"
 }
