@@ -36,7 +36,10 @@ def load_survey(directory: str, file_name: str, question_format: str) -> dict[st
 
 
 def save_results(simulated_survey: dict[str, dict], directory: str, run_id: str):
-    with open(os.path.join(directory, f"results/{run_id}.json"), "w") as f:
+    results_directory = os.path.join(directory, "results")
+    if not os.path.exists(results_directory):
+        os.makedirs(results_directory)
+    with open(os.path.join(results_directory, f"{run_id}.json"), "w") as f:
         json.dump(simulated_survey, f)
         print("Successfully saved simulated responses!")
 
