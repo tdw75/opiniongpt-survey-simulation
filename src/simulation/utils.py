@@ -64,6 +64,6 @@ def print_results(results: dict[str, dict]):
         print(f"{k}: {v}")
     print("=" * 20, "RESULTS", "=" * 20)
     for num, question in results["questions"].items():
-        print(f"{num}: {question}")
+        print(f"{question}")
         for i, response in enumerate(results["responses"][num]):
             print(f"* {i}. {response}")

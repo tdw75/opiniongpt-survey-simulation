@@ -50,6 +50,7 @@ def main(
         "metadata": {
             "model_id": MODEL_DIRECTORY.get(base_model_name, base_model_name),
             "model_type": "OpinionGPT" if is_lora else "instruct",
+            "subgroup": subgroup if is_lora else "none",  # todo: update after adding persona prompting
             "system_prompt": system_prompt,
             "by": by,
             "run_id": (run_id := generate_run_id(base_model_name)),
