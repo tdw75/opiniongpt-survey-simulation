@@ -65,8 +65,8 @@ def load_base(model_id: str) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     model_id = MODEL_DIRECTORY.get(model_id, model_id)
     model = AutoModelForCausalLM.from_pretrained(model_id)
     tokenizer = AutoTokenizer.from_pretrained(model_id, padding_side="left")
-    if is_phi_model(model_id):
-        tokenizer.chat_template = PHI_TOKENIZER_FORMAT
+    # if is_phi_model(model_id):
+    #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT
     print(f"Successfully loaded model: {model_id}")
     return model, tokenizer
 
