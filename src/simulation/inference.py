@@ -86,9 +86,10 @@ def simulate_response_single_question(
         messages,
         tokenize=True,
         return_tensors="pt",
-        padding=True,
+        # padding=True,
         add_generation_prompt=True,
         return_dict=True,
+        # padding_side="left"
     )
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
     input_length = inputs["input_ids"].shape[-1]
