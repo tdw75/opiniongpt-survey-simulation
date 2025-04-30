@@ -38,10 +38,10 @@ def main(
     print(model)
 
     survey_questions = load_survey(directory, filename, question_format)
-    survey_questions = get_single_question(survey_questions)  # todo: delete after debugging
+    survey_questions = get_single_question(survey_questions, question_num)  # todo: delete after debugging
     system_prompt = build_survey_context_message()
     respondents = simulate_whole_survey(
-        model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs, num=question_num
+        model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs
     )
     survey_run = {  # todo: add rest of metadata
         "metadata": {
