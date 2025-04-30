@@ -45,7 +45,7 @@ def main(
     )
     survey_run = {  # todo: add rest of metadata
         "metadata": {
-            "model_id": MODEL_DIRECTORY[base_model_name],
+            "model_id": MODEL_DIRECTORY.get(base_model_name, base_model_name),
             "model_type": "OpinionGPT" if is_lora else "instruct",
             "system_prompt": system_prompt,
             "by": by,
