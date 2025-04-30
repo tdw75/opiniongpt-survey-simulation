@@ -29,7 +29,7 @@ def build_survey_context_message() -> str:
     4: Strongly disagree
     "
     
-    For each question, just select a single answer from the set of available responses. 
+    For each question, just select a single answer from the set of available responses exactly as given. 
     For example:
     Q33 - 4: Strongly disagree"
     """
