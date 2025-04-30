@@ -1,3 +1,5 @@
+import re
+
 from peft import PeftModel
 from transformers import (
     AutoModelForCausalLM,
@@ -63,6 +65,8 @@ def load_base(model_id: str) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     model_id = MODEL_DIRECTORY.get(model_id, model_id)
     model = AutoModelForCausalLM.from_pretrained(model_id)
     tokenizer = AutoTokenizer.from_pretrained(model_id, padding_side="left")
+    if is_phi_model(model_id):
+        tokenizer.chat_template = PHI_TOKENIZER_FORMAT
     print(f"Successfully loaded model: {model_id}")
     return model, tokenizer
 
@@ -72,7 +76,28 @@ def change_persona(model, target_persona: str):
     return model
 
 
+def is_phi_model(model_id: str) -> bool:
+    return bool(re.match(r"^.+/phi.*", model_id, re.IGNORECASE))
+
+
+def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
+    return dict(
+        max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
+        min_new_tokens=4,
+        no_repeat_ngram_size=3,
+        do_sample=True,
+        top_p=0.9,
+        pad_token_id=tokenizer.eos_token_id,
+        temperature=0.2,
+    )
+
+
 MODEL_DIRECTORY = {
     "phi": "unsloth/Phi-3-mini-4k-instruct",
     "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
 }
+
+
+PHI_TOKENIZER_FORMAT = """
+{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}
+"""
