@@ -1,0 +1,5 @@
+{
+  "metadata": {"model_id":  "phi-3", "run_id": "20250429", "system_prompt": "you are a survey participant"},
+  "questions": {"Q1":  "I believe in Santa Claus", "Q2":  "I believe in the Tooth Fairy"},
+  "responses": {"Q1":  ["1 - agree", "1 - agree"], "Q2":  ["2 - disagree", "1 - agree"]}
+}

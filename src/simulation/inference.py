@@ -17,19 +17,16 @@ def simulate_whole_survey(
     by: str,
     system_prompt: str,
     hyperparams: dict[str, Any],
-    num: int = 0  # todo: remove after debugging
+    num: int = 10  # todo: remove after debugging
 ) -> dict:
     print(model)
     if by == "respondents":
         responses = simulate_group_of_respondents(
-            model, tokenizer, survey, system_prompt, 1000
+            model, tokenizer, survey, system_prompt, num
         )
     elif by == "questions":  # todo: change hardcoded n
-        single_question = list(survey.items())[num]
-        single_question = {single_question[0]: single_question[1]}
-        # todo: change to whole survey, loop through all questions maybe?
         responses = simulate_set_of_responses_multiple_questions(
-            model, tokenizer, single_question, system_prompt, hyperparams, 10
+            model, tokenizer, survey, system_prompt, hyperparams, num
         )
     else:
         raise ValueError  # todo: add error message
@@ -109,7 +106,6 @@ def simulate_response_single_question(
         generation_kwargs.update(hyperparams)
 
     output = model.generate(**generation_kwargs)
-    # output = output[input_len:]  # todo: deactivated for debugging
     response = tokenizer.decode(output[0][input_length:], skip_special_tokens=True)
     # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
