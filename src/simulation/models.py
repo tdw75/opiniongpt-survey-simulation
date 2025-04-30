@@ -82,12 +82,11 @@ def is_phi_model(model_id: str) -> bool:
 
 def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
     return dict(
-        max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
+        max_new_tokens=8,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
         min_new_tokens=4,
         no_repeat_ngram_size=3,
         do_sample=True,
         top_p=0.9,
-        pad_token_id=tokenizer.eos_token_id,
         temperature=0.2,
     )
 
