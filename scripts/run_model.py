@@ -17,6 +17,7 @@ from src.simulation.utils import (
     save_results,
     generate_run_id,
     get_single_question,
+    print_results,
 )
 
 
@@ -38,7 +39,9 @@ def main(
     print(model)
 
     survey_questions = load_survey(directory, filename, question_format)
-    survey_questions = get_single_question(survey_questions, question_num)  # todo: delete after debugging
+    survey_questions = get_single_question(
+        survey_questions, question_num
+    )  # todo: delete after debugging
     system_prompt = build_survey_context_message()
     respondents = simulate_whole_survey(
         model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs
@@ -55,6 +58,7 @@ def main(
         "questions": survey_questions,
         "respondents": respondents,
     }
+    print_results(survey_run)
     save_results(survey_run, directory, run_id)
 
 
