@@ -3,7 +3,7 @@ from typing import Any
 import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from models import default_hyperparams
+from src.simulation.models import default_hyperparams
 
 
 # todo: model config
