@@ -121,8 +121,8 @@ def simulate_set_of_responses_multiple_questions(
 
     for number, question in survey.items():  # todo: add tqdm
         messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": question},
+            # {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"{system_prompt}\n{question}"},
         ]
         responses[number] = simulate_set_of_responses_single_question(
             model, tokenizer, messages, hyperparams, n
