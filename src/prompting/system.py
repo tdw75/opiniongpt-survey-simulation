@@ -31,7 +31,6 @@ def build_survey_context_message() -> str:
     
     For each question, just select a single answer from the set of available responses. 
     For example:
-    "Response: 
     Q33 - 4: Strongly disagree"
     """
 
