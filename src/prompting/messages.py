@@ -1,3 +1,5 @@
+from typing import re
+
 import pandas as pd
 
 from src.data.variables import get_valid_responses, responses_to_map
@@ -68,6 +70,8 @@ def build_user_prompt_message_grouped(
 {format_subtopics(numbers, subtopics)}
 
 {format_responses(response_set)}
+
+Response:
 """
 
 
@@ -78,6 +82,8 @@ def build_user_prompt_message_individual(
 {number}: {item}
 
 {format_responses(response_set)}
+
+Response:
 """
 
 
@@ -86,7 +92,7 @@ def format_responses(response_set: dict[int, str]) -> str:
     message = """The possible responses are:"""
     for key, response in response_set.items():
         message += f"\n{key}: {response}"
-    message += "\n\nIf you are unsure you can answer with '-1: Don't know'"
+    # message += "\n\nIf you are unsure you can answer with '-1: Don't know'"
     return message
 
 

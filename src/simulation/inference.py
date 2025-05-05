@@ -3,6 +3,8 @@ from typing import Any
 import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
+from src.simulation.models import default_hyperparams
+
 
 # todo: model config
 # - model_name
@@ -17,7 +19,7 @@ def simulate_whole_survey(
     by: str,
     system_prompt: str,
     hyperparams: dict[str, Any],
-    num: int = 10  # todo: remove after debugging
+    num: int = 10,  # todo: remove after debugging
 ) -> dict:
     print(model)
     if by == "respondents":
@@ -39,7 +41,7 @@ def simulate_single_respondent(
     tokenizer: PreTrainedTokenizer,
     survey: dict[str, str],
     system_prompt: str,
-    hyperparams: dict,
+    hyperparams: dict = None,
 ) -> dict[str, str]:
 
     # todo: function for both OpinionGPT and persona prompting
@@ -84,30 +86,26 @@ def simulate_response_single_question(
         messages,
         tokenize=True,
         return_tensors="pt",
-        padding=True,
+        # padding=True,
         add_generation_prompt=True,
         return_dict=True,
+        # padding_side="left"
     )
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
     input_length = inputs["input_ids"].shape[-1]
 
-    with torch.no_grad():
-        # todo: inject hyperparameters/config
-        generation_kwargs = dict(
-            input_ids=inputs["input_ids"],
-            attention_mask=inputs["attention_mask"],
-            max_new_tokens=50,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
-            min_new_tokens=4,
-            no_repeat_ngram_size=3,
-            do_sample=True,
-            temperature=1,
-        )
-    if hyperparams:
-        generation_kwargs.update(hyperparams)
+    # todo: inject hyperparameters/config
+    generation_kwargs = dict(
+        input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
+    )
 
-    output = model.generate(**generation_kwargs)
-    response = tokenizer.decode(output[0][input_length:], skip_special_tokens=True)
-    # todo: extract numeric keys for responses (e.g. -1: don't know)
+    hyperparams = {**default_hyperparams(tokenizer), **(hyperparams or {})}
+    generation_kwargs.update(hyperparams)
+
+    with torch.no_grad():
+        output = model.generate(**generation_kwargs)
+        response = tokenizer.decode(output[0][input_length:], skip_special_tokens=True)
+        # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
 
 
@@ -124,8 +122,8 @@ def simulate_set_of_responses_multiple_questions(
 
     for number, question in survey.items():  # todo: add tqdm
         messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": question},
+            # {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"{system_prompt}\n{question}"},
         ]
         responses[number] = simulate_set_of_responses_single_question(
             model, tokenizer, messages, hyperparams, n
@@ -148,7 +146,7 @@ def simulate_group_of_respondents(
     respondents = {}
     for i in range(n_respondents):  # todo: add tqdm
         respondents[i] = simulate_single_respondent(
-            model, tokenizer, survey, system_prompt
+            model, tokenizer, survey, system_prompt,
         )
 
     return respondents

@@ -20,7 +20,7 @@ def build_survey_context_message() -> str:
     "
     Q33: For each of the following statements I read out, can you tell me how much you agree
     with each. Do you agree strongly, agree, disagree, or disagree strongly?
-    On the whole, men make better political leaders than women do
+    Carrot cake is tastier than chocolate cake
     
     Available responses:
     1: Agree strongly
@@ -29,10 +29,11 @@ def build_survey_context_message() -> str:
     4: Strongly disagree
     "
     
-    For each question, just select a single answer from the set of available responses. 
+    For each question, just select a single answer from the set of available responses.
+    Please copy the answer exactly as written in the 'Available responses' list above. 
+    Do not change spelling or capitalisation. 
     For example:
-    "Response: 
-    Q33 - 4: Strongly disagree"
+    4: Agree strongly"
     """
 
 

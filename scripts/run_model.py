@@ -17,6 +17,7 @@ from src.simulation.utils import (
     save_results,
     generate_run_id,
     get_single_question,
+    print_results,
 )
 
 
@@ -38,23 +39,27 @@ def main(
     print(model)
 
     survey_questions = load_survey(directory, filename, question_format)
-    survey_questions = get_single_question(survey_questions)  # todo: delete after debugging
+    survey_questions = get_single_question(
+        survey_questions, question_num
+    )  # todo: delete after debugging
     system_prompt = build_survey_context_message()
-    respondents = simulate_whole_survey(
-        model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs, num=question_num
+    responses = simulate_whole_survey(
+        model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs
     )
     survey_run = {  # todo: add rest of metadata
         "metadata": {
-            "model_id": MODEL_DIRECTORY[base_model_name],
+            "model_id": MODEL_DIRECTORY.get(base_model_name, base_model_name),
             "model_type": "OpinionGPT" if is_lora else "instruct",
+            "subgroup": subgroup if is_lora else "none",  # todo: update after adding persona prompting
             "system_prompt": system_prompt,
             "by": by,
             "run_id": (run_id := generate_run_id(base_model_name)),
             **kwargs,
         },
         "questions": survey_questions,
-        "respondents": respondents,
+        "responses": responses,
     }
+    print_results(survey_run)
     save_results(survey_run, directory, run_id)
 
 
