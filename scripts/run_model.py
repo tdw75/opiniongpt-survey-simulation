@@ -18,6 +18,7 @@ from src.simulation.utils import (
     generate_run_id,
     get_single_question,
     print_results,
+    get_run_name,
 )
 
 
@@ -51,7 +52,8 @@ def main(
         **kwargs,
     )
     print_results(survey_run)
-    save_results(survey_run, directory, run_id)
+    run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
+    save_results({run_name: survey_run}, directory, run_id)
 
 
 def run_single(

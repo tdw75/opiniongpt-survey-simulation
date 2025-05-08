@@ -70,3 +70,7 @@ def print_results(results: dict[str, dict]):
         print(f"{question}")
         for i, response in enumerate(results["responses"][num]):
             print(f"* {i}. {response}")
+
+def get_run_name(base_model_name: str, is_lora: bool, subgroup: str | None) -> str:
+    model_type = "opinion-gpt" if is_lora else "instruct"
+    return f"{base_model_name}-{model_type}-{subgroup or 'general'}"
