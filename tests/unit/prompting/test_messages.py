@@ -3,11 +3,15 @@ import pickle
 import pandas as pd
 import os
 import pytest
+
+from src.simulation.models import ModelConfig
 from src.prompting.messages import (
     build_user_prompt_message_grouped,
     format_subtopics,
     extract_user_prompts_from_survey_grouped,
-    build_user_prompt_message_individual, extract_user_prompts_from_survey_individual,
+    build_user_prompt_message_individual,
+    extract_user_prompts_from_survey_individual,
+    format_messages,
 )
 
 
@@ -46,7 +50,9 @@ def test_build_user_prompt_message_grouped(expected_messages_grouped):
 
 
 @pytest.mark.parametrize("idx, number", [(0, "Q1"), (3, "Q4")])
-def test_build_user_prompt_message_individual(expected_messages_individual, idx, number):
+def test_build_user_prompt_message_individual(
+    expected_messages_individual, idx, number
+):
     survey = pd.read_csv("test_data_files/sample_variables.csv")
     question = survey.loc[idx]
     responses = {
@@ -80,6 +86,16 @@ Q6: Religion"""
     assert message == expected_message
 
 
+def test_format_messages():
+
+    system_prompt = "this is the system prompt"
+    user_prompt = "what is your name?"
+    formatted = format_messages(system_prompt, user_prompt, ModelConfig(base_model_name="phi"))
+    assert formatted == [
+        {"role": "user", "content": "this is the system prompt\nwhat is your name?"}
+    ]
+
+
 def load_page(num: int, directory: str = "test_data_files/pages"):
     with open(os.path.join(directory, f"page{num}.pkl"), "rb") as f:
         return pickle.load(f)
@@ -105,7 +121,7 @@ The possible responses are:
 3: Not very important
 4: Not at all important
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
     # todo: wording of neighbours question doesn't really make sense, might need to change manually
     q22_q26 = """
@@ -122,7 +138,7 @@ The possible responses are:
 1: Mentioned
 2: Not mentioned
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
     q27 = """
 For each of the following statements I read out, can you tell me how much you agree 
@@ -138,7 +154,7 @@ The possible responses are:
 3: Disagree
 4: Strongly disagree
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
     return {"Q1-Q6": q1_q6, "Q22-Q26": q22_q26, "Q27": q27}
 
@@ -156,7 +172,7 @@ The possible responses are:
 3: Not very important
 4: Not at all important
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
     q4 = """
 Q4: For each of the following aspects, indicate how important it is in your life. Would you 
@@ -169,7 +185,7 @@ The possible responses are:
 3: Not very important
 4: Not at all important
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
     q23 = """
 Q23: On this list are various groups of people. Could you please mention any that you would 
@@ -180,7 +196,7 @@ The possible responses are:
 1: Mentioned
 2: Not mentioned
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
 
     q27 = """
@@ -194,7 +210,7 @@ The possible responses are:
 3: Disagree
 4: Strongly disagree
 
-If you are unsure you can answer with '-1: Don't know'
+Response:
 """
 
     return {"Q1": q1, "Q4": q4, "Q23": q23, "Q27": q27}

@@ -1,7 +1,6 @@
-from typing import re
-
 import pandas as pd
 
+from src.simulation.models import ModelConfig
 from src.data.variables import get_valid_responses, responses_to_map
 from ast import literal_eval
 
@@ -48,7 +47,9 @@ def extract_user_prompts_from_survey_individual(
     prompts = {}
 
     for idx, question in survey_df.iterrows():
-        subtopic = f"\n{question['subtopic']}" if not pd.isnull(question["group"]) else ""
+        subtopic = (
+            f"\n{question['subtopic']}" if not pd.isnull(question["group"]) else ""
+        )
         item = f"{question['item_stem']}{subtopic}"
         responses = literal_eval(question["responses"])
         prompts[question["number"]] = build_user_prompt_message_individual(
@@ -92,7 +93,6 @@ def format_responses(response_set: dict[int, str]) -> str:
     message = """The possible responses are:"""
     for key, response in response_set.items():
         message += f"\n{key}: {response}"
-    # message += "\n\nIf you are unsure you can answer with '-1: Don't know'"
     return message
 
 
@@ -104,3 +104,15 @@ def format_subtopics(numbers: list[str], subtopics: list[str] | None) -> str:
         for n, s in zip(numbers, subtopics):
             message += f"\n{n}: {s}"
         return message
+
+
+def format_messages(
+    system_prompt: str, user_prompt: str, model_config: ModelConfig
+) -> list[dict[str, str]]:
+    if model_config.is_phi_model:
+        return [{"role": "user", "content": f"{system_prompt}\n{user_prompt}"}]
+    else:
+        return [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
