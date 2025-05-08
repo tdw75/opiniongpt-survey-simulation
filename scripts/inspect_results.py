@@ -12,7 +12,7 @@ from src.simulation.utils import get_nth_newest_file, print_results
 
 def main(run_id: str | int = "0", directory: str = "data_files"):
 
-    if run_id.isdigit() or isinstance(run_id, int):
+    if str(run_id).isdigit():
         file_name = get_nth_newest_file(int(run_id), directory)
     else:
         file_name = os.path.join(directory, run_id)
