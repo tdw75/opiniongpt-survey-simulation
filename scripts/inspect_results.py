@@ -1,7 +1,11 @@
 import json
 import os
+import sys
 
 import fire
+
+sys.path.append(os.getcwd())
+
 
 from src.simulation.utils import get_nth_newest_file, print_results
 
