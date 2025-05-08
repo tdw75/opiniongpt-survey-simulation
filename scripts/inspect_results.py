@@ -10,7 +10,7 @@ sys.path.append(os.getcwd())
 from src.simulation.utils import get_nth_newest_file, print_results
 
 
-def main(run_id: str | int, directory: str):
+def main(run_id: str | int = 0, directory: str = "data_files"):
 
     if isinstance(run_id, str):
         file_name = run_id
