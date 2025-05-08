@@ -8,9 +8,9 @@ print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
-from src.prompting.system import build_survey_context_message
+from src.prompting.system import build_survey_context_message, build_persona_message
 from src.simulation.inference import simulate_whole_survey
-from src.simulation.models import load_model, MODEL_DIRECTORY
+from src.simulation.models import load_model, MODEL_DIRECTORY, ModelConfig
 from src.simulation.utils import (
     huggingface_login,
     load_survey,
@@ -18,6 +18,7 @@ from src.simulation.utils import (
     generate_run_id,
     get_single_question,
     print_results,
+    get_run_name,
 )
 
 
@@ -32,10 +33,39 @@ def main(
     question_num: int = 0,
     **kwargs,
 ):
+    config = ModelConfig(
+        base_model_name=base_model_name,
+        subgroup=subgroup,
+        is_lora=is_lora,
+        is_persona=False,  # todo: parametrise
+        device=device,
+        aggregation_by="questions",  # todo: parametrise
+    )
+    run_id = generate_run_id(base_model_name)
+    survey_run = run_single(
+        config,
+        directory,
+        run_id,
+        filename,
+        question_format,
+        question_num,
+        **kwargs,
+    )
+    print_results(survey_run)
+    run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
+    save_results({run_name: survey_run}, directory, run_id)
 
-    by = "questions"  # todo: parametrise
-    # todo: separate model loading from inference (maybe loop through subgroups)
-    model, tokenizer = load_model(base_model_name, subgroup, is_lora, device)
+
+def run_single(
+    config: ModelConfig,
+    directory: str,
+    run_id: str,
+    filename: str = "variables.csv",
+    question_format: str = "individual",
+    question_num: int = 0,
+    **kwargs,
+):
+    model, tokenizer = load_model(config)
     print(model)
 
     survey_questions = load_survey(directory, filename, question_format)
@@ -44,23 +74,23 @@ def main(
     )  # todo: delete after debugging
     system_prompt = build_survey_context_message()
     responses = simulate_whole_survey(
-        model, tokenizer, survey_questions, by, system_prompt, hyperparams=kwargs
+        model, tokenizer, config, survey_questions, system_prompt
     )
-    survey_run = {  # todo: add rest of metadata
+    return {  # todo: add rest of metadata, unpack all config values
         "metadata": {
-            "model_id": MODEL_DIRECTORY.get(base_model_name, base_model_name),
-            "model_type": "OpinionGPT" if is_lora else "instruct",
-            "subgroup": subgroup if is_lora else "none",  # todo: update after adding persona prompting
+            "model_id": config.model_id,
+            "model_type": config.model_type,
+            "subgroup": (
+                config.subgroup if config.is_lora else "none"
+            ),  # todo: update after adding persona prompting
             "system_prompt": system_prompt,
-            "by": by,
-            "run_id": (run_id := generate_run_id(base_model_name)),
+            "aggregation_by": config.aggregation_by,
+            "run_id": run_id,
             **kwargs,
         },
         "questions": survey_questions,
         "responses": responses,
     }
-    print_results(survey_run)
-    save_results(survey_run, directory, run_id)
 
 
 if __name__ == "__main__":

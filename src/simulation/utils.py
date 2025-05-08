@@ -24,7 +24,7 @@ def huggingface_login() -> None:
 
 
 def load_survey(directory: str, file_name: str, question_format: str) -> dict[str, str]:
-    survey_df = pd.read_csv(os.path.join(directory, file_name))
+    survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
     if question_format == "grouped":
         survey = extract_user_prompts_from_survey_grouped(survey_df)
     elif question_format == "individual":
@@ -70,3 +70,7 @@ def print_results(results: dict[str, dict]):
         print(f"{question}")
         for i, response in enumerate(results["responses"][num]):
             print(f"* {i}. {response}")
+
+def get_run_name(base_model_name: str, is_lora: bool, subgroup: str | None) -> str:
+    model_type = "opinion-gpt" if is_lora else "instruct"
+    return f"{base_model_name}-{model_type}-{subgroup or 'general'}"

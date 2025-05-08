@@ -1,6 +1,8 @@
 import re
+from typing import Literal, Any
 
 from peft import PeftModel
+from pydantic import BaseModel
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -24,30 +26,74 @@ bias_to_subreddit = {
 adapters = list(bias_to_subreddit.keys())
 
 
+MODEL_DIRECTORY = {
+    "phi": "unsloth/Phi-3-mini-4k-instruct",
+    "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
+}
+
+
+class ModelConfig(BaseModel):
+    base_model_name: Literal[tuple(MODEL_DIRECTORY.keys())] = "phi"
+    subgroup: Literal[tuple(adapters + [None])] = None
+    is_lora: bool = False
+    is_persona: bool = False
+    device: str = "cuda:2"
+    aggregation_by: Literal["questions", "respondent"] = "questions"
+    hyperparams: dict = {}
+
+    def model_post_init(self, context: Any, /) -> None:
+        default_hyperparams: dict[str, Any] = dict(
+            min_new_tokens=4,
+            max_new_tokens=16,
+            do_sample=True,
+            top_p=0.9,
+            temperature=0.8,
+        )
+        self.hyperparams = {**default_hyperparams, **self.hyperparams}
+
+    @property
+    def model_type(self) -> str:
+        return "OpinionGPT" if self.is_lora else "Instruct"
+
+    @property
+    def model_id(self) -> str:
+        return MODEL_DIRECTORY.get(self.base_model_name, self.base_model_name)
+
+    @property
+    def is_phi_model(self):
+        return bool(re.match(r"^.+/phi.*", self.model_id, re.IGNORECASE))
+
+    def change_subgroup(self, subgroup: str):
+        if subgroup in adapters + [None]:
+            self.subgroup = subgroup
+        else:
+            raise ValueError(f"Invalid subgroup: {subgroup}")
+
+
 def load_model(
-    base_model_name, subgroup: str, is_lora: bool, device: str = "cuda:2"
+    config: ModelConfig,
 ) -> tuple[PeftModel | PreTrainedModel, PreTrainedTokenizer]:
-    model, tokenizer = load_base(base_model_name)
-    if is_lora:
-        model = load_opinion_gpt(model, device)
-        return change_adapter(model, subgroup), tokenizer
+    model, tokenizer = load_base(config)
+    if config.is_lora:
+        model = load_opinion_gpt(model, config)
+        return change_adapter(model, config.subgroup), tokenizer
     else:
-        model = model.to(device)
+        model = model.to(config.device)
         # todo: implement persona prompting
         print("No LoRA adapters used")
-        return change_persona(model, subgroup), tokenizer
+        return change_persona(model, config.subgroup), tokenizer
 
 
-def load_opinion_gpt(model: PreTrainedModel, device: str = "cuda:2") -> PeftModel:
+def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
 
     lora_id = "HU-Berlin-ML-Internal/opiniongpt-phi3-{adapter}"
     default_adapter = adapters[0]
 
     model = PeftModel.from_pretrained(
         model, lora_id.format(adapter=default_adapter), adapter_name=default_adapter
-    ).to(device)
+    ).to(config.device)
 
-    for adapter in adapters[1:]:  # all adapters loaded and then accessed as needed
+    for adapter in adapters[1:]:  # all adapters loaded to be accessed as needed
         print(f"Loading adapter: {adapter}")
         model.load_adapter(lora_id.format(adapter=adapter), adapter)
 
@@ -61,23 +107,18 @@ def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
     return model
 
 
-def load_base(model_id: str) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
-    model_id = MODEL_DIRECTORY.get(model_id, model_id)
-    model = AutoModelForCausalLM.from_pretrained(model_id)
-    tokenizer = AutoTokenizer.from_pretrained(model_id, padding_side="left")
+def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+    model = AutoModelForCausalLM.from_pretrained(config.model_id)
+    tokenizer = AutoTokenizer.from_pretrained(config.model_id, padding_side="left")
     # if is_phi_model(model_id):
     #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT
-    print(f"Successfully loaded model: {model_id}")
+    print(f"Successfully loaded model: {config.model_id}")
     return model, tokenizer
 
 
 def change_persona(model, target_persona: str):
     # todo: implement changing personas for LLaMa
     return model
-
-
-def is_phi_model(model_id: str) -> bool:
-    return bool(re.match(r"^.+/phi.*", model_id, re.IGNORECASE))
 
 
 def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
@@ -88,12 +129,6 @@ def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
         top_p=0.9,
         temperature=0.8,
     )
-
-
-MODEL_DIRECTORY = {
-    "phi": "unsloth/Phi-3-mini-4k-instruct",
-    "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
-}
 
 
 PHI_TOKENIZER_FORMAT = """
