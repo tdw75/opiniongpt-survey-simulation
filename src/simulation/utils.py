@@ -24,7 +24,7 @@ def huggingface_login() -> None:
 
 
 def load_survey(directory: str, file_name: str, question_format: str) -> dict[str, str]:
-    survey_df = pd.read_csv(os.path.join(directory, file_name))
+    survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
     if question_format == "grouped":
         survey = extract_user_prompts_from_survey_grouped(survey_df)
     elif question_format == "individual":
