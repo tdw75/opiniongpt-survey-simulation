@@ -75,13 +75,10 @@ def load_model(
 ) -> tuple[PeftModel | PreTrainedModel, PreTrainedTokenizer]:
     model, tokenizer = load_base(config)
     if config.is_lora:
-        model = load_opinion_gpt(model, config)
-        return change_adapter(model, config.subgroup), tokenizer
+        return load_opinion_gpt(model, config), tokenizer
     else:
-        model = model.to(config.device)
-        # todo: implement persona prompting
         print("No LoRA adapters used")
-        return change_persona(model, config.subgroup), tokenizer
+        return model.to(config.device), tokenizer
 
 
 def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
@@ -100,13 +97,6 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
     return model
 
 
-def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
-    if model.active_adapter != target_adapter:
-        model.set_adapter(target_adapter)
-        print(f"Changed active adapter to {target_adapter}")
-    return model
-
-
 def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     model = AutoModelForCausalLM.from_pretrained(config.model_id)
     tokenizer = AutoTokenizer.from_pretrained(config.model_id, padding_side="left")
@@ -114,6 +104,20 @@ def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer
     #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT
     print(f"Successfully loaded model: {config.model_id}")
     return model, tokenizer
+
+
+def change_subgroup(model: PreTrainedModel | PeftModel, config: ModelConfig) -> PreTrainedModel | PeftModel:
+    if config.is_lora:
+        model = change_adapter(model, config.subgroup)
+    model = change_persona(model, config.subgroup)  # todo: implement
+    return model
+
+
+def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
+    if model.active_adapter != target_adapter:
+        model.set_adapter(target_adapter)
+        print(f"Changed active adapter to {target_adapter}")
+    return model
 
 
 def change_persona(model, target_persona: str):

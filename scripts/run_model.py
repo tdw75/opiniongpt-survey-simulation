@@ -8,7 +8,7 @@ print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
 from src.simulation.run import run_single
-from src.simulation.models import ModelConfig
+from src.simulation.models import ModelConfig, load_model
 from src.simulation.utils import (
     huggingface_login,
     save_results,
@@ -38,7 +38,10 @@ def main(
         aggregation_by="questions",  # todo: parametrise
     )
     run_id = generate_run_id(base_model_name)
+    model, tokenizer = load_model(config)
     survey_run = run_single(
+        model,
+        tokenizer,
         config,
         directory,
         run_id,

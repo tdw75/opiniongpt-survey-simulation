@@ -1,3 +1,6 @@
+from peft import PeftModel
+from transformers import PreTrainedModel, PreTrainedTokenizer
+
 from src.prompting.system import build_survey_context_message
 from src.simulation.inference import simulate_whole_survey
 from src.simulation.models import ModelConfig, load_model
@@ -5,6 +8,8 @@ from src.simulation.utils import load_survey, get_single_question
 
 
 def run_single(
+    model: PeftModel | PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
     directory: str,
     run_id: str,
@@ -13,7 +18,6 @@ def run_single(
     question_num: int = 0,
     **kwargs,
 ):
-    model, tokenizer = load_model(config)
     print(model)
 
     survey_questions = load_survey(directory, filename, question_format)
