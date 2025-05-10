@@ -1,4 +1,11 @@
+import os
+import sys
+
 import fire
+
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
 
 from src.simulation.models import adapters, ModelConfig
 from src.simulation.run import run_single
