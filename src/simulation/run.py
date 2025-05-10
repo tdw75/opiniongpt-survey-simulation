@@ -1,3 +1,5 @@
+import logging
+
 from peft import PeftModel
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
@@ -18,7 +20,7 @@ def run_single(
     question_num: int = 0,
     **kwargs,
 ):
-    print(model)
+    logging.debug(model)
 
     survey_questions = load_survey(directory, filename, question_format)
     survey_questions = get_single_question(

@@ -11,10 +11,11 @@ from src.simulation.models import adapters, ModelConfig, load_model
 from src.simulation.run import run_single
 from src.simulation.utils import (
     huggingface_login,
-    print_results,
+    print_results_single,
     generate_run_id,
     save_results,
     get_run_name,
+    HEADER_PRINTOUT,
 )
 
 
@@ -52,8 +53,7 @@ def main(
             **kwargs,
         )
     }
-    print("=" * 50, "\n", "-" * 20, run_name, "-" * 20, "\n", "=" * 50)
-    print_results(simulated_surveys[run_name])
+    print_results_single(simulated_surveys[run_name], run_name)
 
     opinion_gpt_config = ModelConfig(
         base_model_name=base_model_name,
@@ -78,8 +78,7 @@ def main(
             question_num,
             **kwargs,
         )
-        print("=" * 50, "\n", "-" * 20, run_name, "-" * 20, "\n", "=" * 50)
-        print_results(simulated_surveys[run_name])
+        print_results_single(simulated_surveys[run_name], run_name)
 
     save_results(simulated_surveys, directory, run_id)
 
