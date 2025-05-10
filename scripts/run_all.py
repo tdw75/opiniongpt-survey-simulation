@@ -1,7 +1,7 @@
 import fire
 
-from scripts.run_model import run_single
 from src.simulation.models import adapters, ModelConfig
+from src.simulation.run import run_single
 from src.simulation.utils import (
     huggingface_login,
     print_results,
@@ -12,8 +12,8 @@ from src.simulation.utils import (
 
 
 def main(
-    base_model_name: str,
-    directory: str,
+    base_model_name: str = "phi",
+    directory: str = "data_files",
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
