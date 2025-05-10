@@ -79,7 +79,7 @@ def print_results_single(results: dict[str, dict], title: str):
             print(f"* {i}. {response}")
 
 
-HEADER_PRINTOUT = "=" * 50 + "\n" + "*" * 5 + "{title}" + "*" * 5 + "\n" + "=" * 50
+HEADER_PRINTOUT = "=" * 50 + "\n" + "*" * 5 + "  {title}  " + "*" * 5 + "\n" + "=" * 50
 SUBHEADER_PRINTOUT = "-" * 20 + "{title}" + "-" * 20
 
 
