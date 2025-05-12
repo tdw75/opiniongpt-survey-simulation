@@ -44,7 +44,7 @@ def simulate_single_respondent(
 
     text_responses = {}
 
-    for number, question in survey.items():
+    for number, question in tqdm(survey.items()):  # todo: add desc
         # todo: add previous_responses to 'assistant' prompt
 
         messages = [
@@ -104,7 +104,7 @@ def simulate_set_of_responses_multiple_questions(
 ):
     responses: dict[str, list[str]] = {}
 
-    for number, question in tqdm(survey.items(), desc=f"{config or 'general'} survey"):
+    for number, question in tqdm(survey.items(), desc=f"{config.subgroup or 'general'} survey"):
         messages = format_messages(system_prompt, question, config)
         responses[number] = simulate_set_of_responses_single_question(
             model, tokenizer, config, messages, number, n
