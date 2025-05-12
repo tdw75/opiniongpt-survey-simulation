@@ -104,9 +104,7 @@ def simulate_set_of_responses_multiple_questions(
 ):
     responses: dict[str, list[str]] = {}
 
-    for number, question in tqdm(
-        survey.items(), desc=f"{config or 'general'} survey"
-    ):
+    for number, question in tqdm(survey.items(), desc=f"{config or 'general'} survey"):
         messages = format_messages(system_prompt, question, config)
         responses[number] = simulate_set_of_responses_single_question(
             model, tokenizer, config, messages, number, n
@@ -146,7 +144,7 @@ def simulate_set_of_responses_single_question(
 ) -> list[str]:
 
     responses = []
-    for i in tqdm(range(n), desc=str(question_num)):
+    for i in tqdm(range(n), desc=str(question_num), leave=False):
 
         response = simulate_response_single_question(model, tokenizer, config, messages)
         responses.append(response)

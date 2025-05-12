@@ -50,7 +50,6 @@ def main(
             **kwargs
         )
     }
-    print_results_single(simulated_surveys[run_name], run_name)
 
     opinion_gpt_config = ModelConfig(
         base_model_name=base_model_name,
@@ -74,7 +73,6 @@ def main(
             question_format,
             **kwargs
         )
-        print_results_single(simulated_surveys[run_name], run_name)
 
     save_results(simulated_surveys, directory, run_id)
 

@@ -13,7 +13,6 @@ from src.simulation.utils import (
     huggingface_login,
     save_results,
     generate_run_id,
-    print_results_single,
     get_run_name,
 )
 
@@ -50,7 +49,6 @@ def main(
         **kwargs
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
-    print_results_single(survey_run, run_name)
     save_results({run_name: survey_run}, directory, run_id)
 
 
