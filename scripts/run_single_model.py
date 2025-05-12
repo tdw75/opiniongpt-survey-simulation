@@ -26,7 +26,6 @@ def main(
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
-    question_num: int = 0,
     **kwargs,
 ):
     config = ModelConfig(
@@ -47,7 +46,6 @@ def main(
         run_id,
         filename,
         question_format,
-        question_num,
         **kwargs,
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)

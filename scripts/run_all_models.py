@@ -25,7 +25,6 @@ def main(
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
-    question_num: int = 0,
     **kwargs,  # LLM hyperparams
 ):
     instruct_config = ModelConfig(
@@ -49,7 +48,6 @@ def main(
             run_id,
             filename,
             question_format,
-            question_num,
             **kwargs,
         )
     }
@@ -75,7 +73,6 @@ def main(
             run_id,
             filename,
             question_format,
-            question_num,
             **kwargs,
         )
         print_results_single(simulated_surveys[run_name], run_name)

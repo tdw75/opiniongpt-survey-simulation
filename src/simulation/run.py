@@ -17,18 +17,14 @@ def run_single(
     run_id: str,
     filename: str = "variables.csv",
     question_format: str = "individual",
-    question_num: int = 0,
     **kwargs,
 ):
     logging.debug(model)
 
     survey_questions = load_survey(directory, filename, question_format)
-    survey_questions = get_single_question(
-        survey_questions, question_num
-    )  # todo: delete after debugging
     system_prompt = build_survey_context_message()
     responses = simulate_whole_survey(
-        model, tokenizer, config, survey_questions, system_prompt
+        model, tokenizer, config, survey_questions, system_prompt, **kwargs
     )
     return {  # todo: add rest of metadata, unpack all config values
         "metadata": {

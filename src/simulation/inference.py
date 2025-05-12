@@ -1,8 +1,13 @@
+import logging
+
 import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from src.prompting.messages import format_messages
 from src.simulation.models import ModelConfig
+
+
+logger = logging.getLogger(__name__)
 
 
 def simulate_whole_survey(
@@ -11,9 +16,9 @@ def simulate_whole_survey(
     config: ModelConfig,
     survey: dict[str, str],
     system_prompt: str,
-    num: int = 10,  # todo: remove after debugging
+    num: int = 1000,  # todo: remove after debugging
 ) -> dict:
-    print(model)
+    logger.debug(model)
     if config.aggregation_by == "respondents":
         responses = simulate_group_of_respondents(
             model, tokenizer, config, survey, system_prompt, num
@@ -61,7 +66,6 @@ def simulate_response_single_question(
     """
     function that actually calls the LLM
     """
-    # todo: parametrize active adapter (or outside of function)
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
     if tokenizer.pad_token is None:
@@ -101,7 +105,6 @@ def simulate_set_of_responses_multiple_questions(
     responses: dict[str, list[str]] = {}
 
     for number, question in survey.items():  # todo: add tqdm
-        # todo: hardcoded as phi, change to use LLaMa
         messages = format_messages(system_prompt, question, config)
         responses[number] = simulate_set_of_responses_single_question(
             model, tokenizer, config, messages, n
