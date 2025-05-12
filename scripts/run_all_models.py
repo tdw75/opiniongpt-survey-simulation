@@ -11,7 +11,6 @@ from src.simulation.models import adapters, ModelConfig, load_model
 from src.simulation.run import run_single
 from src.simulation.utils import (
     huggingface_login,
-    print_results_single,
     generate_run_id,
     save_results,
     get_run_name,
@@ -24,6 +23,7 @@ def main(
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
+    number: int = 1000,
     **kwargs,  # LLM hyperparams
 ):
     instruct_config = ModelConfig(
@@ -45,6 +45,7 @@ def main(
             instruct_config,
             directory,
             run_id,
+            number,
             filename,
             question_format,
             **kwargs
@@ -69,6 +70,7 @@ def main(
             opinion_gpt_config,
             directory,
             run_id,
+            number,
             filename,
             question_format,
             **kwargs

@@ -22,6 +22,7 @@ def main(
     directory: str,
     subgroup: str,
     is_lora: bool,
+    number: int = 1000,
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
@@ -44,6 +45,7 @@ def main(
         config,
         directory,
         run_id,
+        number,
         filename,
         question_format,
         **kwargs

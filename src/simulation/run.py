@@ -15,6 +15,7 @@ def run_single(
     config: ModelConfig,
     directory: str,
     run_id: str,
+    number: int,
     filename: str = "variables.csv",
     question_format: str = "individual",
     **kwargs,
@@ -24,7 +25,7 @@ def run_single(
     survey_questions = load_survey(directory, filename, question_format)
     system_prompt = build_survey_context_message()
     responses = simulate_whole_survey(
-        model, tokenizer, config, survey_questions, system_prompt,
+        model, tokenizer, config, survey_questions, system_prompt, number
     )
     return {  # todo: add rest of metadata, unpack all config values
         "metadata": {
