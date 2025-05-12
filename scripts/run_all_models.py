@@ -15,7 +15,6 @@ from src.simulation.utils import (
     generate_run_id,
     save_results,
     get_run_name,
-    HEADER_PRINTOUT,
 )
 
 
@@ -48,7 +47,6 @@ def main(
             run_id,
             filename,
             question_format,
-            **kwargs,
         )
     }
     print_results_single(simulated_surveys[run_name], run_name)
@@ -73,7 +71,6 @@ def main(
             run_id,
             filename,
             question_format,
-            **kwargs,
         )
         print_results_single(simulated_surveys[run_name], run_name)
 

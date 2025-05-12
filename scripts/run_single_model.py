@@ -35,6 +35,7 @@ def main(
         is_persona=False,  # todo: parametrise
         device=device,
         aggregation_by="questions",  # todo: parametrise
+        hyperparams=kwargs
     )
     run_id = generate_run_id(base_model_name)
     model, tokenizer = load_model(config)
@@ -46,7 +47,6 @@ def main(
         run_id,
         filename,
         question_format,
-        **kwargs,
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
     print_results_single(survey_run, run_name)
