@@ -17,6 +17,7 @@ def run_single(
     run_id: str,
     filename: str = "variables.csv",
     question_format: str = "individual",
+    **kwargs,
 ):
     logging.debug(model)
 

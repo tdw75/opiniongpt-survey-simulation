@@ -47,6 +47,7 @@ def main(
             run_id,
             filename,
             question_format,
+            **kwargs
         )
     }
     print_results_single(simulated_surveys[run_name], run_name)
@@ -71,6 +72,7 @@ def main(
             run_id,
             filename,
             question_format,
+            **kwargs
         )
         print_results_single(simulated_surveys[run_name], run_name)
 

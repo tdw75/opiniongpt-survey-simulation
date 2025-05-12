@@ -47,6 +47,7 @@ def main(
         run_id,
         filename,
         question_format,
+        **kwargs
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
     print_results_single(survey_run, run_name)

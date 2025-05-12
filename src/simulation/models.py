@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import Literal, Any
 
@@ -30,6 +31,8 @@ MODEL_DIRECTORY = {
     "phi": "unsloth/Phi-3-mini-4k-instruct",
     "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
 }
+
+logger = logging.getLogger(__name__)
 
 
 class ModelConfig(BaseModel):
@@ -77,7 +80,7 @@ def load_model(
     if config.is_lora:
         return load_opinion_gpt(model, config), tokenizer
     else:
-        print("No LoRA adapters used")
+        logger.info("No LoRA adapters used")
         return model.to(config.device), tokenizer
 
 
@@ -91,7 +94,7 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
     ).to(config.device)
 
     for adapter in adapters[1:]:  # all adapters loaded to be accessed as needed
-        print(f"Loading adapter: {adapter}")
+        logger.info(f"Loading adapter: {adapter}")
         model.load_adapter(lora_id.format(adapter=adapter), adapter)
 
     return model
@@ -102,11 +105,13 @@ def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer
     tokenizer = AutoTokenizer.from_pretrained(config.model_id, padding_side="left")
     # if is_phi_model(model_id):
     #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT
-    print(f"Successfully loaded model: {config.model_id}")
+    logger.info(f"Successfully loaded model: {config.model_id}")
     return model, tokenizer
 
 
-def change_subgroup(model: PreTrainedModel | PeftModel, config: ModelConfig) -> PreTrainedModel | PeftModel:
+def change_subgroup(
+    model: PreTrainedModel | PeftModel, config: ModelConfig
+) -> PreTrainedModel | PeftModel:
     if config.is_lora:
         model = change_adapter(model, config.subgroup)
     model = change_persona(model, config.subgroup)  # todo: implement
@@ -116,7 +121,7 @@ def change_subgroup(model: PreTrainedModel | PeftModel, config: ModelConfig) -> 
 def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
     if model.active_adapter != target_adapter:
         model.set_adapter(target_adapter)
-        print(f"Changed active adapter to {target_adapter}")
+        logger.info(f"Changed active adapter to {target_adapter}")
     return model
 
 
