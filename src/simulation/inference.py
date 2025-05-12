@@ -1,8 +1,14 @@
+import logging
+
 import torch
+from tqdm import tqdm
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from src.prompting.messages import format_messages
 from src.simulation.models import ModelConfig
+
+
+logger = logging.getLogger(__name__)
 
 
 def simulate_whole_survey(
@@ -13,7 +19,7 @@ def simulate_whole_survey(
     system_prompt: str,
     num: int = 10,  # todo: remove after debugging
 ) -> dict:
-    print(model)
+    logger.debug(model)
     if config.aggregation_by == "respondents":
         responses = simulate_group_of_respondents(
             model, tokenizer, config, survey, system_prompt, num
@@ -38,7 +44,7 @@ def simulate_single_respondent(
 
     text_responses = {}
 
-    for number, question in survey.items():
+    for number, question in tqdm(survey.items()):  # todo: add desc
         # todo: add previous_responses to 'assistant' prompt
 
         messages = [
@@ -61,7 +67,6 @@ def simulate_response_single_question(
     """
     function that actually calls the LLM
     """
-    # todo: parametrize active adapter (or outside of function)
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
     if tokenizer.pad_token is None:
@@ -97,14 +102,12 @@ def simulate_set_of_responses_multiple_questions(
     system_prompt: str,
     n: int = 1000,
 ):
-
     responses: dict[str, list[str]] = {}
 
-    for number, question in survey.items():  # todo: add tqdm
-        # todo: hardcoded as phi, change to use LLaMa
+    for number, question in tqdm(survey.items(), desc=f"{config.subgroup or 'general'} survey"):
         messages = format_messages(system_prompt, question, config)
         responses[number] = simulate_set_of_responses_single_question(
-            model, tokenizer, config, messages, n
+            model, tokenizer, config, messages, number, n
         )
 
     return responses
@@ -123,7 +126,7 @@ def simulate_group_of_respondents(
     #  - separate script?? maybe different load_model but same run_inference
 
     respondents = {}
-    for i in range(n_respondents):  # todo: add tqdm
+    for i in tqdm(range(n_respondents), desc="Respondents"):  # todo: add tqdm
         respondents[i] = simulate_single_respondent(
             model, tokenizer, config, survey, system_prompt
         )
@@ -136,11 +139,12 @@ def simulate_set_of_responses_single_question(
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
     messages: list[dict[str, str]],
+    question_num: str,
     n: int = 1000,
 ) -> list[str]:
 
     responses = []
-    for i in range(n):
+    for i in tqdm(range(n), desc=str(question_num), leave=False):
 
         response = simulate_response_single_question(model, tokenizer, config, messages)
         responses.append(response)

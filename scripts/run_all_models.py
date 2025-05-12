@@ -11,11 +11,9 @@ from src.simulation.models import adapters, ModelConfig, load_model
 from src.simulation.run import run_single
 from src.simulation.utils import (
     huggingface_login,
-    print_results_single,
     generate_run_id,
     save_results,
-    get_run_name,
-    HEADER_PRINTOUT,
+    get_run_name, load_survey,
 )
 
 
@@ -25,9 +23,11 @@ def main(
     filename: str = "variables.csv",
     question_format: str = "individual",
     device: str = "cuda:2",
-    question_num: int = 0,
+    number: int = 1000,
     **kwargs,  # LLM hyperparams
 ):
+    survey_questions = load_survey(directory, filename, question_format)
+
     instruct_config = ModelConfig(
         base_model_name=base_model_name,
         subgroup=None,
@@ -45,15 +45,12 @@ def main(
             instruct_model,
             instruct_tokenizer,
             instruct_config,
-            directory,
+            survey_questions,
             run_id,
-            filename,
-            question_format,
-            question_num,
-            **kwargs,
+            number,
+            **kwargs
         )
     }
-    print_results_single(simulated_surveys[run_name], run_name)
 
     opinion_gpt_config = ModelConfig(
         base_model_name=base_model_name,
@@ -71,14 +68,11 @@ def main(
             opiniongpt_model,
             opiniongpt_tokenizer,
             opinion_gpt_config,
-            directory,
+            survey_questions,
             run_id,
-            filename,
-            question_format,
-            question_num,
-            **kwargs,
+            number,
+            **kwargs
         )
-        print_results_single(simulated_surveys[run_name], run_name)
 
     save_results(simulated_surveys, directory, run_id)
 

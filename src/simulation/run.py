@@ -5,30 +5,22 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from src.prompting.system import build_survey_context_message
 from src.simulation.inference import simulate_whole_survey
-from src.simulation.models import ModelConfig, load_model
-from src.simulation.utils import load_survey, get_single_question
+from src.simulation.models import ModelConfig
 
 
 def run_single(
     model: PeftModel | PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
-    directory: str,
+    survey_questions: dict[str, str],
     run_id: str,
-    filename: str = "variables.csv",
-    question_format: str = "individual",
-    question_num: int = 0,
+    number: int,
     **kwargs,
 ):
     logging.debug(model)
-
-    survey_questions = load_survey(directory, filename, question_format)
-    survey_questions = get_single_question(
-        survey_questions, question_num
-    )  # todo: delete after debugging
     system_prompt = build_survey_context_message()
     responses = simulate_whole_survey(
-        model, tokenizer, config, survey_questions, system_prompt
+        model, tokenizer, config, survey_questions, system_prompt, number
     )
     return {  # todo: add rest of metadata, unpack all config values
         "metadata": {
