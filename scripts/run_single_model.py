@@ -13,7 +13,7 @@ from src.simulation.utils import (
     huggingface_login,
     save_results,
     generate_run_id,
-    get_run_name,
+    get_run_name, load_survey,
 )
 
 
@@ -28,6 +28,8 @@ def main(
     device: str = "cuda:2",
     **kwargs,
 ):
+    survey_questions = load_survey(directory, filename, question_format)
+
     config = ModelConfig(
         base_model_name=base_model_name,
         subgroup=subgroup,
@@ -43,11 +45,9 @@ def main(
         model,
         tokenizer,
         config,
-        directory,
+        survey_questions,
         run_id,
         number,
-        filename,
-        question_format,
         **kwargs
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)

@@ -13,7 +13,7 @@ from src.simulation.utils import (
     huggingface_login,
     generate_run_id,
     save_results,
-    get_run_name,
+    get_run_name, load_survey,
 )
 
 
@@ -26,6 +26,8 @@ def main(
     number: int = 1000,
     **kwargs,  # LLM hyperparams
 ):
+    survey_questions = load_survey(directory, filename, question_format)
+
     instruct_config = ModelConfig(
         base_model_name=base_model_name,
         subgroup=None,
@@ -43,11 +45,9 @@ def main(
             instruct_model,
             instruct_tokenizer,
             instruct_config,
-            directory,
+            survey_questions,
             run_id,
             number,
-            filename,
-            question_format,
             **kwargs
         )
     }
@@ -68,11 +68,9 @@ def main(
             opiniongpt_model,
             opiniongpt_tokenizer,
             opinion_gpt_config,
-            directory,
+            survey_questions,
             run_id,
             number,
-            filename,
-            question_format,
             **kwargs
         )
 
