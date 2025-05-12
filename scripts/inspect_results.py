@@ -7,7 +7,7 @@ import fire
 sys.path.append(os.getcwd())
 
 
-from src.simulation.utils import get_nth_newest_file, print_results
+from src.simulation.utils import get_nth_newest_file, print_results_multiple
 
 
 def main(run_id: str | int = "0", directory: str = "data_files"):
@@ -18,7 +18,7 @@ def main(run_id: str | int = "0", directory: str = "data_files"):
         file_name = os.path.join(directory, run_id)
     with open(file_name) as f:
         results = json.load(f)
-        print_results(results)
+        print_results_multiple(results)
 
 
 if __name__ == "__main__":

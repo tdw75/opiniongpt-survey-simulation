@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from src.simulation.utils import get_nth_newest_file, print_results, get_run_name
+from src.simulation.utils import get_nth_newest_file, print_results_single, get_run_name
 
 
 @pytest.mark.parametrize(
@@ -17,7 +17,7 @@ def test_get_nth_newest_file(idx, expected):
 
 def test_print_results():
     results = json.load(open("test_data_files/results/20250429_results.json"))
-    print_results(results)
+    print_results_single(results, "title")
 
 
 @pytest.mark.parametrize(
