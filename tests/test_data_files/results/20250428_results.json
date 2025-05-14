@@ -1,5 +1,23 @@
 {
-  "metadata": {"model_id":  "llama-3", "run_id": "20250428", "system_prompt": "you are a survey participant"},
-  "questions": {"Q1":  "I believe in Santa Claus", "Q2":  "I believe in the Tooth Fairy"},
-  "responses": {"Q1":  ["1 - agree", "2 - disagree"], "Q2":  ["1 - agree", "1 - agree"]}
+  "group": {
+    "metadata": {
+      "model_id": "llama-3",
+      "run_id": "20250428",
+      "system_prompt": "you are a survey participant"
+    },
+    "questions": {
+      "Q1": "I believe in Santa Claus",
+      "Q2": "I believe in the Tooth Fairy"
+    },
+    "responses": {
+      "Q1": [
+        "1: agree",
+        "2: disagree"
+      ],
+      "Q2": [
+        "1: agree",
+        "1: agree"
+      ]
+    }
+  }
 }

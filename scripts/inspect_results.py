@@ -6,8 +6,7 @@ import fire
 
 sys.path.append(os.getcwd())
 
-
-from src.simulation.utils import get_nth_newest_file, print_results_multiple
+from src.analysis.results import get_nth_newest_file, print_results_multiple
 
 
 def main(run_id: str | int = "0", directory: str = "data_files"):

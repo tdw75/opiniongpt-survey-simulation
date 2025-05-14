@@ -1,13 +1,11 @@
-import glob
 import json
 import os
 from datetime import datetime
 
-
 import pandas as pd
 
-from src.prompting.messages import extract_user_prompts_from_survey_individual
 from src.prompting.messages import extract_user_prompts_from_survey_grouped
+from src.prompting.messages import extract_user_prompts_from_survey_individual
 
 
 def huggingface_login() -> None:
@@ -53,34 +51,6 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     """debugging function: selects a single question from the survey"""
     single_question = list(survey.items())[idx]
     return {single_question[0]: single_question[1]}
-
-
-def get_nth_newest_file(n: int, directory: str):
-    files_path = os.path.join(directory, "results/*")
-    files = sorted(glob.iglob(files_path), key=os.path.getmtime, reverse=True)
-    return files[n]
-
-
-def print_results_multiple(results: dict[str, dict[str, dict]]):
-    for name, result in results.items():
-        print_results_single(result, name)
-
-
-def print_results_single(results: dict[str, dict], title: str):
-    print(HEADER_PRINTOUT.format(title=title))
-
-    print(SUBHEADER_PRINTOUT.format(title="METADATA"))
-    for k, v in results["metadata"].items():
-        print(f"{k}: {v}")
-    print(SUBHEADER_PRINTOUT.format(title="RESULTS"))
-    for num, question in results["questions"].items():
-        print(f"{question}")
-        for i, response in enumerate(results["responses"][num]):
-            print(f"* {i}. {response}")
-
-
-HEADER_PRINTOUT = "=" * 50 + "\n" + "*" * 5 + "  {title}  " + "*" * 5 + "\n" + "=" * 50
-SUBHEADER_PRINTOUT = "-" * 20 + "{title}" + "-" * 20
 
 
 def get_run_name(base_model_name: str, is_lora: bool, subgroup: str | None) -> str:
