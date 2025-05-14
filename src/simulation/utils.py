@@ -27,7 +27,7 @@ def load_survey(
 
     survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
     if subset_name:
-        with open(os.path.join(directory, subset_name), "r") as f:
+        with open(os.path.join(directory, "variables",subset_name), "r") as f:
             subsets = json.load(f)
         survey_df = filter_survey_subset(survey_df, subsets)
 
