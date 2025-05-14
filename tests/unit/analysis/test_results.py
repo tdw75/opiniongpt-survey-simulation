@@ -12,7 +12,7 @@ from src.analysis.results import (
 
 def test_survey_results_to_df():
     survey_results = json.load(open("test_data_files/results/20250428_results.json"))
-    df = survey_results_to_df({"phi-aus": survey_results})
+    df = survey_results_to_df(survey_results)
     expected = {
         "number": ["Q1"] * 2 + ["Q2"] * 2,
         "question": ["I believe in Santa Claus"] * 2
