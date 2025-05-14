@@ -21,16 +21,31 @@ def huggingface_login() -> None:
         print("Token is not set. Please save a token in the .env file.")
 
 
-def load_survey(directory: str, file_name: str, question_format: str) -> dict[str, str]:
+def load_survey(
+    directory: str, file_name: str, question_format: str, subset_name: str = None
+) -> dict[str, str]:
+
     survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
+    if subset_name:
+        with open(os.path.join(directory, subset_name), "r") as f:
+            subsets = json.load(f)
+        survey_df = filter_survey_subset(survey_df, subsets)
+
     if question_format == "grouped":
         survey = extract_user_prompts_from_survey_grouped(survey_df)
     elif question_format == "individual":
         survey = extract_user_prompts_from_survey_individual(survey_df)
     else:
         raise ValueError(f"Invalid question format: {question_format}")
+
     print("Successfully loaded survey!")
     return survey
+
+
+def filter_survey_subset(survey: pd.DataFrame, subsets: dict) -> pd.DataFrame:
+    group_mask = survey["group"].isin(subsets["groups"])
+    questions_mask = survey["number"].isin(subsets["individual_questions"])
+    return survey[group_mask | questions_mask].reset_index(drop=True)
 
 
 def save_results(simulated_survey: dict[str, dict], directory: str, run_id: str):

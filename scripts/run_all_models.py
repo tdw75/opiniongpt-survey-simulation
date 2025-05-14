@@ -21,12 +21,13 @@ def main(
     base_model_name: str = "phi",
     directory: str = "data_files",
     filename: str = "variables.csv",
+    subset_file: str = None,
     question_format: str = "individual",
     device: str = "cuda:2",
     number: int = 1000,
     **kwargs,  # LLM hyperparams
 ):
-    survey_questions = load_survey(directory, filename, question_format)
+    survey_questions = load_survey(directory, filename, question_format, subset_file)
 
     instruct_config = ModelConfig(
         base_model_name=base_model_name,
