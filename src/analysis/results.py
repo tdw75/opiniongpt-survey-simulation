@@ -11,13 +11,16 @@ def load_survey_results(file_name: str, directory: str) -> dict[str, dict]:
         return json.load(f)
 
 
-def survey_results_to_df(survey_results: dict[str, dict]) -> pd.DataFrame:
+def survey_results_to_df(survey_results: dict[str, dict], variables: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for subgroup, results in survey_results.items():
         for num, responses in results["responses"].items():
+            variable = variables[variables["number"]==num]
             for response in responses:
                 row = {
                     "number": num,
+                    "group": variable["group"].item(),
+                    "subtopic": variable["subtopic"].item(),
                     "question": results["questions"][num],
                     "response": response,
                     **results["metadata"],
