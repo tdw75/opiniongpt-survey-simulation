@@ -37,4 +37,4 @@ def test_get_nth_newest_file(idx, expected):
 
 def test_print_results():
     results = json.load(open("test_data_files/results/20250429_results.json"))
-    print_results_single(results, "title")
+    print_results_single(results["group"], "title")
