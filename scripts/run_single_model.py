@@ -8,12 +8,13 @@ print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
 from src.simulation.run import run_single
-from src.simulation.models import ModelConfig, load_model
+from src.simulation.models import ModelConfig, load_model, change_subgroup
 from src.simulation.utils import (
     huggingface_login,
     save_results,
     generate_run_id,
-    get_run_name, load_survey,
+    get_run_name,
+    load_survey,
 )
 
 
@@ -37,18 +38,14 @@ def main(
         is_persona=False,  # todo: parametrise
         device=device,
         aggregation_by="questions",  # todo: parametrise
-        hyperparams=kwargs
+        hyperparams=kwargs,
     )
     run_id = generate_run_id(base_model_name)
     model, tokenizer = load_model(config)
+    model, config = change_subgroup(model, config, subgroup)
+
     survey_run = run_single(
-        model,
-        tokenizer,
-        config,
-        survey_questions,
-        run_id,
-        number,
-        **kwargs
+        model, tokenizer, config, survey_questions, run_id, number, **kwargs
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
     save_results({run_name: survey_run}, directory, run_id)
