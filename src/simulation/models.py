@@ -137,7 +137,7 @@ def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
         min_new_tokens=4,
         do_sample=True,
         top_p=0.9,
-        temperature=0.8,
+        temperature=1,
     )
 
 
