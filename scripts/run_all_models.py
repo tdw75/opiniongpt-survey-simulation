@@ -23,6 +23,7 @@ def main(
     directory: str = "data_files",
     filename: str = "variables.csv",
     subset_file: str = None,
+    simulation_name: str = None,
     question_format: str = "individual",
     device: str = "cuda:2",
     number: int = 1000,
@@ -78,7 +79,7 @@ def main(
             **kwargs,
         )
 
-    save_results(simulated_surveys, directory, run_id)
+    save_results(simulated_surveys, directory, run_id, simulation_name)
 
 
 if __name__ == "__main__":
