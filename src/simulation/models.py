@@ -110,12 +110,13 @@ def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer
 
 
 def change_subgroup(
-    model: PreTrainedModel | PeftModel, config: ModelConfig
-) -> PreTrainedModel | PeftModel:
+    model: PreTrainedModel | PeftModel, config: ModelConfig, new_subgroup: str
+) -> tuple[PreTrainedModel | PeftModel, ModelConfig]:
+    config.change_subgroup(new_subgroup)
     if config.is_lora:
         model = change_adapter(model, config.subgroup)
     model = change_persona(model, config.subgroup)  # todo: implement
-    return model
+    return model, config
 
 
 def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
@@ -136,7 +137,7 @@ def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
         min_new_tokens=4,
         do_sample=True,
         top_p=0.9,
-        temperature=0.8,
+        temperature=1,
     )
 
 

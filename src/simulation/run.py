@@ -1,4 +1,5 @@
 import logging
+from timeit import default_timer as timer
 
 from peft import PeftModel
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -17,21 +18,19 @@ def run_single(
     number: int,
     **kwargs,
 ):
+    start = timer()
     logging.debug(model)
     system_prompt = build_survey_context_message()
     responses = simulate_whole_survey(
         model, tokenizer, config, survey_questions, system_prompt, number
     )
+    end = timer()
     return {  # todo: add rest of metadata, unpack all config values
         "metadata": {
-            "model_id": config.model_id,
-            "model_type": config.model_type,
-            "subgroup": (
-                config.subgroup if config.is_lora else "none"
-            ),  # todo: update after adding persona prompting
+            **config.model_dump(),
             "system_prompt": system_prompt,
-            "aggregation_by": config.aggregation_by,
             "run_id": run_id,
+            "execution_time": end - start,
             **kwargs,
         },
         "questions": survey_questions,
