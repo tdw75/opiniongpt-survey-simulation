@@ -30,7 +30,7 @@ def build_survey_context_message() -> str:
     "
     
     For each question, just select a single answer from the set of available responses.
-    Please copy the answer exactly as written in the 'Available responses' list abover. 
+    Please copy the answer exactly as written in the 'Available responses' list above. 
     Do not change spelling or capitalisation. 
     For example:
     Agree strongly"
