@@ -72,7 +72,7 @@ def build_user_prompt_message_grouped(
 
 {format_responses(response_set)}
 
-Response:
+What is your response?
 """
 
 
@@ -84,7 +84,7 @@ def build_user_prompt_message_individual(
 
 {format_responses(response_set)}
 
-Response:
+What is your response?
 """
 
 
@@ -116,3 +116,13 @@ def format_messages(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
+
+
+def format_messages_batch(
+    system_prompt: str, user_prompts: list[str], model_config: ModelConfig
+) -> list[list[dict]]:
+    messages = []
+    for user_prompt in user_prompts:
+        messages.append(format_messages(system_prompt, user_prompt, model_config))
+
+    return messages
