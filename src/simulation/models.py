@@ -42,6 +42,7 @@ class ModelConfig(BaseModel):
     is_persona: bool = False
     device: str = "cuda:2"
     aggregation_by: Literal["questions", "respondent"] = "questions"
+    count: int = 500
     hyperparams: dict = {}
 
     def model_post_init(self, context: Any, /) -> None:

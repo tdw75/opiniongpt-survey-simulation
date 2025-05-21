@@ -23,7 +23,7 @@ def main(
     directory: str,
     subgroup: str,
     is_lora: bool,
-    number: int = 1000,
+    count: int = 1000,
     filename: str = "variables.csv",
     subset_file: str = None,
     simulation_name: str = None,
@@ -40,6 +40,7 @@ def main(
         is_persona=False,  # todo: parametrise
         device=device,
         aggregation_by="questions",  # todo: parametrise
+        count=count,
         hyperparams=kwargs,
     )
     run_id = generate_run_id(base_model_name)
@@ -47,7 +48,7 @@ def main(
     model, config = change_subgroup(model, config, subgroup)
 
     survey_run = run_single(
-        model, tokenizer, config, survey_questions, run_id, number, **kwargs
+        model, tokenizer, config, survey_questions, run_id, **kwargs
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
     save_results({run_name: survey_run}, directory, run_id, simulation_name)

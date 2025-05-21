@@ -15,14 +15,13 @@ def run_single(
     config: ModelConfig,
     survey_questions: dict[str, str],
     run_id: str,
-    number: int,
     **kwargs,
 ):
     start = timer()
     logging.debug(model)
     system_prompt = build_survey_context_message()
     responses = simulate_whole_survey(
-        model, tokenizer, config, survey_questions, system_prompt, number
+        model, tokenizer, config, survey_questions, system_prompt
     )
     end = timer()
     return {  # todo: add rest of metadata, unpack all config values

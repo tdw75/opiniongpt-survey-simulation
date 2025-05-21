@@ -26,7 +26,7 @@ def main(
     simulation_name: str = None,
     question_format: str = "individual",
     device: str = "cuda:2",
-    number: int = 1000,
+    count: int = 500,
     **kwargs,  # LLM hyperparams
 ):
     survey_questions = load_survey(directory, filename, question_format, subset_file)
@@ -38,6 +38,7 @@ def main(
         is_persona=False,
         device=device,
         aggregation_by="questions",
+        count=count,
         hyperparams=kwargs,
     )
     instruct_model, instruct_tokenizer = load_model(instruct_config)
@@ -50,7 +51,6 @@ def main(
             instruct_config,
             survey_questions,
             run_id,
-            number,
             **kwargs,
         )
     }
@@ -61,6 +61,7 @@ def main(
         is_persona=False,
         device=device,
         aggregation_by="questions",
+        count=count,
         hyperparams=kwargs,
     )
     opinion_gpt_model, opinion_gpt_tokenizer = load_model(opinion_gpt_config)
@@ -75,7 +76,6 @@ def main(
             opinion_gpt_config,
             survey_questions,
             run_id,
-            number,
             **kwargs,
         )
 
