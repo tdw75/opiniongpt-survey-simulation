@@ -91,8 +91,8 @@ Response:
 def format_responses(response_set: dict[int, str]) -> str:
     response_set = get_valid_responses(response_set)
     message = """The possible responses are:"""
-    for key, response in response_set.items():
-        message += f"\n{key}: {response}"
+    for _, response in response_set.items():
+        message += f"\n- {response}"
     return message
 
 

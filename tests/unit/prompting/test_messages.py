@@ -116,10 +116,10 @@ Q5: Work
 Q6: Religion
 
 The possible responses are:
-1: Very important
-2: Rather important
-3: Not very important
-4: Not at all important
+- Very important
+- Rather important
+- Not very important
+- Not at all important
 
 Response:
 """
@@ -135,8 +135,8 @@ Q25: Unmarried couples living together
 Q26: People who speak a different language
 
 The possible responses are:
-1: Mentioned
-2: Not mentioned
+- Mentioned
+- Not mentioned
 
 Response:
 """
@@ -149,10 +149,10 @@ The aspects are:
 Q27: One of main goals in life has been to make my parents proud
 
 The possible responses are:
-1: Agree strongly
-2: Agree
-3: Disagree
-4: Strongly disagree
+- Agree strongly
+- Agree
+- Disagree
+- Strongly disagree
 
 Response:
 """
@@ -167,10 +167,10 @@ say it is very important, rather important, not very important or not important 
 Family
 
 The possible responses are:
-1: Very important
-2: Rather important
-3: Not very important
-4: Not at all important
+- Very important
+- Rather important
+- Not very important
+- Not at all important
 
 Response:
 """
@@ -180,10 +180,10 @@ say it is very important, rather important, not very important or not important 
 Politics
 
 The possible responses are:
-1: Very important
-2: Rather important
-3: Not very important
-4: Not at all important
+- Very important
+- Rather important
+- Not very important
+- Not at all important
 
 Response:
 """
@@ -193,8 +193,8 @@ not like to have as neighbors?
 People of a different religion
 
 The possible responses are:
-1: Mentioned
-2: Not mentioned
+- Mentioned
+- Not mentioned
 
 Response:
 """
@@ -205,10 +205,10 @@ with each. Do you agree strongly, agree, disagree, or disagree strongly? - One o
 main goals in life has been to make my parents proud
 
 The possible responses are:
-1: Agree strongly
-2: Agree
-3: Disagree
-4: Strongly disagree
+- Agree strongly
+- Agree
+- Disagree
+- Strongly disagree
 
 Response:
 """
