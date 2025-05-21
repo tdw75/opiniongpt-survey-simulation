@@ -2,9 +2,9 @@ import os
 
 import pandas as pd
 
-from data.filtering import filter_by_subgroups
-from demographics.base import BaseSubGroup
-from demographics.config import ALL_COUNTRIES, ALL_SEX, ALL_AGE
+from src.data.filtering import filter_by_subgroups
+from src.demographics.base import BaseSubGroup
+from src.demographics.config import ALL_COUNTRIES, ALL_SEX, ALL_AGE
 
 
 def main(directory: str, subgroups: list[type[BaseSubGroup]]):

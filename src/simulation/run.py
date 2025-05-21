@@ -31,6 +31,7 @@ def run_single(
             "system_prompt": system_prompt,
             "run_id": run_id,
             "execution_time": end - start,
+            "num_questions": number,
             **kwargs,
         },
         "questions": survey_questions,

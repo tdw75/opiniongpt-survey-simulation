@@ -23,17 +23,17 @@ def build_survey_context_message() -> str:
     Carrot cake is tastier than chocolate cake
     
     Available responses:
-    1: Agree strongly
-    2: Agree
-    3: Disagree
-    4: Strongly disagree
+    - Agree strongly
+    - Agree
+    - Disagree
+    - Strongly disagree
     "
     
     For each question, just select a single answer from the set of available responses.
-    Please copy the answer exactly as written in the 'Available responses' list above. 
+    Please copy the answer exactly as written in the 'Available responses' list abover. 
     Do not change spelling or capitalisation. 
     For example:
-    4: Agree strongly"
+    Agree strongly"
     """
 
 
