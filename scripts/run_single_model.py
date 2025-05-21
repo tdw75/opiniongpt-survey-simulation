@@ -25,11 +25,13 @@ def main(
     is_lora: bool,
     number: int = 1000,
     filename: str = "variables.csv",
+    subset_file: str = None,
+    simulation_name: str = None,
     question_format: str = "individual",
     device: str = "cuda:2",
-    **kwargs,
+    **kwargs,  # LLM hyperparams
 ):
-    survey_questions = load_survey(directory, filename, question_format)
+    survey_questions = load_survey(directory, filename, question_format, subset_file)
 
     config = ModelConfig(
         base_model_name=base_model_name,
@@ -48,7 +50,7 @@ def main(
         model, tokenizer, config, survey_questions, run_id, number, **kwargs
     )
     run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
-    save_results({run_name: survey_run}, directory, run_id)
+    save_results({run_name: survey_run}, directory, run_id, simulation_name)
 
 
 if __name__ == "__main__":

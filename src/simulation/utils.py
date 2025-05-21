@@ -22,12 +22,12 @@ def huggingface_login() -> None:
 
 
 def load_survey(
-    directory: str, file_name: str, question_format: str, subset_name: str = None
+    directory: str, file_name: str, question_format: str, subset_name: str
 ) -> dict[str, str]:
 
     survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
     if subset_name:
-        with open(os.path.join(directory, "variables",subset_name), "r") as f:
+        with open(os.path.join(directory, "variables", subset_name), "r") as f:
             subsets = json.load(f)
         survey_df = filter_survey_subset(survey_df, subsets)
 
@@ -48,8 +48,13 @@ def filter_survey_subset(survey: pd.DataFrame, subsets: dict) -> pd.DataFrame:
     return survey[group_mask | questions_mask].reset_index(drop=True)
 
 
-def save_results(simulated_survey: dict[str, dict], directory: str, run_id: str):
-    results_directory = os.path.join(directory, "results")
+def save_results(
+    simulated_survey: dict[str, dict], directory: str, run_id: str, simulation_name: str
+):
+    if simulation_name:
+        results_directory = os.path.join(directory, "results", simulation_name)
+    else:
+        results_directory = os.path.join(directory, "results")
     if not os.path.exists(results_directory):
         os.makedirs(results_directory)
     with open(os.path.join(results_directory, f"{run_id}.json"), "w") as f:
