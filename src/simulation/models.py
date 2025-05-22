@@ -135,10 +135,10 @@ def change_persona(model, target_persona: str):
 def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
     return dict(
         max_new_tokens=16,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
-        min_new_tokens=4,
+        min_new_tokens=2,
         do_sample=True,
         top_p=0.9,
-        temperature=1,
+        temperature=0.6,
     )
 
 

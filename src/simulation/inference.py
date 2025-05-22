@@ -69,8 +69,8 @@ def init_generation_params(
 ):
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
-    # if config.aggregation_by == "questions":
-    #     config.hyperparams["num_return_sequences"] = config.count
+    if config.aggregation_by == "questions":
+        config.hyperparams["num_return_sequences"] = config.count
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -121,8 +121,10 @@ def simulate_set_of_responses_multiple_questions(
         survey.items(), desc=f"{config.subgroup or 'general'} survey"
     ):
         messages = format_messages(system_prompt, question, config)
-        responses[number] = simulate_set_of_responses_single_question(
-            model, tokenizer, config, messages, number
+        generation_kwargs = init_generation_params(model, tokenizer, config, messages)
+        input_len = generation_kwargs["input_ids"].shape[-1]
+        responses[number] = generate_responses(
+            model, tokenizer, generation_kwargs, input_len
         )
 
     return responses
@@ -143,25 +145,3 @@ def simulate_group_of_respondents(
         )
 
     return respondents
-
-
-def simulate_set_of_responses_single_question(
-    model: PreTrainedModel,
-    tokenizer: PreTrainedTokenizer,
-    config: ModelConfig,
-    messages: list[dict[str, str]],
-    question_num: str,
-) -> list[str]:
-
-    generation_kwargs = init_generation_params(model, tokenizer, config, messages)
-    input_length = generation_kwargs["input_ids"].shape[-1]
-    # if config.hyperparams.get("num_return_sequences", 0) > 0:
-    #     responses = generate_responses(model, tokenizer, generation_kwargs, input_length)
-
-    responses = []
-    for i in tqdm(range(config.count), desc=str(question_num), leave=False):
-
-        response = generate_responses(model, tokenizer, generation_kwargs, input_length)
-        responses.extend(response)
-
-    return responses
