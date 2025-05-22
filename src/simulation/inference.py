@@ -7,7 +7,6 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 from src.prompting.messages import format_messages
 from src.simulation.models import ModelConfig
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -17,16 +16,15 @@ def simulate_whole_survey(
     config: ModelConfig,
     survey: dict[str, str],
     system_prompt: str,
-    num: int = 10,  # todo: remove after debugging
 ) -> dict:
     logger.debug(model)
     if config.aggregation_by == "respondents":
         responses = simulate_group_of_respondents(
-            model, tokenizer, config, survey, system_prompt, num
+            model, tokenizer, config, survey, system_prompt
         )
-    elif config.aggregation_by == "questions":  # todo: change hardcoded n
+    elif config.aggregation_by == "questions":
         responses = simulate_set_of_responses_multiple_questions(
-            model, tokenizer, config, survey, system_prompt, num
+            model, tokenizer, config, survey, system_prompt
         )
     else:
         raise ValueError  # todo: add error message
@@ -51,23 +49,26 @@ def simulate_single_respondent(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": question},
         ]
-        response = simulate_response_single_question(model, tokenizer, config, messages)
+        generation_kwargs = init_generation_params(model, tokenizer, config, messages)
+        input_length = generation_kwargs["input_ids"].shape[-1]
+        response = generate_response(model, tokenizer, generation_kwargs, input_length)
+
         # todo: update messages with assistant response
         text_responses[number] = response
 
     return text_responses
 
 
-def simulate_response_single_question(
+def init_generation_params(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
     messages: list[dict[str, str]],
-) -> str:
-    """
-    function that actually calls the LLM
-    """
+):
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
+
+    # if config.aggregation_by == "questions":
+    #     config.hyperparams["num_return_sequences"] = config.count
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -80,17 +81,26 @@ def simulate_response_single_question(
         return_dict=True,
     )
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
-    input_length = inputs["input_ids"].shape[-1]
 
     generation_kwargs = dict(
         input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
     )
     generation_kwargs.update(config.hyperparams)
+    return generation_kwargs
 
+
+def generate_response(
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
+    generation_kwargs: dict,
+    input_length: int,
+):
+    """
+    function that actually calls the LLM
+    """
     with torch.no_grad():
         output = model.generate(**generation_kwargs)
         response = tokenizer.decode(output[0][input_length:], skip_special_tokens=True)
-        # todo: extract numeric keys for responses (e.g. -1: don't know)
     return response
 
 
@@ -100,14 +110,15 @@ def simulate_set_of_responses_multiple_questions(
     config: ModelConfig,
     survey: dict[str, str],
     system_prompt: str,
-    n: int = 1000,
 ):
     responses: dict[str, list[str]] = {}
 
-    for number, question in tqdm(survey.items(), desc=f"{config.subgroup or 'general'} survey"):
+    for number, question in tqdm(
+        survey.items(), desc=f"{config.subgroup or 'general'} survey"
+    ):
         messages = format_messages(system_prompt, question, config)
         responses[number] = simulate_set_of_responses_single_question(
-            model, tokenizer, config, messages, number, n
+            model, tokenizer, config, messages, number
         )
 
     return responses
@@ -119,14 +130,10 @@ def simulate_group_of_respondents(
     config: ModelConfig,
     survey: dict[str, str],
     system_prompt: str,
-    n_respondents: int = 1000,
 ) -> dict[int, dict]:
 
-    # todo: allow toggling between persona prompting and opinionGPT
-    #  - separate script?? maybe different load_model but same run_inference
-
     respondents = {}
-    for i in tqdm(range(n_respondents), desc="Respondents"):  # todo: add tqdm
+    for i in tqdm(range(config.count), desc="Respondents"):
         respondents[i] = simulate_single_respondent(
             model, tokenizer, config, survey, system_prompt
         )
@@ -140,13 +147,15 @@ def simulate_set_of_responses_single_question(
     config: ModelConfig,
     messages: list[dict[str, str]],
     question_num: str,
-    n: int = 1000,
 ) -> list[str]:
 
     responses = []
-    for i in tqdm(range(n), desc=str(question_num), leave=False):
+    generation_kwargs = init_generation_params(model, tokenizer, config, messages)
+    input_length = generation_kwargs["input_ids"].shape[-1]
 
-        response = simulate_response_single_question(model, tokenizer, config, messages)
+    for i in tqdm(range(config.count), desc=str(question_num), leave=False):
+
+        response = generate_response(model, tokenizer, generation_kwargs, input_length)
         responses.append(response)
 
     return responses

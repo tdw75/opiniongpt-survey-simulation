@@ -55,6 +55,7 @@ def extract_user_prompts_from_survey_individual(
         prompts[question["number"]] = build_user_prompt_message_individual(
             item, responses_to_map(responses), question["number"]
         )
+        print(f"successfully loaded {question['number']}")
 
     return prompts
 
