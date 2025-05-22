@@ -43,8 +43,8 @@ def load_survey(
 
 
 def filter_survey_subset(survey: pd.DataFrame, subsets: dict) -> pd.DataFrame:
-    group_mask = survey["group"].isin(subsets["groups"])
-    questions_mask = survey["number"].isin(subsets["individual_questions"])
+    group_mask = survey["group"].isin(subsets.get("groups", []))
+    questions_mask = survey["number"].isin(subsets.get("individual_questions", []))
     return survey[group_mask | questions_mask].reset_index(drop=True)
 
 
