@@ -47,11 +47,12 @@ class ModelConfig(BaseModel):
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
-            min_new_tokens=4,
+            # todo: maybe change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
+            min_new_tokens=2,
             max_new_tokens=16,
             do_sample=True,
             top_p=0.9,
-            temperature=0.8,
+            temperature=0.6,
         )
         self.hyperparams = {**default_hyperparams, **self.hyperparams}
 
@@ -130,16 +131,6 @@ def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
 def change_persona(model, target_persona: str):
     # todo: implement changing personas for LLaMa
     return model
-
-
-def default_hyperparams(tokenizer: PreTrainedTokenizer) -> dict:
-    return dict(
-        max_new_tokens=16,  # potentially change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
-        min_new_tokens=2,
-        do_sample=True,
-        top_p=0.9,
-        temperature=0.6,
-    )
 
 
 PHI_TOKENIZER_FORMAT = """
