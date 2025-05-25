@@ -23,10 +23,17 @@ def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
     assert messages == expected_messages_grouped
 
 
-def test_extract_user_prompts_from_survey_individual(expected_messages_individual):
-    survey = pd.read_csv("test_data_files/sample_variables.csv")
+@pytest.mark.parametrize(
+    "file_name, is_subtopic_separate", [("sample_variables", True), ("sample_variables_not_split", False)]
+)
+def test_extract_user_prompts_from_survey_individual(
+    expected_messages_individual, file_name, is_subtopic_separate
+):
+    survey = pd.read_csv(f"test_data_files/{file_name}.csv")
     indices = [0, 3, 22, 25]
-    messages = extract_user_prompts_from_survey_individual(survey.loc[indices])
+    messages = extract_user_prompts_from_survey_individual(
+        survey.loc[indices], is_subtopic_separate
+    )
     assert messages == expected_messages_individual
 
 
@@ -90,7 +97,9 @@ def test_format_messages():
 
     system_prompt = "this is the system prompt"
     user_prompt = "what is your name?"
-    formatted = format_messages(system_prompt, user_prompt, ModelConfig(base_model_name="phi"))
+    formatted = format_messages(
+        system_prompt, user_prompt, ModelConfig(base_model_name="phi")
+    )
     assert formatted == [
         {"role": "user", "content": "this is the system prompt\nwhat is your name?"}
     ]
