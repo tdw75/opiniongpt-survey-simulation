@@ -157,6 +157,7 @@ cython_debug/
 
 example
 data_files/results
+data_files/variables/pages_raw
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

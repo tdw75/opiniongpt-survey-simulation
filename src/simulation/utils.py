@@ -34,7 +34,7 @@ def load_survey(
     if question_format == "grouped":
         survey = extract_user_prompts_from_survey_grouped(survey_df)
     elif question_format == "individual":
-        survey = extract_user_prompts_from_survey_individual(survey_df)
+        survey = extract_user_prompts_from_survey_individual(survey_df, True)
     else:
         raise ValueError(f"Invalid question format: {question_format}")
 
