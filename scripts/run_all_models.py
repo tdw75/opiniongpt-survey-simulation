@@ -30,22 +30,31 @@ def main(
     **kwargs,  # LLM hyperparams
 ):
     survey_questions = load_survey(directory, filename, question_format, subset_file)
+    run_id = generate_run_id(base_model_name)
+    simulated_surveys = {}
 
+    # BASE (NON-LORA) MODELS
     instruct_config = ModelConfig(
         base_model_name=base_model_name,
         subgroup=None,
         is_lora=False,
-        is_persona=False,
+        is_persona=True,
         device=device,
         aggregation_by="questions",
         count=count,
         hyperparams=kwargs,
     )
     instruct_model, instruct_tokenizer = load_model(instruct_config)
-    run_id = generate_run_id(base_model_name)
-    run_name = get_run_name(base_model_name, False, None)
-    simulated_surveys = {  # todo: add personas
-        run_name: run_single(
+
+    for subgroup in adapters + [None]:
+
+        instruct_model, instruct_config = change_subgroup(
+            instruct_model,
+            instruct_config,
+            subgroup,
+        )
+        run_name = get_run_name(base_model_name, False, subgroup)
+        simulated_surveys[run_name] = run_single(
             instruct_model,
             instruct_tokenizer,
             instruct_config,
@@ -53,8 +62,8 @@ def main(
             run_id,
             **kwargs,
         )
-    }
 
+    # OPINION GPT MODELS # todo: maybe add persona prompting for opinion gpt
     opinion_gpt_config = ModelConfig(
         base_model_name=base_model_name,
         is_lora=True,
@@ -65,7 +74,9 @@ def main(
         hyperparams=kwargs,
     )
     opinion_gpt_model, opinion_gpt_tokenizer = load_model(opinion_gpt_config)
+
     for subgroup in adapters:
+
         run_name = get_run_name(base_model_name, True, subgroup)
         opinion_gpt_model, opinion_gpt_config = change_subgroup(
             opinion_gpt_model, opinion_gpt_config, subgroup

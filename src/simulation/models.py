@@ -11,6 +11,11 @@ from transformers import (
     PreTrainedModel,
 )
 
+from system import (
+    build_survey_context_message,
+    build_survey_context_for_persona,
+)
+
 bias_to_subreddit = {
     "liberal": "AskALiberal",
     "conservative": "AskConservatives",
@@ -44,6 +49,7 @@ class ModelConfig(BaseModel):
     aggregation_by: Literal["questions", "respondent"] = "questions"
     count: int = 500
     hyperparams: dict = {}
+    system_prompt: str = build_survey_context_message()
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
@@ -117,7 +123,8 @@ def change_subgroup(
     config.change_subgroup(new_subgroup)
     if config.is_lora:
         model = change_adapter(model, config.subgroup)
-    model = change_persona(model, config.subgroup)  # todo: implement
+    if config.is_persona:
+        config.system_prompt = build_survey_context_for_persona(config.system_prompt)
     return model, config
 
 
@@ -125,11 +132,6 @@ def change_adapter(model: PeftModel, target_adapter: str) -> PeftModel:
     if model.active_adapter != target_adapter:
         model.set_adapter(target_adapter)
         logger.info(f"Changed active adapter to {target_adapter}")
-    return model
-
-
-def change_persona(model, target_persona: str):
-    # todo: implement changing personas for LLaMa
     return model
 
 
