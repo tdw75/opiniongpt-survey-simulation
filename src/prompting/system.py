@@ -1,4 +1,4 @@
-from config import subgroups
+from src.demographics.config import subgroups
 from src.demographics.base import BaseSubGroup
 
 
