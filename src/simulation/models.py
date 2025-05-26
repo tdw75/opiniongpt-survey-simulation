@@ -124,7 +124,7 @@ def change_subgroup(
     if config.is_lora:
         model = change_adapter(model, config.subgroup)
     if config.is_persona:
-        config.system_prompt = build_survey_context_for_persona(config.system_prompt)
+        config.system_prompt = build_survey_context_for_persona(config.subgroup)
     return model, config
 
 

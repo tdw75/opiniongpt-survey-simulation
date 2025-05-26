@@ -39,8 +39,8 @@ def build_persona_message(subgroup: type[BaseSubGroup]) -> str:
 
 
 def build_survey_context_for_persona(subgroup: str) -> str:
-    persona = build_persona_message(subgroups[subgroup])
-    return build_survey_context_message()  + persona
+    persona = build_persona_message(subgroups[subgroup]) if subgroup is not None else ""
+    return build_survey_context_message() + persona
 
 
 FEW_SHOT = ""  # todo: add examples to facilitate few shot learning
