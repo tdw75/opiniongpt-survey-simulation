@@ -11,7 +11,7 @@ from transformers import (
     PreTrainedModel,
 )
 
-from system import (
+from src.prompting.system import (
     build_survey_context_message,
     build_survey_context_for_persona,
 )
