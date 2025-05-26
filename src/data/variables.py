@@ -23,7 +23,9 @@ class QuestionPatterns:
 
 @dataclass
 class HeaderPatterns:
-    main = re.compile("\s+\n \n\d+ \n \nThe WORLD VALUES SURVEY ASSOCIATION\s+\nwww.worldvaluessurvey.org")
+    main = re.compile(
+        "\s+\n \n\d+ \n \nThe WORLD VALUES SURVEY ASSOCIATION\s+\nwww.worldvaluessurvey.org"
+    )
     sub = re.compile(r"([A-Z].*\s+\(Q\d+ *-Q\d+\))")
 
 
@@ -31,16 +33,15 @@ def strip_header(page: str, pattern) -> str:
     """
     Removes the page heading/subheading from the input string
     """
-    stripped_page = re.sub(pattern, '', page)
+    stripped_page = re.sub(pattern, "", page)
     return stripped_page
 
 
 def concatenate_pages(pages: list[str]) -> str:
-    return ''.join(pages)
+    return "".join(pages)
 
 
 def split_on_questions(page: str) -> list[str]:
-
     """
     Splits a string containing whole page(s) of the questionnaire into a list of strings
     where each string contains a separate question and/or subheading
@@ -62,7 +63,9 @@ def filter_out_non_questions(strings: list[str]) -> list[str]:
 
 def pipeline(pages: dict[int, str]) -> list[str]:
     # todo: add question splitting to pipeline, then update unit test
-    stripped_pages = [strip_header(page, HeaderPatterns.main) for page in pages.values()]
+    stripped_pages = [
+        strip_header(page, HeaderPatterns.main) for page in pages.values()
+    ]
     stripped_pages = [strip_header(page, HeaderPatterns.sub) for page in stripped_pages]
     all_pages = concatenate_pages(stripped_pages)
     questions = split_on_questions(all_pages)
@@ -72,18 +75,22 @@ def pipeline(pages: dict[int, str]) -> list[str]:
 
 def split_question_into_parts(question: str) -> dict:
     number, rest = [a.strip() for a in re.split(QuestionPatterns.number, question) if a]
-    name, rest = [b.strip() for b in re.split(QuestionPatterns.name, rest, maxsplit=1) if b]
-    group, sub = identify_question_group(name)
-    item_stem, rest = [c.strip() for c in re.split(QuestionPatterns.item_stem, rest, maxsplit=1) if c]
-    item_stem = item_stem.replace(sub, "").rstrip(" \n-–:")
+    name, rest = [
+        b.strip() for b in re.split(QuestionPatterns.name, rest, maxsplit=1) if b
+    ]
+    group, subtopic = identify_question_group(name)
+    item_stem, rest = [
+        c.strip() for c in re.split(QuestionPatterns.item_stem, rest, maxsplit=1) if c
+    ]
+    # item_stem = item_stem.replace(subtopic, "").rstrip(" \n-–:")
     responses = [d.strip() for d in re.split(QuestionPatterns.responses, rest)]
     return dict(
         number=number,
         name=name,
         group=group,
-        subtopic=sub,
+        subtopic=subtopic,
         item_stem=item_stem,
-        responses=[r for r in responses if r]
+        responses=[r for r in responses if r],
     )
 
 
@@ -100,6 +107,15 @@ def responses_to_map(responses: list[str]) -> dict[int, str]:
     pattern = re.compile("(-?\d+).+?([A-Z].*)")
     response_tuples = [re.split(pattern, r)[1:-1] for r in responses]
     return {int(k): v for k, v in response_tuples}
+
+
+def flip_key_value(mapping: dict[str, str]) -> dict[str, str]:
+    return {v: k for k, v in mapping.items()}
+
+
+def flip_response_order():
+    # todo: implement
+    raise NotImplementedError
 
 
 def get_invalid_responses(response_map: dict[int, str]) -> dict[int, str]:

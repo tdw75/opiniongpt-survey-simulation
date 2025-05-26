@@ -5,15 +5,17 @@ import pandas as pd
 from src.data.read import unpickle_pages
 from src.data.variables import pipeline, split_question_into_parts
 
-
-def main(base_directory: str, page_nums: list[int]):
-    page_directory = os.path.join(base_directory, "pages_raw")
+def main(read_directory: str, page_nums: list[int], write_directory: str = None):
+    page_directory = os.path.join(read_directory, "pages_raw")
     pages = unpickle_pages(page_directory, page_nums)
     question_strings = pipeline(pages)
-    questions = [split_question_into_parts(q) for q in remove_problem_questions(question_strings)]
+
+    questions = []
+    for q in remove_problem_questions(question_strings):
+        questions.append(split_question_into_parts(q))
 
     questions_df = pd.DataFrame(questions)
-    questions_df.to_csv(os.path.join(base_directory, "variables.csv"))
+    questions_df.to_csv(os.path.join(write_directory or read_directory, "variables.csv"))
 
 
 def remove_problem_questions(all_questions: list[str]) -> list[str]:

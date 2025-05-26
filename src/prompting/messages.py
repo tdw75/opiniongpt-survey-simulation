@@ -38,7 +38,7 @@ def extract_user_prompts_from_survey_grouped(survey_df: pd.DataFrame) -> dict[st
 
 
 def extract_user_prompts_from_survey_individual(
-    survey_df: pd.DataFrame,
+    survey_df: pd.DataFrame, is_subtopic_separate: bool
 ) -> dict[str, str]:
     """
     General prompt format for each individual questions
@@ -50,7 +50,7 @@ def extract_user_prompts_from_survey_individual(
         subtopic = (
             f"\n{question['subtopic']}" if not pd.isnull(question["group"]) else ""
         )
-        item = f"{question['item_stem']}{subtopic}"
+        item = f"{question['item_stem']}{subtopic if is_subtopic_separate else ''}"
         responses = literal_eval(question["responses"])
         prompts[question["number"]] = build_user_prompt_message_individual(
             item, responses_to_map(responses), question["number"]
