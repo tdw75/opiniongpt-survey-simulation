@@ -15,7 +15,6 @@ def run_single(
     config: ModelConfig,
     survey_questions: dict[str, str],
     run_id: str,
-    **kwargs,
 ):
     start = timer()
     logging.debug(model)
@@ -24,13 +23,11 @@ def run_single(
         model, tokenizer, config, survey_questions, system_prompt
     )
     end = timer()
-    return {  # todo: add rest of metadata, unpack all config values
+    return {
         "metadata": {
-            **config.model_dump(),
-            "system_prompt": system_prompt,
             "run_id": run_id,
             "execution_time": end - start,
-            **kwargs,
+            **config.model_dump(),
         },
         "questions": survey_questions,
         "responses": responses,

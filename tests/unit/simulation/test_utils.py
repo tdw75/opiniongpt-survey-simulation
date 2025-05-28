@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+from src.simulation.models import ModelConfig
 from src.simulation.utils import get_run_name, filter_survey_subset
 
 
@@ -17,10 +18,13 @@ def test_filter_survey_subset():
 @pytest.mark.parametrize(
     "base_model_name, is_lora, subgroup, exp_name",
     [
-        ("claude", False, "australian", "claude-instruct-australian"),
-        ("claude", True, "australian", "claude-opinion-gpt-australian"),
-        ("claude", False, None, "claude-instruct-general"),
+        ("phi", False, "german", "phi-instruct-german"),
+        ("phi", True, "german", "phi-opinion-gpt-german"),
+        ("phi", False, None, "phi-instruct-general"),
     ],
 )
 def test_get_run_name(base_model_name, is_lora, subgroup, exp_name):
-    assert get_run_name(base_model_name, is_lora, subgroup) == exp_name
+    config = ModelConfig(
+        base_model_name=base_model_name, subgroup=subgroup, is_lora=is_lora
+    )
+    assert get_run_name(config) == exp_name

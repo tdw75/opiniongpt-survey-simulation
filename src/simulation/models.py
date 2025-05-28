@@ -64,7 +64,7 @@ class ModelConfig(BaseModel):
 
     @property
     def model_type(self) -> str:
-        return "OpinionGPT" if self.is_lora else "Instruct"
+        return "opinion-gpt" if self.is_lora else f"instruct"
 
     @property
     def model_id(self) -> str:

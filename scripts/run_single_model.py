@@ -50,7 +50,7 @@ def main(
     survey_run = run_single(
         model, tokenizer, config, survey_questions, run_id, **kwargs
     )
-    run_name = get_run_name(base_model_name, is_lora, subgroup if is_lora else None)
+    run_name = get_run_name(config)
     save_results({run_name: survey_run}, directory, run_id, simulation_name)
 
 

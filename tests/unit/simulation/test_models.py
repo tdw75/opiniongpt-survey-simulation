@@ -19,13 +19,13 @@ class TestModelConfig:
 
         assert config.base_model_name == "phi"
         assert config.model_id == "unsloth/Phi-3-mini-4k-instruct"
-        assert config.model_type == "OpinionGPT"
+        assert config.model_type == "opinion-gpt"
         assert config.hyperparams == {
-            "min_new_tokens": 4,
+            "min_new_tokens": 2,
             "max_new_tokens": 9999,
             "do_sample": True,
             "top_p": 0.9,
-            "temperature": 0.8,
+            "temperature": 0.6,
             "new_param": True,
         }
 
