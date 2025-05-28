@@ -1,12 +1,5 @@
+from src.demographics.config import subgroups
 from src.demographics.base import BaseSubGroup
-
-
-def build_persona_message(subgroup: type[BaseSubGroup]) -> str:
-    return f"""
-    Please answer all questions as if you are {subgroup.PERSONA}.
-    Make sure your responses align as closely as possible to the responses that someone from this 
-    demographic is likely to give.
-    """
 
 
 def build_survey_context_message() -> str:
@@ -35,6 +28,19 @@ def build_survey_context_message() -> str:
     For example:
     4: Agree strongly"
     """
+
+
+def build_persona_message(subgroup: type[BaseSubGroup]) -> str:
+    return f"""
+    Please answer all questions as if you are {subgroup.PERSONA}.
+    Make sure your responses align as closely as possible to the responses that someone from this 
+    demographic is likely to give.
+    """
+
+
+def build_survey_context_for_persona(subgroup: str) -> str:
+    persona = build_persona_message(subgroups[subgroup]) if subgroup is not None else ""
+    return build_survey_context_message() + persona
 
 
 FEW_SHOT = ""  # todo: add examples to facilitate few shot learning
