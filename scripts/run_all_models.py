@@ -31,10 +31,30 @@ def main(
 ):
     survey_questions = load_survey(directory, filename, question_format, subset_file)
     run_id = generate_run_id(base_model_name)
-    simulated_surveys = {}
+    phi_instruct_surveys = run_phi_instruct(
+        survey_questions, base_model_name, device, count, run_id, **kwargs
+    )
+    opinion_gpt_surveys = run_opinion_gpt(
+        survey_questions, base_model_name, device, count, run_id, **kwargs
+    )  # todo: maybe add persona prompting for opinion gpt
+    save_results(
+        {**phi_instruct_surveys, **opinion_gpt_surveys},
+        directory,
+        run_id,
+        simulation_name,
+    )
 
-    # BASE (NON-LORA) MODELS
-    instruct_config = ModelConfig(
+
+def run_phi_instruct(
+    survey_questions,
+    base_model_name: str,
+    device: str,
+    count: int,
+    run_id: str,
+    **kwargs,
+):
+    simulated_surveys = {}
+    config = ModelConfig(
         base_model_name=base_model_name,
         subgroup=None,
         is_lora=False,
@@ -44,27 +64,28 @@ def main(
         count=count,
         hyperparams=kwargs,
     )
-    instruct_model, instruct_tokenizer = load_model(instruct_config)
+    model, tokenizer = load_model(config)
 
     for subgroup in adapters + [None]:
 
-        instruct_model, instruct_config = change_subgroup(
-            instruct_model,
-            instruct_config,
-            subgroup,
-        )
-        run_name = get_run_name(base_model_name, False, subgroup)
+        model, config = change_subgroup(model, config, subgroup)
+        run_name = get_run_name(config)
         simulated_surveys[run_name] = run_single(
-            instruct_model,
-            instruct_tokenizer,
-            instruct_config,
-            survey_questions,
-            run_id,
-            **kwargs,
+            model, tokenizer, config, survey_questions, run_id
         )
+    return simulated_surveys
 
-    # OPINION GPT MODELS # todo: maybe add persona prompting for opinion gpt
-    opinion_gpt_config = ModelConfig(
+
+def run_opinion_gpt(
+    survey_questions,
+    base_model_name: str,
+    device: str,
+    count: int,
+    run_id: str,
+    **kwargs,
+):
+    simulated_surveys = {}
+    config = ModelConfig(
         base_model_name=base_model_name,
         is_lora=True,
         is_persona=False,
@@ -73,24 +94,15 @@ def main(
         count=count,
         hyperparams=kwargs,
     )
-    opinion_gpt_model, opinion_gpt_tokenizer = load_model(opinion_gpt_config)
+    model, tokenizer = load_model(config)
 
     for subgroup in adapters:
-
-        run_name = get_run_name(base_model_name, True, subgroup)
-        opinion_gpt_model, opinion_gpt_config = change_subgroup(
-            opinion_gpt_model, opinion_gpt_config, subgroup
-        )
+        run_name = get_run_name(config)
+        model, config = change_subgroup(model, config, subgroup)
         simulated_surveys[run_name] = run_single(
-            opinion_gpt_model,
-            opinion_gpt_tokenizer,
-            opinion_gpt_config,
-            survey_questions,
-            run_id,
-            **kwargs,
+            model, tokenizer, config, survey_questions, run_id
         )
-
-    save_results(simulated_surveys, directory, run_id, simulation_name)
+    return simulated_surveys
 
 
 if __name__ == "__main__":
