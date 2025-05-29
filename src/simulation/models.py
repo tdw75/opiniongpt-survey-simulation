@@ -45,7 +45,7 @@ class ModelConfig(BaseModel):
     subgroup: Literal[tuple(adapters + [None])] = None
     is_lora: bool = False
     is_persona: bool = False
-    device: str = "cuda:2"
+    device: str = "cuda"
     aggregation_by: Literal["questions", "respondent"] = "questions"
     count: int = 500
     hyperparams: dict = {}
@@ -86,10 +86,10 @@ def load_model(
 ) -> tuple[PeftModel | PreTrainedModel, PreTrainedTokenizer]:
     model, tokenizer = load_base(config)
     if config.is_lora:
-        return load_opinion_gpt(model, config), tokenizer
+        model = load_opinion_gpt(model, config)
     else:
         logger.info("No LoRA adapters used")
-        return model.to(config.device), tokenizer
+    return model, tokenizer
 
 
 def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
@@ -97,9 +97,13 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
     lora_id = "HU-Berlin-ML-Internal/opiniongpt-phi3-{adapter}"
     default_adapter = adapters[0]
 
+    model = AutoModelForCausalLM.from_pretrained(config.model_id)
     model = PeftModel.from_pretrained(
-        model, lora_id.format(adapter=default_adapter), adapter_name=default_adapter
-    ).to(config.device)
+        model,
+        lora_id.format(adapter=default_adapter),
+        adapter_name=default_adapter,
+        device_map="auto",
+    )
 
     for adapter in adapters[1:]:  # all adapters loaded to be accessed as needed
         logger.info(f"Loading adapter: {adapter}")
@@ -110,7 +114,9 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
 
 def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     model = AutoModelForCausalLM.from_pretrained(config.model_id)
-    tokenizer = AutoTokenizer.from_pretrained(config.model_id, padding_side="left")
+    tokenizer = AutoTokenizer.from_pretrained(
+        config.model_id, padding_side="left", device_map="auto", torch_dtype="auto"
+    )
     # if is_phi_model(model_id):
     #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT
     logger.info(f"Successfully loaded model: {config.model_id}")
