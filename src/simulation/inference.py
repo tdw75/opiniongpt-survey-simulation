@@ -49,7 +49,7 @@ def simulate_single_respondent(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": question},
         ]
-        generation_kwargs = init_generation_params(model, tokenizer, config, messages)
+        generation_kwargs = init_generation_params(tokenizer, config, messages)
         input_length = generation_kwargs["input_ids"].shape[-1]
         responses = generate_responses(
             model, tokenizer, generation_kwargs, input_length
@@ -62,10 +62,7 @@ def simulate_single_respondent(
 
 
 def init_generation_params(
-    model: PreTrainedModel,
-    tokenizer: PreTrainedTokenizer,
-    config: ModelConfig,
-    messages: list[dict[str, str]],
+    tokenizer: PreTrainedTokenizer, config: ModelConfig, messages: list[dict[str, str]]
 ):
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
 
@@ -82,7 +79,6 @@ def init_generation_params(
         add_generation_prompt=True,
         return_dict=True,
     )
-    inputs = {k: v.to(model.device) for k, v in inputs.items()}
 
     generation_kwargs = dict(
         input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
@@ -121,7 +117,7 @@ def simulate_set_of_responses_multiple_questions(
         survey.items(), desc=f"{config.subgroup or 'general'} survey"
     ):
         messages = format_messages(system_prompt, question, config)
-        generation_kwargs = init_generation_params(model, tokenizer, config, messages)
+        generation_kwargs = init_generation_params(tokenizer, config, messages)
         input_len = generation_kwargs["input_ids"].shape[-1]
         responses[number] = generate_responses(
             model, tokenizer, generation_kwargs, input_len
