@@ -266,7 +266,7 @@ somewhere in between, you can choose any number in between.","['1.- Private owne
 91,Q108,Government´s vs individual´s responsibility,,Government´s vs individual´s responsibility,"Now I'd like you to tell me your views on various issues. How would you place your 
 views on this scale? 1 means you agree completely with the statement on the left; 10 
 means you agree completely with the statement on the right; and if your views fall 
-somewhere in between, you can choose any number in between.","['1.- The government should take more responsibility to ensure that everyone is', 'provided for', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- People should take more responsibility to provide for themselves', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+somewhere in between, you can choose any number in between.","['1.- The government should take more responsibility to ensure that everyone is provided for', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- People should take more responsibility to provide for themselves', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 92,Q109,Competition good or harmful,,Competition good or harmful,"Now I'd like you to tell me your views on various issues. How would you place your 
 views on this scale? 1 means you agree completely with the statement on the left; 10 
 means you agree completely with the statement on the right; and if your views fall 
@@ -274,7 +274,7 @@ somewhere in between, you can choose any number in between.","['1.- Competition 
 93,Q110,Success: hard work vs luck,Success,hard work vs luck,"Now I'd like you to tell me your views on various issues. How would you place your 
 views on this scale? 1 means you agree completely with the statement on the left; 10 
 means you agree completely with the statement on the right; and if your views fall 
-somewhere in between, you can chose any number in between.","['1.- In the long run, hard work usually brings a better life', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Hard work doesn´t generally bring success - it´s more a matter of luck and', 'connections', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+somewhere in between, you can chose any number in between.","['1.- In the long run, hard work usually brings a better life', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Hard work doesn´t generally bring success - it´s more a matter of luck and connections', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 94,Q111,Protecting environment vs. Economic growth,,Protecting environment vs. Economic growth,"Here are two statements people sometimes make when discussing the environment and 
 economic growth. Which of them comes closer to your own point of view? A. Protecting 
 the environment should be given priority, even if it causes slower economic growth and 
@@ -662,17 +662,14 @@ completely satisfied.","['1.- Not satisfied at all', '2.- 2', '3.- 3', '4.- 4', 
 this card, would you tell me how close do you feel to…?  
 Your village, town or city","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 236,Q256,"Feel close to your district, region",Feel close to,"Feel close to your district, region","People have different views about themselves and how they relate to the world. Using
-this card, would you tell me how strongly you agree or disagree with each of the 
-following statements about how you see yourself?  
+this card, would you tell me how close do you feel to…?
 Your county, region, district","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 237,Q257,Feel close to your country,Feel close to,Feel close to your country,"People have different views about themselves and how they relate to the world. Using
-this card, would you tell me how strongly you agree or disagree with each of the 
-following statements about how you see yourself?  
-Country","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+this card, would you tell me how close do you feel to…?
+Your country","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 238,Q258,Feel close to your continent,Feel close to,Feel close to your continent,"People have different views about themselves and how they relate to the world. Using
 this card, would you tell me how close do you feel to…?  
-Continent; e.g. Europe, Asia etc.","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+Your continent; e.g. Europe, Asia etc.","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 239,Q259,Feel close to the world,Feel close to,Feel close to the world,"People have different views about themselves and how they relate to the world. Using
-this card, would you tell me how strongly you agree or disagree with each of the 
-following statements about how you see yourself?  
-World","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+this card, would you tell me how close do you feel to…?
+The world","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
