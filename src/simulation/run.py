@@ -18,10 +18,7 @@ def run_single(
 ):
     start = timer()
     logging.debug(model)
-    system_prompt = build_survey_context_message()
-    responses = simulate_whole_survey(
-        model, tokenizer, config, survey_questions, system_prompt
-    )
+    responses = simulate_whole_survey(model, tokenizer, config, survey_questions)
     end = timer()
     return {
         "metadata": {

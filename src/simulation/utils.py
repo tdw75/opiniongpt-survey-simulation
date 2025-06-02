@@ -72,7 +72,3 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     """debugging function: selects a single question from the survey"""
     single_question = list(survey.items())[idx]
     return {single_question[0]: single_question[1]}
-
-
-def get_run_name(config: ModelConfig) -> str:
-    return f"{config.base_model_name}-{config.model_type}-{config.subgroup or 'general'}"
