@@ -41,13 +41,13 @@ def simulate_single_respondent(
 
     for number, question in tqdm(survey.items()):  # todo: add desc
         # todo: add previous_responses to 'assistant' prompt
-
         # todo: use format_messages
         messages = [
             {"role": "system", "content": config.system_prompt},
             {"role": "user", "content": question},
         ]
         generation_kwargs = init_generation_params(tokenizer, config, messages)
+        generation_kwargs["num_return_sequences"] = 1
         input_length = generation_kwargs["input_ids"].shape[-1]
         responses = generate_responses(
             model, tokenizer, generation_kwargs, input_length
@@ -66,6 +66,8 @@ def init_generation_params(
 
     if config.aggregation_by == "questions":
         config.hyperparams["num_return_sequences"] = config.batch_size
+    elif config.aggregation_by == "respondents":
+        config.hyperparams["num_return_sequences"] = 1
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -111,9 +113,7 @@ def simulate_set_of_responses_multiple_questions(
 ):
     responses: dict[str, list[str]] = {}
 
-    for number, question in tqdm(
-        survey.items(), desc=f"{config.subgroup or 'general'} survey"
-    ):
+    for number, question in tqdm(survey.items(), desc=config.run_name):
         messages = format_messages(survey[number], config)
         responses[number] = simulate_set_of_responses_single_question(
             model, tokenizer, config, messages
