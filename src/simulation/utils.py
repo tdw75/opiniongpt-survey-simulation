@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from typing import Generator
 
 import pandas as pd
 
@@ -72,3 +73,11 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     """debugging function: selects a single question from the survey"""
     single_question = list(survey.items())[idx]
     return {single_question[0]: single_question[1]}
+
+
+def get_batch(config: ModelConfig):
+    full_batches = config.sample_size // config.batch_size
+    for _ in range(full_batches):
+        yield config.batch_size
+    if remainder := config.sample_size % config.batch_size:
+        yield remainder

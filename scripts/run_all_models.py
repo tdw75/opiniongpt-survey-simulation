@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -7,7 +8,6 @@ print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
-from src.analysis.results import load_survey_results
 from src.simulation.models import adapters, ModelConfig, load_model, change_subgroup
 from src.simulation.run import run_single
 from src.simulation.utils import (
@@ -27,7 +27,7 @@ def main(
     question_format: str = "individual",
     device: str = "cuda:2",
     sample_size: int = 500,
-    batch_size: int = 50,
+    batch_size: int = None,
     run_id: str = None,
     **kwargs,  # LLM hyperparams
 ):
@@ -38,7 +38,7 @@ def main(
     shared_config_vars = {
         "base_model_name": base_model_name,
         "sample_size": sample_size,
-        "batch_size": batch_size,
+        "batch_size": batch_size or sample_size,
         "device": device,
         "hyperparams": kwargs,
     }
