@@ -6,6 +6,7 @@ import pandas as pd
 
 from src.prompting.messages import extract_user_prompts_from_survey_grouped
 from src.prompting.messages import extract_user_prompts_from_survey_individual
+from src.simulation.models import ModelConfig
 
 
 def huggingface_login() -> None:
@@ -73,6 +74,5 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     return {single_question[0]: single_question[1]}
 
 
-def get_run_name(base_model_name: str, is_lora: bool, subgroup: str | None) -> str:
-    model_type = "opinion-gpt" if is_lora else "instruct"
-    return f"{base_model_name}-{model_type}-{subgroup or 'general'}"
+def get_run_name(config: ModelConfig) -> str:
+    return f"{config.base_model_name}-{config.model_type}-{config.subgroup or 'general'}"
