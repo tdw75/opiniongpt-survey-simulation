@@ -72,8 +72,6 @@ def build_user_prompt_message_grouped(
 {format_subtopics(numbers, subtopics)}
 
 {format_responses(response_set)}
-
-Response:
 """
 
 
@@ -84,8 +82,6 @@ def build_user_prompt_message_individual(
 {number}: {item}
 
 {format_responses(response_set)}
-
-Response:
 """
 
 

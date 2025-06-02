@@ -4,7 +4,6 @@ from timeit import default_timer as timer
 from peft import PeftModel
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from src.prompting.system import build_survey_context_message
 from src.simulation.inference import simulate_whole_survey
 from src.simulation.models import ModelConfig
 
