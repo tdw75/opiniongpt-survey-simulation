@@ -98,7 +98,7 @@ def test_format_messages():
     system_prompt = "this is the system prompt"
     user_prompt = "what is your name?"
     formatted = format_messages(
-        system_prompt, user_prompt, ModelConfig(base_model_name="phi")
+        user_prompt, ModelConfig(base_model_name="phi", system_prompt=system_prompt)
     )
     assert formatted == [
         {"role": "user", "content": "this is the system prompt\nwhat is your name?"}

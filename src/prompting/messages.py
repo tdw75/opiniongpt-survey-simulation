@@ -72,8 +72,6 @@ def build_user_prompt_message_grouped(
 {format_subtopics(numbers, subtopics)}
 
 {format_responses(response_set)}
-
-Response:
 """
 
 
@@ -84,8 +82,6 @@ def build_user_prompt_message_individual(
 {number}: {item}
 
 {format_responses(response_set)}
-
-Response:
 """
 
 
@@ -107,13 +103,11 @@ def format_subtopics(numbers: list[str], subtopics: list[str] | None) -> str:
         return message
 
 
-def format_messages(
-    system_prompt: str, user_prompt: str, model_config: ModelConfig
-) -> list[dict[str, str]]:
-    if model_config.is_phi_model:
-        return [{"role": "user", "content": f"{system_prompt}\n{user_prompt}"}]
+def format_messages(user_prompt: str, config: ModelConfig) -> list[dict[str, str]]:
+    if config.is_phi_model:
+        return [{"role": "user", "content": f"{config.system_prompt}\n{user_prompt}"}]
     else:
         return [
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": config.system_prompt},
             {"role": "user", "content": user_prompt},
         ]

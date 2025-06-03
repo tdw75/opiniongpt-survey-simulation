@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from typing import Generator
 
 import pandas as pd
 
@@ -35,7 +36,7 @@ def load_survey(
     if question_format == "grouped":
         survey = extract_user_prompts_from_survey_grouped(survey_df)
     elif question_format == "individual":
-        survey = extract_user_prompts_from_survey_individual(survey_df, True)
+        survey = extract_user_prompts_from_survey_individual(survey_df, False)
     else:
         raise ValueError(f"Invalid question format: {question_format}")
 
@@ -74,5 +75,9 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     return {single_question[0]: single_question[1]}
 
 
-def get_run_name(config: ModelConfig) -> str:
-    return f"{config.base_model_name}-{config.model_type}-{config.subgroup or 'general'}"
+def get_batch(config: ModelConfig):
+    full_batches = config.sample_size // config.batch_size
+    for _ in range(full_batches):
+        yield config.batch_size
+    if remainder := config.sample_size % config.batch_size:
+        yield remainder

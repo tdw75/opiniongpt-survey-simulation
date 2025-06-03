@@ -47,7 +47,8 @@ class ModelConfig(BaseModel):
     is_persona: bool = False
     device: str = "cuda:2"
     aggregation_by: Literal["questions", "respondent"] = "questions"
-    count: int = 500
+    sample_size: int = 500
+    batch_size: int = 50,
     hyperparams: dict = {}
     system_prompt: str = build_survey_context_message()
 
@@ -79,6 +80,11 @@ class ModelConfig(BaseModel):
             self.subgroup = subgroup
         else:
             raise ValueError(f"Invalid subgroup: {subgroup}")
+
+    @property
+    def run_name(self):
+        persona_suffix = "with-persona" if self.is_persona else "no-persona"
+        return f"{self.base_model_name}-{self.model_type}-{self.subgroup or 'general'}-{persona_suffix}"
 
 
 def load_model(

@@ -119,12 +119,10 @@ is...","['1.- Very good', '2.- Good', '3.- Fair', '4.- Poor', '5.- Very poor', '
 other people feel that what they do has no real effect on what happens to them. Please 
 use this scale where 1 means ""none at all"" and 10 means ""a great deal"" to indicate how 
 much freedom of choice and control you feel you ha ve over the way your life turns out.","['0.- A great deal', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- None at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
-45,Q49,Satisfaction with your life,,Satisfaction with your life,"All things considered, how satisfied are you with your life as a whole these days?
- 1","['0.- Completely satisfied', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- Completely dissatisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+45,Q49,Satisfaction with your life,,Satisfaction with your life,"All things considered, how satisfied are you with your life as a whole these days?","['0.- Completely satisfied', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- Completely dissatisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 46,Q50,Satisfaction with financial situation of household,,Satisfaction with financial situation of household,"How satisfied are you with the financial situation of your household? If '1' means you 
 are completely dissatisfied on this scale, and '10' means you are completely satisfied, 
-where would you put your satisfaction with your household's financial situation?
- 1","['0.- Satisfied', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- Dissatisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
+where would you put your satisfaction with your household's financial situation?","['0.- Satisfied', '9.- 9', '8.- 8', '7.- 7', '6.- 6', '5.- 5', '4.- 4', '3.- 3', '2.- 2', '1.- Dissatisfied', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Unknown']"
 47,Q51,Frequency you/family (last 12 month): Gone without enough food to eat,Frequency you/family (last 12 month),Gone without enough food to eat,"In the last 12 months, how often have you or your family:  
 Gone without enough food to eat","['1.- Often', '2.- Sometimes', '3.- Rarely', '4.- Never', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 48,Q52,Frequency you/family (last 12 month): Felt unsafe from crime in your own home,Frequency you/family (last 12 month),Felt unsafe from crime in your own home,"In the last 12 months, how often have you or your family:  
@@ -139,22 +137,22 @@ Gone without a safe shelter over your head","['1.- Often', '2.- Sometimes', '3.-
 about your age, would you say that you are better off, worse off or about the same?","['1.- Better off', '2.- Worse off', '3.- Or about the same', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 53,Q57,Most people can be trusted,,Most people can be trusted,"Generally speaking, would you say that most people can be trusted or that you need to 
 be very careful in dealing with people?","['1.- Most people can be trusted', '2.- Need to be very careful', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing']"
-54,Q58,Trust: Your family,Trust,Your family,"I ‘d like to ask you how much you trust people from various groups. Could you tell me
+54,Q58,Trust: Your family,Trust,Your family,"I‘d like to ask you how much you trust people from various groups. Could you tell me
 for each whether you trust people from this group completely, somewhat, not very much 
 or not at all? Your family","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
-55,Q59,Trust: Your neighborhood,Trust,Your neighborhood,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+55,Q59,Trust: Your neighborhood,Trust,Your neighborhood,"I‘d like to ask you how much you trust people from various groups. Could you tell me
 for each whether you trust people from this group completely, somewhat, not very much 
 or not at all? Your neighborhood","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
-56,Q60,Trust: People you know personally,Trust,People you know personally,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+56,Q60,Trust: People you know personally,Trust,People you know personally,"I‘d like to ask you how much you trust people from various groups. Could you tell me
 for each whether you trust people from this group completely, somewhat, not very much 
 or not at all? People you know personally","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
-57,Q61,Trust: People you meet for the first time,Trust,People you meet for the first time,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+57,Q61,Trust: People you meet for the first time,Trust,People you meet for the first time,"I‘d like to ask you how much you trust people from various groups. Could you tell me
 for each whether you trust people from this group completely, somewhat, not very much 
 or not at all? People you meet for the first time","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
-58,Q62,Trust: People of another religion,Trust,People of another religion,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+58,Q62,Trust: People of another religion,Trust,People of another religion,"I‘d like to ask you how much you trust people from various groups. Could you tell me
 for each whether you trust people from this group completely, somewhat, not very 
 much or not at all? People of another religion","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
-59,Q63,Trust: People of another nationality,Trust,People of another nationality,"I ‘d like to ask you how much you trust people from various groups. Could you tell me 
+59,Q63,Trust: People of another nationality,Trust,People of another nationality,"I‘d like to ask you how much you trust people from various groups. Could you tell me
 for each whether you trust people from this group completely, somewhat, not very 
 much or not at all? People of another nationality","['1.- Trust completely', '2.- Trust somewhat', '3.- Do not trust very much', '4.- Do not trust at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 60,Q64,Confidence: Churches,Confidence,Churches,"I am going to name a number of organizations. For each one, could you tell me how 
@@ -266,7 +264,7 @@ somewhere in between, you can choose any number in between.","['1.- Private owne
 91,Q108,Government´s vs individual´s responsibility,,Government´s vs individual´s responsibility,"Now I'd like you to tell me your views on various issues. How would you place your 
 views on this scale? 1 means you agree completely with the statement on the left; 10 
 means you agree completely with the statement on the right; and if your views fall 
-somewhere in between, you can choose any number in between.","['1.- The government should take more responsibility to ensure that everyone is', 'provided for', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- People should take more responsibility to provide for themselves', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+somewhere in between, you can choose any number in between.","['1.- The government should take more responsibility to ensure that everyone is provided for', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- People should take more responsibility to provide for themselves', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 92,Q109,Competition good or harmful,,Competition good or harmful,"Now I'd like you to tell me your views on various issues. How would you place your 
 views on this scale? 1 means you agree completely with the statement on the left; 10 
 means you agree completely with the statement on the right; and if your views fall 
@@ -274,11 +272,12 @@ somewhere in between, you can choose any number in between.","['1.- Competition 
 93,Q110,Success: hard work vs luck,Success,hard work vs luck,"Now I'd like you to tell me your views on various issues. How would you place your 
 views on this scale? 1 means you agree completely with the statement on the left; 10 
 means you agree completely with the statement on the right; and if your views fall 
-somewhere in between, you can chose any number in between.","['1.- In the long run, hard work usually brings a better life', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Hard work doesn´t generally bring success - it´s more a matter of luck and', 'connections', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+somewhere in between, you can chose any number in between.","['1.- In the long run, hard work usually brings a better life', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- Hard work doesn´t generally bring success - it´s more a matter of luck and connections', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 94,Q111,Protecting environment vs. Economic growth,,Protecting environment vs. Economic growth,"Here are two statements people sometimes make when discussing the environment and 
-economic growth. Which of them comes closer to your own point of view? A. Protecting 
-the environment should be given priority, even if it causes slower economic growth and 
-some loss of jobs B. Economic growth and creating jobs should be the top priority, even 
+economic growth. Which of them comes closer to your own point of view?
+A. Protecting the environment should be given priority, even if it causes slower economic growth and
+some loss of jobs
+B. Economic growth and creating jobs should be the top priority, even
 if the environment suffers to som e extent","['1.- A: Protect environment', '2.- B: Economic growth', '3.- Other answer', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 95,Q112,Perceptions of corruption in the country,,Perceptions of corruption in the country,"Now I'd like you to tell me your views on corruption – when people pay a bribe, give a 
 gift or do a favor to other people in order to get the things they need done or the services 
@@ -618,7 +617,7 @@ of democracy. - Governments tax the rich and subsidize the poor","['0.- It is ag
 222,Q242,Democracy: Religious authorities interpret the laws,Democracy,Religious authorities interpret the laws,"Please tell me for each of the following things how essential you think it is as a 
 characteristic of democracy. Use this scale where 1 means “not at all an essential 
 characteristic of democracy” and 10 means it definitely is “an essential characteristic 
-of democr acy. - Religious authorities interpret the laws","['0.- It is against democracy', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+of democracy. - Religious authorities interpret the laws","['0.- It is against democracy', '1.- Not an essential characteristic of democracy', '2.- 2', '3.- 3', '4.- 4', '5.- 5', '6.- 6', '7.- 7', '8.- 8', '9.- 9', '10.- An essential characteristic of democracy', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 223,Q243,Democracy: People choose their leaders in free elections,Democracy,People choose their leaders in free elections,"Please tell me for each of the following things how essential you think it is as a 
 characteristic of democracy. Use this scale where 1 means “not at all an essential 
 characteristic of democracy” and 10 means it definitely is “an essential characteristic 
@@ -662,17 +661,14 @@ completely satisfied.","['1.- Not satisfied at all', '2.- 2', '3.- 3', '4.- 4', 
 this card, would you tell me how close do you feel to…?  
 Your village, town or city","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 236,Q256,"Feel close to your district, region",Feel close to,"Feel close to your district, region","People have different views about themselves and how they relate to the world. Using
-this card, would you tell me how strongly you agree or disagree with each of the 
-following statements about how you see yourself?  
+this card, would you tell me how close do you feel to…?
 Your county, region, district","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 237,Q257,Feel close to your country,Feel close to,Feel close to your country,"People have different views about themselves and how they relate to the world. Using
-this card, would you tell me how strongly you agree or disagree with each of the 
-following statements about how you see yourself?  
-Country","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+this card, would you tell me how close do you feel to…?
+Your country","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 238,Q258,Feel close to your continent,Feel close to,Feel close to your continent,"People have different views about themselves and how they relate to the world. Using
 this card, would you tell me how close do you feel to…?  
-Continent; e.g. Europe, Asia etc.","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+Your continent; e.g. Europe, Asia etc.","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
 239,Q259,Feel close to the world,Feel close to,Feel close to the world,"People have different views about themselves and how they relate to the world. Using
-this card, would you tell me how strongly you agree or disagree with each of the 
-following statements about how you see yourself?  
-World","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"
+this card, would you tell me how close do you feel to…?
+The world","['1.- Very close', '2.- Close', '3.- Not very close', '4.- Not close at all', '-1-.- Don´t know', '-2-.- No answer', '-4-.- Not asked', '-5-.- Missing; Not available']"

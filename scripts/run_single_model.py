@@ -13,7 +13,6 @@ from src.simulation.utils import (
     huggingface_login,
     save_results,
     generate_run_id,
-    get_run_name,
     load_survey,
 )
 
@@ -23,7 +22,8 @@ def main(
     directory: str,
     subgroup: str,
     is_lora: bool,
-    count: int = 1000,
+    sample_size: int = 1000,
+    batch_size: int = 50,
     filename: str = "variables.csv",
     subset_file: str = None,
     simulation_name: str = None,
@@ -40,18 +40,16 @@ def main(
         is_persona=False,  # todo: parametrise
         device=device,
         aggregation_by="questions",  # todo: parametrise
-        count=count,
+        sample_size=sample_size,
+        batch_size=batch_size,
         hyperparams=kwargs,
     )
     run_id = generate_run_id(base_model_name)
     model, tokenizer = load_model(config)
     model, config = change_subgroup(model, config, subgroup)
 
-    survey_run = run_single(
-        model, tokenizer, config, survey_questions, run_id, **kwargs
-    )
-    run_name = get_run_name(config)
-    save_results({run_name: survey_run}, directory, run_id, simulation_name)
+    survey_run = run_single(model, tokenizer, config, survey_questions, run_id)
+    save_results({config.run_name: survey_run}, directory, run_id, simulation_name)
 
 
 if __name__ == "__main__":

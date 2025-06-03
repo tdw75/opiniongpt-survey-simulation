@@ -34,6 +34,25 @@ class TestModelConfig:
         config = ModelConfig(base_model_name=model_name)
         assert config.is_phi_model == exp
 
+    @pytest.mark.parametrize(
+        "base_model_name, is_lora, is_persona, subgroup, exp_name",
+        [
+            ("phi", False, True, "german", "phi-instruct-german-with-persona"),
+            ("phi", True, False, "german", "phi-opinion-gpt-german-no-persona"),
+            ("phi", False, False, None, "phi-instruct-general-no-persona"),
+        ],
+    )
+    def test_get_run_name(
+        self, base_model_name, is_lora, is_persona, subgroup, exp_name
+    ):
+        config = ModelConfig(
+            base_model_name=base_model_name,
+            subgroup=subgroup,
+            is_lora=is_lora,
+            is_persona=is_persona,
+        )
+        assert config.run_name == exp_name
+
     def test_change_subgroup(self):
         config = ModelConfig(subgroup="german")
         config.change_subgroup("american")
