@@ -24,11 +24,12 @@ def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
 
 
 @pytest.mark.parametrize(
-    "file_name, is_subtopic_separate, is_reverse", [
+    "file_name, is_subtopic_separate, is_reverse",
+    [
         # ("sample_variables", True),
         ("sample_variables_not_split", False, True),
         ("sample_variables_not_split", False, False),
-    ]
+    ],
 )
 def test_extract_user_prompts_from_survey_individual(
     expected_messages_individual, file_name, is_subtopic_separate, is_reverse
@@ -73,9 +74,7 @@ def test_build_user_prompt_message_individual(
     }
 
     message = build_user_prompt_message_individual(
-        f"{question['item_stem']}",
-        responses,
-        question["number"],
+        f"{question['item_stem']}", responses, question["number"]
     )
     assert message == expected_messages_individual[False][number]
 
@@ -241,6 +240,8 @@ not like to have as neighbors? – People of a different religion
 The possible responses are:
 1: Not mentioned
 2: Mentioned
+
+Your response:
 """
     q27 = """
 Q27: For each of the following statements I read out, can you tell me how much you agree
