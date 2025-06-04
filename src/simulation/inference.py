@@ -16,13 +16,14 @@ def simulate_whole_survey(
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
     survey: dict[str, str],
+    flipped: dict[str, str],
 ) -> dict:
     logger.debug(model)
     if config.aggregation_by == "respondents":
         responses = simulate_group_of_respondents(model, tokenizer, config, survey)
     elif config.aggregation_by == "questions":
         responses = simulate_set_of_responses_multiple_questions(
-            model, tokenizer, config, survey
+            model, tokenizer, config, survey, flipped
         )
     else:
         raise ValueError  # todo: add error message
@@ -110,13 +111,12 @@ def simulate_set_of_responses_multiple_questions(
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
     survey: dict[str, str],
+    flipped: dict[str, str],
 ):
     responses: dict[str, list[str]] = {}
-
     for number, question in tqdm(survey.items(), desc=config.run_name):
-        messages = format_messages(survey[number], config)
         responses[number] = simulate_set_of_responses_single_question(
-            model, tokenizer, config, messages
+            model, tokenizer, config, survey[number], flipped[number]
         )
 
     return responses
@@ -126,16 +126,25 @@ def simulate_set_of_responses_single_question(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
-    messages: list[dict[str, str]],
+    question: str,
+    question_flipped: str,
 ) -> list[str]:
     responses = []
-    generation_kwargs = init_generation_params(tokenizer, config, messages)
-    input_len = generation_kwargs["input_ids"].shape[-1]
+    idx_to_name = {0: "normal", 1: "flipped"}
+    messages = {
+        "normal": format_messages(question, config),
+        "flipped": format_messages(question_flipped, config)
+    }
+    generation_kwargs = {
+        k: init_generation_params(tokenizer, config, m) for k, m in messages.items()
+    }
+    input_len = {k: v["input_ids"].shape[-1] for k, v in generation_kwargs.items()}
 
-    for batch in tqdm(get_batch(config), desc="batch"):
-        generation_kwargs["num_return_sequences"] = batch
+    for idx, batch in tqdm(enumerate(get_batch(config)), desc="batch"):
+        params_batch = generation_kwargs[idx_to_name[idx % 2]]
+        params_batch["num_return_sequences"] = batch
         response_batch = generate_responses(
-            model, tokenizer, generation_kwargs, input_len
+            model, tokenizer, params_batch, input_len[idx_to_name[idx % 2]]
         )
         responses.extend(response_batch)
 
