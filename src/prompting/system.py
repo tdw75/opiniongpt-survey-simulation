@@ -2,7 +2,7 @@ from src.demographics.config import subgroups
 from src.demographics.base import BaseSubGroup
 
 
-def build_survey_context_message(is_with_few_shot: bool = False) -> str:
+def build_survey_context_message(is_with_few_shot: bool) -> str:
 
     message = """
     You are participating in a survey on personal values. For each question, you will be given a list of possible 

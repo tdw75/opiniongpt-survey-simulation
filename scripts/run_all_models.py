@@ -29,6 +29,7 @@ def main(
     sample_size: int = 500,
     batch_size: int = None,
     run_id: str = None,
+    is_few_shot: bool = False,
     **kwargs,  # LLM hyperparams
 ):
 
@@ -40,6 +41,7 @@ def main(
         "sample_size": sample_size,
         "batch_size": batch_size or max(sample_size, 50),
         "device": device,
+        "is_few_shot": is_few_shot,
         "hyperparams": kwargs,
     }
 
