@@ -130,7 +130,7 @@ The possible responses are:
 3: Not very important
 4: Not at all important
 
-Response:
+Your response:
 """
     # todo: wording of neighbours question doesn't really make sense, might need to change manually
     q22_q26 = """
@@ -147,7 +147,7 @@ The possible responses are:
 1: Mentioned
 2: Not mentioned
 
-Response:
+Your response:
 """
     q27 = """
 For each of the following statements I read out, can you tell me how much you agree 
@@ -163,7 +163,7 @@ The possible responses are:
 3: Disagree
 4: Strongly disagree
 
-Response:
+Your response:
 """
     return {"Q1-Q6": q1_q6, "Q22-Q26": q22_q26, "Q27": q27}
 
@@ -172,7 +172,7 @@ Response:
 def expected_messages_individual() -> dict[str, str]:
     q1 = """
 Q1: For each of the following aspects, indicate how important it is in your life. Would you 
-say it is very important, rather important, not very important or not important at all?
+say it is very important, rather important, not very important or not important at all? –
 Family
 
 The possible responses are:
@@ -181,11 +181,11 @@ The possible responses are:
 3: Not very important
 4: Not at all important
 
-Response:
+Your response:
 """
     q4 = """
-Q4: For each of the following aspects, indicate how important it is in your life. Would you 
-say it is very important, rather important, not very important or not important at all?
+Q4: For each of the following aspects, indicate how important it is in your life. Would you
+say it is very important, rather important, not very important or not important at all? –
 Politics
 
 The possible responses are:
@@ -194,23 +194,22 @@ The possible responses are:
 3: Not very important
 4: Not at all important
 
-Response:
+Your response:
 """
     q23 = """
-Q23: On this list are various groups of people. Could you please mention any that you would 
-not like to have as neighbors?
-People of a different religion
+Q23: On this list are various groups of people. Could you please mention any that you would
+not like to have as neighbors? – People of a different religion
 
 The possible responses are:
 1: Mentioned
 2: Not mentioned
 
-Response:
+Your response:
 """
 
     q27 = """
-Q27: For each of the following statements I read out, can you tell me how much you agree 
-with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my 
+Q27: For each of the following statements I read out, can you tell me how much you agree
+with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my
 main goals in life has been to make my parents proud
 
 The possible responses are:
@@ -219,7 +218,7 @@ The possible responses are:
 3: Disagree
 4: Strongly disagree
 
-Response:
+Your response:
 """
 
     return {"Q1": q1, "Q4": q4, "Q23": q23, "Q27": q27}

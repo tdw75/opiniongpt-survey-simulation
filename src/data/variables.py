@@ -104,9 +104,13 @@ def identify_question_group(question_name: str) -> tuple[str, str]:
 
 
 def responses_to_map(responses: list[str]) -> dict[int, str]:
-    pattern = re.compile("(-?\d+).+?([A-Z, 0-9].*)")
-    response_tuples = [re.split(pattern, r)[1:-1] for r in responses]
-    return {int(k): v for k, v in response_tuples}
+    pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
+    response_tuples = [
+        (int(match.group(1)), match.group(2))
+        for r in responses
+        if (match := pattern.match(r))
+    ]
+    return {k: v for k, v in response_tuples}
 
 
 def flip_key_value(mapping: dict[str, str]) -> dict[str, str]:

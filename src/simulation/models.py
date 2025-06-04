@@ -50,7 +50,8 @@ class ModelConfig(BaseModel):
     sample_size: int = 500
     batch_size: int = 50,
     hyperparams: dict = {}
-    system_prompt: str = build_survey_context_message()
+    system_prompt: str = None
+    is_few_shot: bool = False  # fixme: currently has no effect
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
@@ -62,6 +63,7 @@ class ModelConfig(BaseModel):
             temperature=0.6,
         )
         self.hyperparams = {**default_hyperparams, **self.hyperparams}
+        self.system_prompt = self.system_prompt or build_survey_context_message()
 
     @property
     def model_type(self) -> str:
