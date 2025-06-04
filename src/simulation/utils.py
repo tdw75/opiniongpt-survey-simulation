@@ -24,7 +24,11 @@ def huggingface_login() -> None:
 
 
 def load_survey(
-    directory: str, file_name: str, question_format: str, subset_name: str
+    directory: str,
+    file_name: str,
+    question_format: str,
+    subset_name: str,
+    is_reverse: bool,
 ) -> dict[str, str]:
 
     survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
@@ -34,9 +38,11 @@ def load_survey(
         survey_df = filter_survey_subset(survey_df, subsets)
 
     if question_format == "grouped":
-        survey = extract_user_prompts_from_survey_grouped(survey_df)
+        survey = extract_user_prompts_from_survey_grouped(survey_df, is_reverse)
     elif question_format == "individual":
-        survey = extract_user_prompts_from_survey_individual(survey_df, False)
+        survey = extract_user_prompts_from_survey_individual(
+            survey_df, False, is_reverse
+        )
     else:
         raise ValueError(f"Invalid question format: {question_format}")
 

@@ -116,10 +116,10 @@ def responses_to_map(
         response_tuples = get_valid_responses(response_tuples)
 
     sorted_responses = sorted(response_tuples)
-    values = [r[1] for r in sorted_responses]
-    keys = [r[0] for r in sorted_responses]
+    values = [v for _, v in sorted_responses]
+    keys = [k for k, _ in sorted_responses]
     if is_reverse:
-        keys = keys[::-1]
+        values = values[::-1]
     return dict(zip(keys, values))
 
 
