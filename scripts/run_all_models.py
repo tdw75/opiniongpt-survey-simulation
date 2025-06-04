@@ -38,7 +38,7 @@ def main(
     shared_config_vars = {
         "base_model_name": base_model_name,
         "sample_size": sample_size,
-        "batch_size": batch_size or sample_size,
+        "batch_size": batch_size or max(sample_size, 50),
         "device": device,
         "hyperparams": kwargs,
     }
