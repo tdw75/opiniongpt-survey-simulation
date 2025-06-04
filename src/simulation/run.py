@@ -13,11 +13,14 @@ def run_single(
     tokenizer: PreTrainedTokenizer,
     config: ModelConfig,
     survey_questions: dict[str, str],
+    survey_flipped: dict[str, str],
     run_id: str,
 ):
     start = timer()
     logging.debug(model)
-    responses = simulate_whole_survey(model, tokenizer, config, survey_questions)
+    responses = simulate_whole_survey(
+        model, tokenizer, config, survey_questions, survey_flipped
+    )
     end = timer()
     return {
         "metadata": {

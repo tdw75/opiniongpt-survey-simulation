@@ -46,11 +46,18 @@ def main(
     }
 
     # todo: clear cache in loop
-    survey_questions = load_survey(directory, filename, question_format, subset_file)
-    phi_instruct_surveys = run_phi_instruct(
-        survey_questions, shared_config_vars, run_id
+    survey_questions = load_survey(
+        directory, filename, question_format, subset_file, False
     )
-    opinion_gpt_surveys = run_opinion_gpt(survey_questions, shared_config_vars, run_id)
+    survey_flipped = load_survey(
+        directory, filename, question_format, subset_file, True
+    )
+    phi_instruct_surveys = run_phi_instruct(
+        survey_questions, survey_flipped, shared_config_vars, run_id
+    )
+    opinion_gpt_surveys = run_opinion_gpt(
+        survey_questions, survey_flipped, shared_config_vars, run_id
+    )
     simulated_surveys.update(phi_instruct_surveys)
     simulated_surveys.update(opinion_gpt_surveys)
 
@@ -62,7 +69,12 @@ def main(
     )
 
 
-def run_phi_instruct(survey_questions, shared_config_vars: dict, run_id: str):
+def run_phi_instruct(
+    survey_questions: dict[str, str],
+    survey_flipped: dict[str, str],
+    shared_config_vars: dict,
+    run_id: str,
+):
     simulated_surveys = {}
     config = ModelConfig(
         **shared_config_vars,
@@ -80,7 +92,12 @@ def run_phi_instruct(survey_questions, shared_config_vars: dict, run_id: str):
     return simulated_surveys
 
 
-def run_opinion_gpt(survey_questions, shared_config_vars: dict, run_id: str):
+def run_opinion_gpt(
+    survey_questions: dict[str, str],
+    survey_flipped: dict[str, str],
+    shared_config_vars: dict,
+    run_id: str,
+):
     # todo: add persona prompting for opinion gpt
     simulated_surveys = {}
     config = ModelConfig(
