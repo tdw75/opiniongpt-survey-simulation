@@ -103,14 +103,24 @@ def identify_question_group(question_name: str) -> tuple[str, str]:
     return group, subquestion
 
 
-def responses_to_map(responses: list[str]) -> dict[int, str]:
+def responses_to_map(
+    responses: list[str], is_reverse: bool, is_only_valid: bool = True
+) -> dict[int, str]:
     pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
     response_tuples = [
         (int(match.group(1)), match.group(2))
         for r in responses
         if (match := pattern.match(r))
     ]
-    return {k: v for k, v in response_tuples}
+    if is_only_valid:
+        response_tuples = get_valid_responses(response_tuples)
+
+    sorted_responses = sorted(response_tuples)
+    values = [r[1] for r in sorted_responses]
+    keys = [r[0] for r in sorted_responses]
+    if is_reverse:
+        keys = keys[::-1]
+    return dict(zip(keys, values))
 
 
 def flip_key_value(mapping: dict[str, str]) -> dict[str, str]:
@@ -129,8 +139,11 @@ def get_invalid_responses(response_map: dict[int, str]) -> dict[int, str]:
     return {k: v for k, v in response_map.items() if k < 0}
 
 
-def get_valid_responses(response_map: dict[int, str]) -> dict[int, str]:
+def get_valid_responses(
+    response_tuples: list[tuple[int, str]],
+) -> list[tuple[int, str]]:
     """
-    Valid responses are encoded with non-negative integers. Returns all such responses from the inpout dictionary
+    Valid responses are encoded with non-negative integers. Returns all such responses from the inpout response tuples
     """
-    return {k: v for k, v in response_map.items() if k >= 0}
+
+    return [r for r in response_tuples if r[0] >= 0]

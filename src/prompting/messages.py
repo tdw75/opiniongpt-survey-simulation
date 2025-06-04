@@ -1,11 +1,13 @@
 import pandas as pd
 
 from src.simulation.models import ModelConfig
-from src.data.variables import get_valid_responses, responses_to_map
+from src.data.variables import responses_to_map
 from ast import literal_eval
 
 
-def extract_user_prompts_from_survey_grouped(survey_df: pd.DataFrame) -> dict[str, str]:
+def extract_user_prompts_from_survey_grouped(
+    survey_df: pd.DataFrame, is_reverse: bool
+) -> dict[str, str]:
     """
     General prompt format for each group of questions
     """
@@ -29,7 +31,7 @@ def extract_user_prompts_from_survey_grouped(survey_df: pd.DataFrame) -> dict[st
         )
         prompts[key] = build_user_prompt_message_grouped(
             item_stem,
-            responses_to_map(responses),
+            responses_to_map(responses, is_reverse),
             numbers,
             question_group["subtopic"].values,
         )
@@ -38,7 +40,7 @@ def extract_user_prompts_from_survey_grouped(survey_df: pd.DataFrame) -> dict[st
 
 
 def extract_user_prompts_from_survey_individual(
-    survey_df: pd.DataFrame, is_subtopic_separate: bool
+    survey_df: pd.DataFrame, is_subtopic_separate: bool, is_reverse: bool
 ) -> dict[str, str]:
     """
     General prompt format for each individual questions
@@ -53,7 +55,7 @@ def extract_user_prompts_from_survey_individual(
         item = f"{question['item_stem']}{subtopic if is_subtopic_separate else ''}"
         responses = literal_eval(question["responses"])
         prompts[question["number"]] = build_user_prompt_message_individual(
-            item, responses_to_map(responses), question["number"]
+            item, responses_to_map(responses, is_reverse), question["number"]
         )
         print(f"successfully loaded {question['number']}")
 
@@ -90,7 +92,6 @@ Your response:
 
 
 def format_responses(response_set: dict[int, str]) -> str:
-    response_set = get_valid_responses(response_set)
     message = """The possible responses are:"""
     for key, response in response_set.items():
         message += f"\n{key}: {response}"
