@@ -51,7 +51,7 @@ class ModelConfig(BaseModel):
     batch_size: int = 50,
     hyperparams: dict = {}
     system_prompt: str = None
-    is_few_shot: bool = False
+    is_few_shot: bool = False  # fixme: currently has no effect
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
@@ -63,7 +63,7 @@ class ModelConfig(BaseModel):
             temperature=0.6,
         )
         self.hyperparams = {**default_hyperparams, **self.hyperparams}
-        self.system_prompt = self.system_prompt or build_survey_context_message(self.is_few_shot)
+        self.system_prompt = self.system_prompt or build_survey_context_message()
 
     @property
     def model_type(self) -> str:
@@ -132,7 +132,7 @@ def change_subgroup(
     if config.is_lora:
         model = change_adapter(model, config.subgroup)
     if config.is_persona:
-        config.system_prompt = build_survey_context_for_persona(config.subgroup, config.is_few_shot)
+        config.system_prompt = build_survey_context_for_persona(config.subgroup)
     return model, config
 
 
