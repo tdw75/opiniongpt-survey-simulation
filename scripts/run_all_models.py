@@ -87,7 +87,7 @@ def run_phi_instruct(
     for subgroup in adapters + [None]:
         model, config = change_subgroup(model, config, subgroup)
         simulated_surveys[config.run_name] = run_single(
-            model, tokenizer, config, survey_questions, run_id
+            model, tokenizer, config, survey_questions, survey_flipped, run_id
         )
     return simulated_surveys
 
@@ -111,7 +111,7 @@ def run_opinion_gpt(
     for subgroup in adapters:
         model, config = change_subgroup(model, config, subgroup)
         simulated_surveys[config.run_name] = run_single(
-            model, tokenizer, config, survey_questions, run_id
+            model, tokenizer, config, survey_questions, survey_flipped, run_id
         )
     return simulated_surveys
 
