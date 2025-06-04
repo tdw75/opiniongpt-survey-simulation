@@ -33,7 +33,20 @@ def main(
 ):
 
     run_id = run_id or generate_run_id(base_model_name)
-    simulated_surveys = {}
+    if simulation_name is not None:
+        file_path = os.path.join(
+            directory, "results", simulation_name, f"{run_id}.json"
+        )
+    else:
+        file_path = os.path.join(directory, "results", f"{run_id}.json")
+
+    if os.path.exists(file_path):
+        with open(os.path.join(file_path)) as f:
+            simulated_surveys = json.load(f)
+        already_fit = list(simulated_surveys.keys())
+        print(f"run {run_id} found, loading previous results for: {already_fit}")
+    else:
+        simulated_surveys, already_fit = {}, []
 
     shared_config_vars = {
         "base_model_name": base_model_name,
@@ -46,9 +59,11 @@ def main(
     # todo: clear cache in loop
     survey_questions = load_survey(directory, filename, question_format, subset_file)
     phi_instruct_surveys = run_phi_instruct(
-        survey_questions, shared_config_vars, run_id
+        survey_questions, shared_config_vars, run_id, already_fit
     )
-    opinion_gpt_surveys = run_opinion_gpt(survey_questions, shared_config_vars, run_id)
+    opinion_gpt_surveys = run_opinion_gpt(
+        survey_questions, shared_config_vars, run_id, already_fit
+    )
     simulated_surveys.update(phi_instruct_surveys)
     simulated_surveys.update(opinion_gpt_surveys)
 
@@ -60,7 +75,12 @@ def main(
     )
 
 
-def run_phi_instruct(survey_questions, shared_config_vars: dict, run_id: str):
+def run_phi_instruct(
+    survey_questions: dict[str, str],
+    shared_config_vars: dict,
+    run_id: str,
+    already_fit: list[str],
+):
     simulated_surveys = {}
     config = ModelConfig(
         **shared_config_vars,
@@ -72,13 +92,21 @@ def run_phi_instruct(survey_questions, shared_config_vars: dict, run_id: str):
 
     for subgroup in adapters + [None]:
         model, config = change_subgroup(model, config, subgroup)
-        simulated_surveys[config.run_name] = run_single(
-            model, tokenizer, config, survey_questions, run_id
-        )
+        if config.run_name not in already_fit:
+            simulated_surveys[config.run_name] = run_single(
+                model, tokenizer, config, survey_questions, run_id
+            )
+        else:
+            print(f"{config.run_name} already fit")
     return simulated_surveys
 
 
-def run_opinion_gpt(survey_questions, shared_config_vars: dict, run_id: str):
+def run_opinion_gpt(
+    survey_questions: dict[str, str],
+    shared_config_vars: dict,
+    run_id: str,
+    already_fit: list[str],
+):
     # todo: add persona prompting for opinion gpt
     simulated_surveys = {}
     config = ModelConfig(
@@ -91,9 +119,12 @@ def run_opinion_gpt(survey_questions, shared_config_vars: dict, run_id: str):
 
     for subgroup in adapters:
         model, config = change_subgroup(model, config, subgroup)
-        simulated_surveys[config.run_name] = run_single(
-            model, tokenizer, config, survey_questions, run_id
-        )
+        if config.run_name not in already_fit:
+            simulated_surveys[config.run_name] = run_single(
+                model, tokenizer, config, survey_questions, run_id
+            )
+        else:
+            print(f"{config.run_name} already fit")
     return simulated_surveys
 
 

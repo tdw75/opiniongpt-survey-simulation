@@ -2,6 +2,13 @@ from src.demographics.config import subgroups
 from src.demographics.base import BaseSubGroup
 
 
+"""
+You are participating in a survey on personal values. For each question, you will be given a list of 
+available responses after the question. Choose the single response that best fits your answer and reply using only 
+the exact key and value pair from the provided list (including number, colon, space, and text). 
+Do not include any other words, formatting, or explanation—just the selected response exactly as shown."""
+
+
 def build_survey_context_message() -> str:
 
     return """
