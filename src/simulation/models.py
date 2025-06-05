@@ -117,7 +117,7 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
 
 
 def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
-    model = AutoModelForCausalLM.from_pretrained(config.model_id)
+    model = AutoModelForCausalLM.from_pretrained(config.model_id, torch_dtype="auto")
     tokenizer = AutoTokenizer.from_pretrained(config.model_id, padding_side="left")
     # if is_phi_model(model_id):
     #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT

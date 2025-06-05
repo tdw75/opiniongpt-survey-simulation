@@ -127,11 +127,6 @@ def flip_key_value(mapping: dict[str, str]) -> dict[str, str]:
     return {v: k for k, v in mapping.items()}
 
 
-def flip_response_order():
-    # todo: implement
-    raise NotImplementedError
-
-
 def get_invalid_responses(response_map: dict[int, str]) -> dict[int, str]:
     """
     Invalid responses are encoded with negative integers. Returns all such responses from the inpout dictionary
