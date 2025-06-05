@@ -1,8 +1,12 @@
+from ast import literal_eval
+
 import pandas as pd
 
-from src.simulation.models import ModelConfig
 from src.data.variables import responses_to_map
-from ast import literal_eval
+from src.simulation.models import ModelConfig
+
+
+Messages = list[dict[str, str]]
 
 
 def extract_user_prompts_from_survey_grouped(
@@ -108,7 +112,21 @@ def format_subtopics(numbers: list[str], subtopics: list[str] | None) -> str:
         return message
 
 
-def format_messages(user_prompt: str, config: ModelConfig) -> list[dict[str, str]]:
+def batch_messages(user_prompts: list[str], config: ModelConfig) -> list[Messages]:
+    """
+    takes a list of user prompts and returns a list of alternative Messages
+    e.g. [user1, user2] -> [message1, message2, message1, message2, message1, message2]
+    """
+
+    messages = []
+    for prompt in user_prompts:
+        messages.append(format_messages(prompt, config))
+
+    # note: if config.sample_size is odd then actual number of outputs will be config.sample_size - 1
+    return messages * (config.sample_size // len(user_prompts))
+
+
+def format_messages(user_prompt: str, config: ModelConfig) -> Messages:
     if config.is_phi_model:
         return [{"role": "user", "content": f"{config.system_prompt}\n{user_prompt}"}]
     else:

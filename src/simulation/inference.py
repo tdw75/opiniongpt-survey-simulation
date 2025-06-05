@@ -4,9 +4,9 @@ import torch
 from tqdm import tqdm
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from src.prompting.messages import format_messages
+from src.prompting.messages import batch_messages, Messages
 from src.simulation.models import ModelConfig
-from src.simulation.utils import get_batch
+from src.simulation.utils import get_batches
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ def simulate_whole_survey(
     config: ModelConfig,
     survey: dict[str, str],
     flipped: dict[str, str],
-) -> dict:
+) -> dict[str, list[str]]:
     logger.debug(model)
     if config.aggregation_by == "respondents":
         responses = simulate_group_of_respondents(model, tokenizer, config, survey)
@@ -49,10 +49,7 @@ def simulate_single_respondent(
         ]
         generation_kwargs = init_generation_params(tokenizer, config, messages)
         generation_kwargs["num_return_sequences"] = 1
-        input_length = generation_kwargs["input_ids"].shape[-1]
-        responses = generate_responses(
-            model, tokenizer, generation_kwargs, input_length
-        )
+        responses = generate_responses(model, tokenizer, generation_kwargs)
 
         # todo: update messages with assistant response
         text_responses[number] = responses[0]
@@ -61,14 +58,11 @@ def simulate_single_respondent(
 
 
 def init_generation_params(
-    tokenizer: PreTrainedTokenizer, config: ModelConfig, messages: list[dict[str, str]]
+    tokenizer: PreTrainedTokenizer,
+    config: ModelConfig,
+    messages: Messages | list[Messages],
 ):
     # todo: inject system prompt based on prompting style (e.g. persona, own-history, etc.)
-
-    if config.aggregation_by == "questions":
-        config.hyperparams["num_return_sequences"] = config.batch_size
-    elif config.aggregation_by == "respondents":
-        config.hyperparams["num_return_sequences"] = 1
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -81,29 +75,19 @@ def init_generation_params(
         return_dict=True,
     )
     inputs = {k: v.to(config.device) for k, v in inputs.items()}
-
-    generation_kwargs = dict(
-        input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
-    )
-    generation_kwargs.update(config.hyperparams)
-    return generation_kwargs
+    return {**inputs, **config.hyperparams}
 
 
 def generate_responses(
-    model: PreTrainedModel,
-    tokenizer: PreTrainedTokenizer,
-    generation_kwargs: dict,
-    input_len: int,
+    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, generation_kwargs: dict
 ) -> list[str]:
     """
     function that actually calls the LLM
     """
+    input_len = generation_kwargs["input_ids"].shape[-1]
     with torch.no_grad():
         outputs = model.generate(**generation_kwargs)
-        return [
-            tokenizer.decode(output[input_len:], skip_special_tokens=True)
-            for output in outputs
-        ]
+        return tokenizer.batch_decode(outputs[:, input_len:], skip_special_tokens=True)
 
 
 def simulate_set_of_responses_multiple_questions(
@@ -130,22 +114,12 @@ def simulate_set_of_responses_single_question(
     question_flipped: str,
 ) -> list[str]:
     responses = []
-    idx_to_name = {0: "normal", 1: "flipped"}
-    messages = {
-        "normal": format_messages(question, config),
-        "flipped": format_messages(question_flipped, config)
-    }
-    generation_kwargs = {
-        k: init_generation_params(tokenizer, config, m) for k, m in messages.items()
-    }
-    input_len = {k: v["input_ids"].shape[-1] for k, v in generation_kwargs.items()}
+    messages_batched = batch_messages([question, question_flipped], config)
 
-    for idx, batch in tqdm(enumerate(get_batch(config)), desc="batch"):
-        params_batch = generation_kwargs[idx_to_name[idx % 2]]
-        params_batch["num_return_sequences"] = batch
-        response_batch = generate_responses(
-            model, tokenizer, params_batch, input_len[idx_to_name[idx % 2]]
-        )
+    for batch in tqdm(get_batches(messages_batched, config.batch_size), desc="batch"):
+        batch_kwargs = init_generation_params(tokenizer, config, batch)
+        batch_kwargs["num_return_sequences"] = 1  # todo: might be redundant
+        response_batch = generate_responses(model, tokenizer, batch_kwargs)
         responses.extend(response_batch)
 
     return responses

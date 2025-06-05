@@ -1,10 +1,11 @@
 import json
 import os
 from datetime import datetime
+from typing import Any, Generator
 
 import pandas as pd
 
-from src.prompting.messages import extract_user_prompts_from_survey_grouped
+from src.prompting.messages import extract_user_prompts_from_survey_grouped, Messages
 from src.prompting.messages import extract_user_prompts_from_survey_individual
 from src.simulation.models import ModelConfig
 
@@ -80,7 +81,21 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     return {single_question[0]: single_question[1]}
 
 
-def get_batch(config: ModelConfig):
+def get_batches(
+    messages: list[Messages], batch_size: int
+) -> Generator[list[Messages], Any, None]:
+    for i in range(0, len(messages), batch_size):
+        yield messages[i : i + batch_size]
+
+
+def mark_is_scale_flipped(responses: list[str]):
+    """
+    responses : list of generated responses for a single survey question
+    """
+    return [i % 2 == 1 for i in range(len(responses))]
+
+
+def get_batch_size(config: ModelConfig):
     full_batches = config.sample_size // config.batch_size
     for _ in range(full_batches):
         yield config.batch_size
