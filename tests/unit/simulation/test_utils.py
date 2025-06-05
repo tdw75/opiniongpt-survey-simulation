@@ -1,8 +1,11 @@
 import pandas as pd
 import pytest
 
-from models import ModelConfig
-from src.simulation.utils import filter_survey_subset, get_batch
+from src.simulation.utils import (
+    filter_survey_subset,
+    mark_is_scale_flipped,
+    get_batches
+)
 
 
 def test_filter_survey_subset():
@@ -15,11 +18,21 @@ def test_filter_survey_subset():
     )
 
 
-@pytest.mark.parametrize(
-    "sample_size, batch_size, expected",
-    [(10, 3, [3, 3, 3, 1]), (10, 2, [2] * 5), (10, 10, [10]), (10, 1, [1] * 10)],
-)
-def test_get_batch(sample_size, batch_size, expected):
-    config = ModelConfig(sample_size=sample_size, batch_size=batch_size)
-    for i, batch in enumerate(get_batch(config)):
+@pytest.mark.parametrize("sample_size", (4, 5))
+def test_get_batches(sample_size):
+    expected_batch1 = [[{"message1": "content"}], [{"message2": "content"}]]
+    expected_batch2 = [[{"message3": "content"}], [{"message4": "content"}]]
+    expected = [expected_batch1, expected_batch2]
+
+    if sample_size == 5:
+        expected.append([[{"message5": "content"}]])
+
+    messages_batched = [[{f"message{i}": "content"}] for i in range(1, sample_size + 1)]
+    for i, batch in enumerate(get_batches(messages_batched, batch_size=2)):
         assert batch == expected[i]
+
+
+def test_mark_is_scale_flipped():
+    responses = [f"response{i}" for i in range(10)]
+    is_flipped = mark_is_scale_flipped(responses)
+    assert is_flipped == [False, True] * 5
