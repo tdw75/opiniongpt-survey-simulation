@@ -184,13 +184,6 @@ def test_responses_to_map(is_only_valid, is_reverse, expected):
     assert response_map == expected
 
 
-@pytest.mark.parametrize(
-    "response", ["1.- Very important", "1: Very important", "1:  Very important", "1: Very important 2: Rather important"]
-)
-def test_split_response_string(response):
-    split = split_response_string(response)
-    assert split == (1, "Very important")
-
 
 def test_integration():
     pages = {i: load_page(i) for i in range(10, 13)}

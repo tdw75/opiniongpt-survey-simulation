@@ -33,8 +33,9 @@ def strip_qnum(response_string: str) -> str:
 
 
 def split_response_with_missing(response):
+    pattern = re.compile("^\s*(\d+)\s*[:\-\.]+\s*((?:(?!\d+\s*[:\-\.]).)+)\s*$")
     try:
-        return split_response_string(response)
+        return split_response_string(response, pattern)
     except AttributeError:
         return -1, "missing"  # todo: add actual missing encoding/name
 
