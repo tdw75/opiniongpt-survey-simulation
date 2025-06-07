@@ -51,7 +51,6 @@ class ModelConfig(BaseModel):
     batch_size: int = 50,
     hyperparams: dict = {}
     system_prompt: str = None
-    is_few_shot: bool = False  # fixme: currently has no effect
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
