@@ -29,6 +29,9 @@ class HeaderPatterns:
     sub = re.compile(r"([A-Z].*\s+\(Q\d+ *-Q\d+\))")
 
 
+response_pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
+
+
 def strip_header(page: str, pattern) -> str:
     """
     Removes the page heading/subheading from the input string
@@ -103,15 +106,17 @@ def identify_question_group(question_name: str) -> tuple[str, str]:
     return group, subquestion
 
 
+def split_response_string(response: str) -> tuple[int, str]:
+    # todo: handle case "1: Very important 2: Rather important"
+    # pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
+    match = response_pattern.match(response)
+    return int(match.group(1)), match.group(2)
+
+
 def responses_to_map(
     responses: list[str], is_reverse: bool, is_only_valid: bool = True
 ) -> dict[int, str]:
-    pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
-    response_tuples = [
-        (int(match.group(1)), match.group(2))
-        for r in responses
-        if (match := pattern.match(r))
-    ]
+    response_tuples = [split_response_string(r) for r in responses]
     if is_only_valid:
         response_tuples = get_valid_responses(response_tuples)
 

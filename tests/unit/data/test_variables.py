@@ -13,6 +13,7 @@ from src.data.variables import (
     Question,
     responses_to_map,
     HeaderPatterns,
+    split_response_string,
 )
 
 
@@ -181,6 +182,14 @@ def test_responses_to_map(is_only_valid, is_reverse, expected):
     ]
     response_map = responses_to_map(responses, is_reverse, is_only_valid)
     assert response_map == expected
+
+
+@pytest.mark.parametrize(
+    "response", ["1.- Very important", "1: Very important", "1:  Very important", "1: Very important 2: Rather important"]
+)
+def test_split_response_string(response):
+    split = split_response_string(response)
+    assert split == (1, "Very important")
 
 
 def test_integration():
