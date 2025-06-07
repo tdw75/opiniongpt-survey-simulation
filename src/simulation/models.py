@@ -50,7 +50,6 @@ class ModelConfig(BaseModel):
     sample_size: int = 500
     batch_size: int = 50,
     hyperparams: dict = {}
-    is_few_shot: bool = False  # fixme: currently has no effect
     system_prompt: str = None
 
     def model_post_init(self, context: Any, /) -> None:
