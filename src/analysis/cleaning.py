@@ -27,10 +27,11 @@ def clean_generated_responses(results: pd.DataFrame) -> pd.DataFrame:
     return results
 
 
-def separate_key_text_columns(results: pd.DataFrame, responses: pd.Series) -> pd.DataFrame:
+def separate_key_text_columns(
+    results: pd.DataFrame, responses: pd.Series
+) -> pd.DataFrame:
     results[["response_key", "response_text"]] = pd.DataFrame(responses.tolist())
     return results
-
 
 
 def strip_response_prompt_qnum(response_string: str) -> str:
@@ -66,9 +67,13 @@ def match_outputs_with_responses(
     flipped_responses: dict[str, ResponseMap],
 ) -> pd.DataFrame:
 
+    responses = add_missing_response_keys(responses)
+    flipped_responses = add_missing_response_keys(flipped_responses)
+
     results["response_text"] = results["response_text"].str.strip()
     results = flip_keys_back(results, responses, flipped_responses)
     results = mark_is_correct_key_value(results, responses)
+    results = mark_missing(results)
     return results
 
 
@@ -84,16 +89,20 @@ def flip_keys_back(
         value_to_key[q] = flip_key_value(r)
 
     def _flip(qnum: str, response_key: int) -> int:
+        if response_key < 0:
+            return -1
         question_responses_flipped = flipped_responses[qnum]
-        response_value = question_responses_flipped[response_key]
+        response_value = question_responses_flipped.get(response_key, "missing")
         return value_to_key[qnum][response_value]
 
+
+    original_keys = results["response_key"]
     reverted_keys = results.apply(
         lambda row: _flip(row["number"], row["response_key"]), axis=1
     )
 
     results["response_key"] = np.where(
-        results["is_scale_flipped"], reverted_keys, results["response_key"]
+        results["is_scale_flipped"], reverted_keys, original_keys
     )
 
     return results
@@ -103,8 +112,27 @@ def mark_is_correct_key_value(
     results: pd.DataFrame, responses: dict[str, ResponseMap]
 ) -> pd.DataFrame:
 
-    correct_text_for_key: pd.Series = results.apply(
-        lambda row: responses[row["number"]][row["response_key"]], axis=1
+    def _get_correct_key_value(row: pd.Series) -> str:
+        return responses[row["number"]].get(row["response_key"], -1)
+
+    correct_text_for_key: pd.Series = results.apply(_get_correct_key_value, axis=1)
+    is_correct_text_for_key = correct_text_for_key == results["response_text"]
+    results["is_response_valid"] = np.where(
+        results["response_key"] >= 0, is_correct_text_for_key, False
     )
-    results["is_response_valid"] = correct_text_for_key == results["response_text"]
+    # todo: make sure 'missing' responses are marked properly
     return results
+
+
+def mark_missing(results: pd.DataFrame) -> pd.DataFrame:
+    results["response_key_final"] = np.where(results["is_response_valid"], results["response_key"], -1)
+    results["response_text_final"] = np.where(results["is_response_valid"], results["response_text"], "missing")
+    return results
+
+
+def add_missing_response_keys(
+    responses: dict[str, ResponseMap],
+) -> dict[str, ResponseMap]:
+    for q, r in responses.items():
+        r[-1] = "missing"
+    return responses

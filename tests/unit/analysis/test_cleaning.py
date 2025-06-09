@@ -77,7 +77,7 @@ def test_separate_key_text_columns():
 def test_flip_keys_back(mock_response_results, responses, responses_flipped):
     results_out = flip_keys_back(mock_response_results, responses, responses_flipped)
 
-    expected = pd.Series([1, 2, 2, 1, 1] + [2, 2, 3, 3, 2], name="response_key")
+    expected = pd.Series([1, 2, 2, 1, 1] + [2, 2, 3, 3, 2, -1], name="response_key")
     pd.testing.assert_series_equal(results_out["response_key"], expected)
 
 
@@ -85,7 +85,7 @@ def test_mark_is_correct_key_value(mock_response_results, responses):
 
     results_out = mark_is_correct_key_value(mock_response_results, responses)
     expected = pd.Series(
-        [True, True, False, False, False] + [True, False, True, False, True],
+        [True, True, False, False, False] + [True, False, True, False, True, False],
         name="is_response_valid",
     )
     pd.testing.assert_series_equal(results_out["is_response_valid"], expected)
@@ -95,12 +95,12 @@ def test_mark_is_correct_key_value(mock_response_results, responses):
 def mock_response_results() -> pd.DataFrame:
     results = pd.DataFrame(
         {
-            "number": ["Q1"] * 5 + ["Q2"] * 5,
-            "response_key": [1, 2, 1, 1, 2] + [2, 2, 3, 1, 2],
+            "number": ["Q1"] * 5 + ["Q2"] * 6,
+            "response_key": [1, 2, 1, 1, 2] + [2, 2, 3, 1, 2, -1],
             "response_text": ["agree", "disagree", "disagree", "potato", "agree"]
-            + ["2", "potato", "3", "3", "2"],
+            + ["2", "potato", "3", "3", "2", "missing"],
             "is_scale_flipped": [False, False, True, False, True]
-            + [False, False, False, True, True],
+            + [False, False, False, True, True, True],
         }
     )
     return results
@@ -109,14 +109,14 @@ def mock_response_results() -> pd.DataFrame:
 @pytest.fixture
 def responses() -> dict[str, ResponseMap]:
     return {
-        "Q1": {1: "agree", 2: "disagree"},
-        "Q2": {1: "1", 2: "2", 3: "3"},
+        "Q1": {1: "agree", 2: "disagree", -1: "missing"},
+        "Q2": {1: "1", 2: "2", 3: "3", -1: "missing"},
     }
 
 
 @pytest.fixture
 def responses_flipped() -> dict[str, ResponseMap]:
     return {
-        "Q1": {1: "disagree", 2: "agree"},
-        "Q2": {1: "3", 2: "2", 3: "1"},
+        "Q1": {1: "disagree", 2: "agree", -1: "missing"},
+        "Q2": {1: "3", 2: "2", 3: "1", -1: "missing"},
     }

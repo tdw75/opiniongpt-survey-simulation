@@ -115,7 +115,7 @@ def split_response_string(response: str, pattern) -> ResponseTuple:
 
 
 def responses_to_map(
-    responses: list[str], is_reverse: bool, is_only_valid: bool = True
+    responses: list[str], is_scale_flipped: bool, is_only_valid: bool = True
 ) -> ResponseMap:
     response_pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
     response_tuples: list[ResponseTuple] = [
@@ -127,7 +127,7 @@ def responses_to_map(
     sorted_responses = sorted(response_tuples)
     values = [v for _, v in sorted_responses]
     keys = [k for k, _ in sorted_responses]
-    if is_reverse:
+    if is_scale_flipped:
         values = values[::-1]
     return dict(zip(keys, values))
 
