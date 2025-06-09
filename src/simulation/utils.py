@@ -1,7 +1,6 @@
 import json
 import os
 from datetime import datetime
-from typing import Generator
 
 import pandas as pd
 
@@ -46,7 +45,7 @@ def load_survey(
     else:
         raise ValueError(f"Invalid question format: {question_format}")
 
-    print("Successfully loaded survey!")
+    print(f"Successfully loaded survey in {'reverse' if is_reverse else 'normal'} order!")
     return survey
 
 

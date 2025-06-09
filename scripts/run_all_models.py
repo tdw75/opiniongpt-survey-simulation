@@ -22,7 +22,7 @@ def main(
     base_model_name: str = "phi",
     directory: str = "data_files",
     filename: str = "variables.csv",
-    subset_file: str = None,
+    subset_file: str = "final_subset.json",
     simulation_name: str = None,
     question_format: str = "individual",
     device: str = "cuda:2",
@@ -39,7 +39,7 @@ def main(
     shared_config_vars = {
         "base_model_name": base_model_name,
         "sample_size": sample_size,
-        "batch_size": batch_size or max(sample_size, 50),
+        "batch_size": batch_size or max(sample_size // 2, 50),
         "device": device,
         "is_few_shot": is_few_shot,
         "hyperparams": kwargs,
