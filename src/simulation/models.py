@@ -50,7 +50,6 @@ class ModelConfig(BaseModel):
     sample_size: int = 500
     batch_size: int = 50,
     hyperparams: dict = {}
-    is_few_shot: bool = False  # fixme: currently has no effect
     system_prompt: str = None
 
     def model_post_init(self, context: Any, /) -> None:
@@ -117,7 +116,7 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
 
 
 def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
-    model = AutoModelForCausalLM.from_pretrained(config.model_id)
+    model = AutoModelForCausalLM.from_pretrained(config.model_id, torch_dtype="auto")
     tokenizer = AutoTokenizer.from_pretrained(config.model_id, padding_side="left")
     # if is_phi_model(model_id):
     #     tokenizer.chat_template = PHI_TOKENIZER_FORMAT

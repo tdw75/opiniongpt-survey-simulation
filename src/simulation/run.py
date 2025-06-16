@@ -6,6 +6,7 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from src.simulation.inference import simulate_whole_survey
 from src.simulation.models import ModelConfig
+from src.simulation.utils import mark_is_scale_flipped
 
 
 def run_single(
@@ -29,5 +30,9 @@ def run_single(
             **config.model_dump(),
         },
         "questions": survey_questions,
+        "questions_flipped": survey_flipped,
         "responses": responses,
+        "is_scale_flipped": {
+            num: mark_is_scale_flipped(resp) for num, resp in responses.items()
+        },
     }
