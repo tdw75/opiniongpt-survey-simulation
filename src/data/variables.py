@@ -1,5 +1,10 @@
 import re
 from dataclasses import dataclass
+from typing import Any
+
+ResponseMap = dict[int, str]
+ResponseReverseMap = dict[str, int]
+ResponseTuple = tuple[int, str]
 
 
 @dataclass
@@ -103,14 +108,18 @@ def identify_question_group(question_name: str) -> tuple[str, str]:
     return group, subquestion
 
 
+def split_response_string(response: str, pattern) -> ResponseTuple:
+    # todo: handle case "1: Very important 2: Rather important"
+    match = pattern.match(response)
+    return int(match.group(1)), match.group(2)
+
+
 def responses_to_map(
-    responses: list[str], is_reverse: bool, is_only_valid: bool = True
-) -> dict[int, str]:
-    pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
-    response_tuples = [
-        (int(match.group(1)), match.group(2))
-        for r in responses
-        if (match := pattern.match(r))
+    responses: list[str], is_scale_flipped: bool, is_only_valid: bool = True
+) -> ResponseMap:
+    response_pattern = re.compile("(-?\d+)(?:[^\w]*\s+)(.*)")
+    response_tuples: list[ResponseTuple] = [
+        split_response_string(r, response_pattern) for r in responses
     ]
     if is_only_valid:
         response_tuples = get_valid_responses(response_tuples)
@@ -118,21 +127,16 @@ def responses_to_map(
     sorted_responses = sorted(response_tuples)
     values = [v for _, v in sorted_responses]
     keys = [k for k, _ in sorted_responses]
-    if is_reverse:
+    if is_scale_flipped:
         values = values[::-1]
     return dict(zip(keys, values))
 
 
-def flip_key_value(mapping: dict[str, str]) -> dict[str, str]:
+def flip_key_value(mapping: dict[Any, Any]) -> dict[Any, Any]:
     return {v: k for k, v in mapping.items()}
 
 
-def flip_response_order():
-    # todo: implement
-    raise NotImplementedError
-
-
-def get_invalid_responses(response_map: dict[int, str]) -> dict[int, str]:
+def get_invalid_responses(response_map: ResponseMap) -> dict[int, str]:
     """
     Invalid responses are encoded with negative integers. Returns all such responses from the inpout dictionary
     """
@@ -140,8 +144,8 @@ def get_invalid_responses(response_map: dict[int, str]) -> dict[int, str]:
 
 
 def get_valid_responses(
-    response_tuples: list[tuple[int, str]],
-) -> list[tuple[int, str]]:
+    response_tuples: list[ResponseTuple],
+) -> list[ResponseTuple]:
     """
     Valid responses are encoded with non-negative integers. Returns all such responses from the inpout response tuples
     """

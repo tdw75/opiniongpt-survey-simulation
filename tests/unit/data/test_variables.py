@@ -13,6 +13,7 @@ from src.data.variables import (
     Question,
     responses_to_map,
     HeaderPatterns,
+    split_response_string,
 )
 
 
@@ -181,6 +182,7 @@ def test_responses_to_map(is_only_valid, is_reverse, expected):
     ]
     response_map = responses_to_map(responses, is_reverse, is_only_valid)
     assert response_map == expected
+
 
 
 def test_integration():
