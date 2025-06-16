@@ -21,7 +21,7 @@ def create_filter_condition_for_subgroups(df: pd.DataFrame, subgroups: list[type
     Selects data that belong to any of given subgroups
     """
 
-    conditions = [s.filter_condition(df) for s in subgroups]
+    conditions = [s.filter_true(df) for s in subgroups]
     mask = conditions[0]
     if len(conditions) > 1:
         for m in conditions[1:]:

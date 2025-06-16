@@ -1,24 +1,48 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from src.demographics.base import BaseSubGroup
+from src.demographics.base import BaseSubGroup, classproperty
+
+
+column = "Q260"
 
 
 @dataclass
-class Sex(BaseSubGroup, ABC):
-    COLUMN = "Q260"
+class Male(BaseSubGroup):
 
+    @classproperty
+    def COLUMN(cls) -> str:
+        return column
+
+
+    @classproperty
+    def ADAPTER(cls) -> str:
+        return "men"
+
+    @classproperty
+    def VALUES(cls) -> set[int]:
+        return {1}
+
+    @classproperty
+    def PERSONA(cls) -> str:
+        return "a person that identifies as male"
 
 @dataclass
-class Male(Sex):
-    VALUES = {1}
-    PERSONA = "a person that identifies as male"
+class Female(BaseSubGroup):
 
+    @classproperty
+    def COLUMN(cls) -> str:
+        return column
 
+    @classproperty
+    def ADAPTER(cls) -> str:
+        return "women"
 
-@dataclass
-class Female(Sex):
-    VALUES = {2}
-    PERSONA = "a person that identifies as female"
+    @classproperty
+    def VALUES(cls) -> set[int]:
+        return {2}
 
+    @classproperty
+    def PERSONA(cls) -> str:
+        return "a person that identifies as female"
 

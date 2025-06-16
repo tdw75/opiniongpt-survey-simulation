@@ -5,32 +5,45 @@ from dataclasses import dataclass
 import pandas as pd
 
 
+class classproperty(property):
+    def __get__(self, obj, cls):
+        return self.fget(cls)
+
+
 @dataclass
 class BaseSubGroup(ABC):
 
     @classmethod
-    def filter_condition(cls, df: pd.DataFrame) -> pd.Series:
+    def filter_true(cls, df: pd.DataFrame) -> pd.Series:
         return df[cls.COLUMN].isin(cls.VALUES)
 
-    @property
+    @classmethod
+    def filter_model(cls, df: pd.DataFrame) -> pd.Series:
+        return df["subgroup"] == cls.ADAPTER
+
+    @classproperty
     @abstractmethod
-    def COLUMN(self) -> str:
+    def COLUMN(cls) -> str:
         raise NotImplementedError
 
-    @property
+    @classproperty
     @abstractmethod
-    def VALUES(self) -> set[str]:
+    def VALUES(self) -> set[str | int]:
         raise NotImplementedError
 
-    @property
+    @classproperty
     @abstractmethod
     def PERSONA(self) -> str:
         raise NotImplementedError
 
-    @classmethod
-    @property
-    def NAME(cls):
+    @classproperty
+    def NAME(cls) -> str:
         return pascal_to_snake(cls.__name__)
+
+    @classproperty
+    @abstractmethod
+    def ADAPTER(cls) -> str:
+        raise NotImplementedError
 
 
 def pascal_to_snake(string: str) -> str:
