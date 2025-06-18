@@ -36,27 +36,39 @@ def test_get_model_responses_for_subgroup(mock_model_results):
 
 
 @pytest.mark.parametrize(
-    "is_normalize, expected",
+    "is_normalize, is_include_invalid, expected",
     [
         (
             False,
+            True,
             {
                 "Q20": {-1: 1, 1: 1, 2: 2, 3: 4, 4: 0},
                 "Q21": {-1: 3, 1: 1, 2: 2, 3: 2, 4: 0, 5: 0},
             },
         ),
-(
+        (
+            False,
+            False,
+            {
+                "Q20": {1: 1, 2: 2, 3: 4, 4: 0},
+                "Q21": {1: 1, 2: 2, 3: 2, 4: 0, 5: 0},
+            },
+        ),
+        (
+            True,
             True,
             {
-                "Q20": {-1: .125, 1: .125, 2: .25, 3: .5, 4: 0.},
-                "Q21": {-1: .375, 1: .125, 2: .25, 3: .25, 4: 0., 5: 0.},
+                "Q20": {-1: 0.125, 1: 0.125, 2: 0.25, 3: 0.5, 4: 0.0},
+                "Q21": {-1: 0.375, 1: 0.125, 2: 0.25, 3: 0.25, 4: 0.0, 5: 0.0},
             },
-        )
+        ),
     ],
 )
-def test_get_response_distribution(expected_true_responses, response_maps, is_normalize, expected):
+def test_get_response_distribution(
+    expected_true_responses, response_maps, is_normalize, is_include_invalid, expected
+):
     response_dists = get_response_distribution(
-        expected_true_responses, response_maps, is_normalize
+        expected_true_responses, response_maps, is_normalize, is_include_invalid
     )
     assert response_dists == expected
 
