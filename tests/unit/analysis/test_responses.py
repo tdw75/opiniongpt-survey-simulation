@@ -7,7 +7,7 @@ from src.analysis.responses import (
     get_response_distribution,
 )
 from src.demographics.country import Germany
-from variables import ResponseMap
+from src.data.variables import ResponseMap
 
 
 def test_get_true_responses_for_subgroup(mock_true_results, expected_true_responses):
