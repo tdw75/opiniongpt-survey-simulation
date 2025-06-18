@@ -1,10 +1,9 @@
 import pandas as pd
 
 from src.demographics.base import BaseSubGroup
-from variables import ResponseMap
+from src.data.variables import ResponseMap
 
-FrequencyDist = dict[str, int]
-FrequencyDistNormalized = dict[str, float]
+FrequencyDist = dict[int, int] | dict[int, float]
 ResponseSupport = list[int]
 
 
@@ -28,9 +27,9 @@ def get_model_responses_for_subgroup(
 def get_response_distribution(
     responses: dict[str, pd.Series],
     response_maps: dict[str, ResponseMap],
-    is_normalize: bool = False,
+    is_normalize: bool = True,
     is_include_invalid: bool = False,
-) -> dict[str, FrequencyDist | FrequencyDistNormalized]:
+) -> dict[str, FrequencyDist]:
 
     dists = {}
     for qnum, observations in responses.items():
@@ -43,7 +42,7 @@ def get_response_distribution(
         counts = observations.value_counts(normalize=is_normalize, sort=False)
         counts = counts.reindex(support, fill_value=0)
         dists[qnum] = {
-            k: float(v) if is_normalize else int(v) for k, v in counts.items()
+            int(k): float(v) if is_normalize else int(v) for k, v in counts.items()
         }
 
     return dists
