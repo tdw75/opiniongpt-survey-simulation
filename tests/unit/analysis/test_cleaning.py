@@ -219,16 +219,10 @@ def test_mark_is_correct_key_value(mock_response_results, responses):
 
     # last response hardcoded as -1, missing
     results_out = mark_is_correct_key_value(mock_response_results, responses)
-    expected_valid = pd.Series(
-        [True, True, False, False, False, False]
-        + [True, False, True, False, True, False],
-        name="is_response_valid",
-    )
     expected_reason = pd.Series(
-        ["", "", reason, reason, reason, reason] + ["", reason, "", reason, "", ""],
+        ["", "", reason, "", reason, reason] + ["", reason, "", reason, "", ""],
         name="reason_invalid",
     )
-    pd.testing.assert_series_equal(results_out["is_response_valid"], expected_valid)
     pd.testing.assert_series_equal(results_out["reason_invalid"], expected_reason)
 
 
@@ -242,7 +236,7 @@ def mock_response_results() -> pd.DataFrame:
                 "agree",
                 "disagree",
                 "disagree",
-                "agree I am an ai",
+                "key without response",
                 "agree",
                 "",
             ]

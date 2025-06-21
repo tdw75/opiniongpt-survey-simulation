@@ -174,7 +174,9 @@ def mark_multiple_responses(
         responses.sort(key=len, reverse=True)
         all_responses = r"(?<!\w)(" + "|".join(map(re.escape, responses)) + r")(?!\w)"
 
-        is_multiple_responses = group["extra_text"].str.contains(all_responses, flags=re.IGNORECASE, regex=True)
+        is_multiple_responses = group["extra_text"].str.contains(
+            all_responses, flags=re.IGNORECASE, regex=True
+        )
         reason = group["reason_invalid"]
         # add reason for invalidity
         reason.loc[is_multiple_responses] += InvalidReasons.MULTIPLE
@@ -194,9 +196,6 @@ def mark_is_correct_key_value(
 
     correct_text_for_key: pd.Series = results.apply(_get_correct_key_value, axis=1)
     is_correct_text_for_key = results["response_text"] == correct_text_for_key
-    results["is_response_valid"] = np.where(
-        results["response_key"] >= 0, is_correct_text_for_key, False
-    )
     is_bare_key = results["response_text"] == "key without response"
     results.loc[
         ~(is_correct_text_for_key | is_bare_key), "reason_invalid"
@@ -215,8 +214,8 @@ def mark_missing(results: pd.DataFrame) -> pd.DataFrame:
 
 
 def mark_invalid(results: pd.DataFrame) -> pd.DataFrame:
-    is_invalid = ~results["is_response_valid"]
-    results["response_key"] = np.where(is_invalid, -1, results["response_key"])
+    is_valid = results["reason_invalid"]==""
+    results["response_value"] = np.where(is_valid, results["response_key"], -1)
     return results
 
 
