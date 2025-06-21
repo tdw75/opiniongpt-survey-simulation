@@ -1,4 +1,5 @@
 import re
+from enum import Enum, StrEnum
 
 import numpy as np
 import pandas as pd
@@ -11,18 +12,24 @@ from src.data.variables import (
 )
 
 
+class InvalidReasons(StrEnum):
+    WRONG_KEY = "wrong key;"
+    NO_RESPONSE = "no response given;"
+    MULTIPLE = "multiple responses;"
+
+
 def clean_generated_responses(results: pd.DataFrame) -> pd.DataFrame:
     responses = results["response"]
     responses = responses.apply(strip_leading_response_prompt_qnum)
     responses = responses.apply(strip_leading_response_prompt_qnum)
     # run twice to catch case with both
-    responses = responses.apply(identify_keyless_response)
+    responses = responses.apply(identify_bare_key)
     responses = responses.apply(split_response_into_key_value)
-    results = separate_key_and_text_columns(results, responses)
+    results = add_separate_key_and_text_columns(results, responses)
     return results
 
 
-def separate_key_and_text_columns(
+def add_separate_key_and_text_columns(
     results: pd.DataFrame, responses: pd.Series
 ) -> pd.DataFrame:
     results[["response_key", "response_text"]] = pd.DataFrame(responses.tolist())
@@ -39,11 +46,11 @@ def strip_leading_response_prompt_qnum(response_string: str) -> str:
         return response_string
 
 
-def identify_keyless_response(response_string: str) -> str:
+def identify_bare_key(response_string: str) -> str:
     pattern = re.compile("^\s*(\d+)\s*(?:[:\-\.]+)?\s*$")
     try:
         key = pattern.match(response_string).group(1)
-        return f"{key}: keyless response"
+        return f"{key}: key without response"
     except AttributeError:
         return response_string
 
@@ -55,6 +62,13 @@ def split_response_into_key_value(response):
         return split_response_string(response, pattern)
     except AttributeError:  # assign key -1 if no key found
         return -1, response
+
+
+def clean_extra_text(results: pd.DataFrame) -> pd.Series:
+    # run twice to catch case with both
+    extra_text = results["extra_text"]
+    extra_text = extra_text.apply(strip_leading_response_prompt_qnum)
+    return extra_text.apply(strip_leading_response_prompt_qnum)
 
 
 def match_outputs_with_valid_responses(
@@ -69,10 +83,13 @@ def match_outputs_with_valid_responses(
 
     results["response_text"] = results["response_text"].str.strip()
     results = flip_keys_back(results, responses, flipped_responses)
-    results = strip_extra_continuations(results, responses)
+    results = extract_first_response_instance(results, responses)
+    results["extra_text"] = clean_extra_text(results)
+    results = mark_multiple_responses(results, responses)
     results = mark_is_correct_key_value(results, responses)
-    # todo: add one more step including responses like 4: some explanation -- check that explanation is not another response
     # todo: check that keyless responses are considered and not automatically deemed invalid
+    # todo: edit distance higher than length for each response if no exact match
+    # todo: just split on \n and evaluate the first section - if no key-value match -> invalid
     results = mark_invalid(results)
     return results
 
@@ -107,43 +124,64 @@ def flip_keys_back(
     return results
 
 
-def strip_extra_continuations(
+def extract_first_response_instance(
     results: pd.DataFrame, valid_responses: dict[str, ResponseMap]
 ):
+    # todo: check that keys without response text are not deemed invalid
     cleaned_list = []
+    extra_list = []
     reason_list = []
     for qnum, group in results.groupby("number"):
 
-        # regex
-        allowed = valid_responses[qnum].values()
-        valid_pattern = "|".join(map(re.escape, allowed))
-        main_pattern = rf"^({valid_pattern})\s+(Q\d+:|(response|your response):).*"
-        invalid_pattern = rf"^({valid_pattern})\s+\d+:\s+({valid_pattern}).*"
+        # case: llm starts generating the next question
+        allowed_responses = list(valid_responses[qnum].values())
+        allowed_responses.sort(key=len, reverse=True)
+        allowed = "|".join(map(re.escape, allowed_responses))
+        main_pattern = rf"^({allowed})(?:\s+(.*))?"
 
         # extract valid responses
         extracted = group["response_text"].str.extract(
             main_pattern, flags=re.IGNORECASE | re.DOTALL
         )
         cleaned = extracted[0]
+        extra = extracted[1]
         reason = group["reason_invalid"]
 
-        # identify invalid responses
-        is_na = cleaned.isna()
-        is_multiple_responses = group["response_text"].str.match(
-            invalid_pattern, case=False, na=False, flags=re.DOTALL
-        )
-
-        # fill cleaned column
-        cleaned[is_multiple_responses] = group["response_text"][is_multiple_responses]
-        cleaned[is_na] = group["response_text"][is_na]
-        cleaned_list.append(cleaned)
+        # identify missing responses
+        is_no_response = cleaned.isna()
+        cleaned[is_no_response] = ""
+        extra[is_no_response] = group["response_text"][is_no_response]
 
         # add reason for invalidity
-        reason.loc[is_multiple_responses] += "multiple responses;"
+        reason.loc[is_no_response] += InvalidReasons.NO_RESPONSE
         reason_list.append(reason)
-        print(is_multiple_responses.sum())
+        cleaned_list.append(cleaned)
+        extra_list.append(extra)
 
     results["response_text"] = pd.concat(cleaned_list).sort_index()
+    results["extra_text"] = pd.concat(extra_list).sort_index().fillna("")
+    results["reason_invalid"] = pd.concat(reason_list).sort_index()
+    return results
+
+
+def mark_multiple_responses(
+    results: pd.DataFrame, valid_responses: dict[str, ResponseMap]
+):
+    reason_list = []
+    for qnum, group in results.groupby("number"):
+
+        responses = list(valid_responses[qnum].values())
+        responses.sort(key=len, reverse=True)
+        all_responses = r"(?<!\w)(" + "|".join(map(re.escape, responses)) + r")(?!\w)"
+
+        is_multiple_responses = group["extra_text"].str.contains(
+            all_responses, flags=re.IGNORECASE, regex=True
+        )
+        reason = group["reason_invalid"]
+        # add reason for invalidity
+        reason.loc[is_multiple_responses] += InvalidReasons.MULTIPLE
+        reason_list.append(reason)
+
     results["reason_invalid"] = pd.concat(reason_list).sort_index()
     return results
 
@@ -153,14 +191,14 @@ def mark_is_correct_key_value(
 ) -> pd.DataFrame:
 
     def _get_correct_key_value(row: pd.Series) -> str:
-        return responses[row["number"]].get(row["response_key"], -1)
+        return responses[row["number"]].get(row["response_key"], "")
 
     correct_text_for_key: pd.Series = results.apply(_get_correct_key_value, axis=1)
-    is_correct_text_for_key = correct_text_for_key == results["response_text"]
-    results["is_response_valid"] = np.where(
-        results["response_key"] >= 0, is_correct_text_for_key, False
-    )
-    results.loc[~is_correct_text_for_key, "reason_invalid"] += "wrong key;"
+    is_correct_text_for_key = results["response_text"] == correct_text_for_key
+    is_bare_key = results["response_text"] == "key without response"
+    results.loc[
+        ~(is_correct_text_for_key | is_bare_key), "reason_invalid"
+    ] += InvalidReasons.WRONG_KEY
     # todo: make sure 'missing' responses are marked properly
     return results
 
@@ -175,8 +213,8 @@ def mark_missing(results: pd.DataFrame) -> pd.DataFrame:
 
 
 def mark_invalid(results: pd.DataFrame) -> pd.DataFrame:
-    is_invalid = ~results["is_response_valid"]
-    results["response_key"] = np.where(is_invalid, -1, results["response_key"])
+    is_valid = results["reason_invalid"]==""
+    results["response_value"] = np.where(is_valid, results["response_key"], -1)
     return results
 
 
