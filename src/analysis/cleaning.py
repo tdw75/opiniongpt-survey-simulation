@@ -181,7 +181,6 @@ def mark_multiple_responses(
         # add reason for invalidity
         reason.loc[is_multiple_responses] += InvalidReasons.MULTIPLE
         reason_list.append(reason)
-        print(is_multiple_responses.sum())
 
     results["reason_invalid"] = pd.concat(reason_list).sort_index()
     return results
