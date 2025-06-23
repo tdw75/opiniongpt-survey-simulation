@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -45,35 +46,33 @@ def test_identify_bare_key(response, expected):
     assert identify_bare_key(response) == expected
 
 
-@pytest.mark.parametrize(
-    "response, expected",
-    [
-        ("1.- Very important", (1, "Very important")),
-        ("1: Very important", (1, "Very important")),
-        ("1:  Very important", (1, "Very important")),
-        ("9: 9", (9, "9")),
-        (
+def test_split_response_into_key_value():
+    responses = pd.Series(
+        [
+            "1.- Very important",
+            "1: Very important",
+            "1:  Very important",
+            "9: 9",
+            "Agree",
             "1: Very important 2: Rather important",
+            "2: Disagree \n\n\nQ42: Do you agree",
+        ]
+    )
+    expected = pd.DataFrame(
+        [
+            (1, "Very important"),
+            (1, "Very important"),
+            (1, "Very important"),
+            (9, "9"),
+            (np.nan, "Agree"),
             (1, "Very important 2: Rather important"),
-        ),
-        (
-            """2: Disagree
-
-
-Q42: Do you agree""",
-            (
-                2,
-                """Disagree
-
-
-Q42: Do you agree""",
-            ),
-        ),
-    ],
-)
-def test_split_response_into_key_value(response, expected):
-    split = split_response_into_key_value(response)
-    assert split == expected
+            (2, """Disagree \n\n\nQ42: Do you agree"""),
+        ],
+        columns=["response_key", "response_text"],
+    )
+    split = responses.apply(split_response_into_key_value)
+    results = add_separate_key_and_text_columns(pd.DataFrame(), split)
+    pd.testing.assert_frame_equal(results, expected, check_dtype=False)
 
 
 def test_separate_key_text_columns():
@@ -82,12 +81,13 @@ def test_separate_key_text_columns():
     responses = pd.Series([(1, "agree"), (2, "disagree"), (2, "2"), (1, "1")])
     results_out = add_separate_key_and_text_columns(results, responses)
     pd.testing.assert_series_equal(
-        results_out["response_key"], pd.Series([1, 2, 2, 1]), check_names=False
+        results_out["response_key"],
+        pd.Series([1, 2, 2, 1]),
+        check_names=False,
+        check_dtype=False,
     )
     pd.testing.assert_series_equal(
         results_out["response_text"],
         pd.Series(["agree", "disagree", "2", "1"]),
         check_names=False,
     )
-
-

@@ -9,7 +9,9 @@ from src.data.variables import ResponseMap, ResponseReverseMap, flip_key_value
 
 
 class InvalidReasons(StrEnum):
-    WRONG_KEY = "wrong key;"
+    MISMATCH = "key text mismatch;"
+    INVALID_KEY = "invalid key;"
+    INVALID_RESPONSE = "invalid response;"
     NO_RESPONSE = "no response given;"
     MULTIPLE = "multiple responses;"
 
@@ -48,17 +50,23 @@ def flip_keys_back(
     responses: dict[str, ResponseMap],
     flipped_responses: dict[str, ResponseMap],
 ):
-    # note: needs cleaned responses otherwise will throw KeyError
-
+    # note: expects cleaned data; will raise KeyError if mappings are missing
+    results = results.copy()
     value_to_key: dict[str, ResponseReverseMap] = {}
     for q, r in responses.items():
         value_to_key[q] = flip_key_value(r)
 
-    def _flip(qnum: str, response_key: int) -> int:
-        if response_key < 0:
+    def _flip(qnum: str, response_key: int) -> int | type(pd.NA):
+        if pd.isna(response_key):
+            return pd.NA
+        elif response_key < 0:
             return -1
         question_responses_flipped = flipped_responses[qnum]
         response_value = question_responses_flipped.get(response_key, "missing")
+        if response_value == "missing":
+            print(qnum)
+            print(response_key)
+            print(question_responses_flipped)
         return value_to_key[qnum][response_value]
 
     original_keys = results["response_key"]
@@ -69,6 +77,7 @@ def flip_keys_back(
     results["response_key"] = np.where(
         results["is_scale_flipped"], reverted_keys, original_keys
     )
+    results["response_key"] = results["response_key"].astype("Int64")
 
     return results
 
@@ -76,7 +85,6 @@ def flip_keys_back(
 def extract_first_response_instance(
     results: pd.DataFrame, valid_responses: dict[str, ResponseMap]
 ):
-    # todo: check that keys without response text are not deemed invalid
     cleaned_list = []
     extra_list = []
     reason_list = []
@@ -139,16 +147,32 @@ def mark_is_correct_key_value(
     results: pd.DataFrame, responses: dict[str, ResponseMap]
 ) -> pd.DataFrame:
 
-    def _get_correct_key_value(row: pd.Series) -> str:
-        return responses[row["number"]].get(row["response_key"], "")
+    results = results.copy()
+    reason_list = []
 
-    correct_text_for_key: pd.Series = results.apply(_get_correct_key_value, axis=1)
-    is_correct_text_for_key = results["response_text"] == correct_text_for_key
-    is_bare_key = results["response_text"] == "key without response"
-    results.loc[
-        ~(is_correct_text_for_key | is_bare_key), "reason_invalid"
-    ] += InvalidReasons.WRONG_KEY
-    # todo: make sure 'missing' responses are marked properly
+    for qnum, group in results.groupby("number"):
+        valid_responses = {k: v for k, v in responses[qnum].items() if k >= 0}
+        reason = group["reason_invalid"].copy()
+        correct_text_for_key = results["response_key"].map(valid_responses).fillna("")
+
+        is_valid_text = group["response_text"].isin(valid_responses.values())
+        is_valid_key = group["response_key"].isin(valid_responses.keys())
+        is_key_text_match = results["response_text"] == correct_text_for_key
+        is_key_without_text = group["response_text"] == "key without response"
+        is_text_without_key = group["response_key"].isna()
+
+        is_invalid_key_text_mismatch = (
+            ~(is_key_text_match | is_text_without_key) & is_valid_text
+        )
+        is_invalid_wrong_text = ~is_valid_text & ~is_key_without_text
+        is_invalid_wrong_key = ~is_valid_key & ~is_text_without_key
+
+        reason.loc[is_invalid_key_text_mismatch] += InvalidReasons.MISMATCH
+        reason.loc[is_invalid_wrong_text] += InvalidReasons.INVALID_RESPONSE
+        reason.loc[is_invalid_wrong_key] += InvalidReasons.INVALID_KEY
+        reason_list.append(reason)
+
+    results["reason_invalid"] = pd.concat(reason_list).sort_index()
     return results
 
 
