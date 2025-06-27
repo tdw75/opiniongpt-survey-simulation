@@ -2,16 +2,20 @@ from ast import literal_eval
 
 import pandas as pd
 
-from src.data.variables import responses_to_map
+from src.data.variables import responses_to_map, ResponseMap
 from src.simulation.models import ModelConfig
 
 
-Messages = list[dict[str, str]]
+Prompt = str
+Messages = list[dict[str, Prompt]]
+ResponseList = list[str]
+QNum = str
+Survey = dict[QNum, tuple[Prompt, ResponseList]]
 
 
 def extract_user_prompts_from_survey_grouped(
     survey_df: pd.DataFrame, is_reverse: bool
-) -> dict[str, str]:
+) -> Survey:
     """
     General prompt format for each group of questions
     """
@@ -33,11 +37,13 @@ def extract_user_prompts_from_survey_grouped(
             if numbers.shape[0] == 1
             else f"{numbers.min()}-{numbers.max()}"
         )
-        prompts[key] = build_user_prompt_message_grouped(
-            item_stem,
-            responses_to_map(responses, is_reverse),
-            numbers,
-            question_group["subtopic"].values,
+        response_map = responses_to_map(responses, is_reverse)
+        response_list = format_responses(response_map)
+        prompts[key] = (
+            build_user_prompt_message_grouped(
+                item_stem, response_list, numbers, question_group["subtopic"].values
+            ),
+            response_list,
         )
 
     return prompts
@@ -45,7 +51,7 @@ def extract_user_prompts_from_survey_grouped(
 
 def extract_user_prompts_from_survey_individual(
     survey_df: pd.DataFrame, is_subtopic_separate: bool, is_reverse: bool
-) -> dict[str, str]:
+) -> Survey:
     """
     General prompt format for each individual questions
     """
@@ -53,56 +59,64 @@ def extract_user_prompts_from_survey_individual(
     prompts = {}
 
     for idx, question in survey_df.iterrows():
+        qnum = question["number"]
         subtopic = (
             f"\n{question['subtopic']}" if not pd.isnull(question["group"]) else ""
         )
         item = f"{question['item_stem']}{subtopic if is_subtopic_separate else ''}"
         responses = literal_eval(question["responses"])
-        prompts[question["number"]] = build_user_prompt_message_individual(
-            item, responses_to_map(responses, is_reverse), question["number"]
+        response_map = responses_to_map(responses, is_reverse)
+        response_list = format_responses(response_map)
+        prompts[qnum] = (
+            build_user_prompt_message_individual(item, response_list, qnum),
+            response_list,
         )
-        print(f"successfully loaded {question['number']}")
+        print(f"successfully loaded {qnum}")
 
     return prompts
 
 
 def build_user_prompt_message_grouped(
     item_stem: str,
-    response_set: dict[int, str],
-    numbers: list[str],
+    responses: ResponseList,
+    numbers: list[QNum],
     subtopics: list[str] | None,
-) -> str:
+) -> Prompt:
     return f"""
 {item_stem}
 
 {format_subtopics(numbers, subtopics)}
 
-{format_responses(response_set)}
+{format_response_message(responses)}
 
 Your response:
 """
 
 
 def build_user_prompt_message_individual(
-    item: str, response_set: dict[int, str], number: str
-) -> str:
+    item: str, responses: ResponseList, number: QNum
+) -> Prompt:
     return f"""
 {number}: {item}
 
-{format_responses(response_set)}
+{format_response_message(responses)}
 
 Your response:
 """
 
 
-def format_responses(response_set: dict[int, str]) -> str:
+def format_responses(response_map: ResponseMap) -> ResponseList:
+    return [f"{k}: {resp}" for k, resp in response_map.items()]
+
+
+def format_response_message(responses: ResponseList) -> str:
     message = """The possible responses are:"""
-    for key, response in response_set.items():
-        message += f"\n{key}: {response}"
+    for response in responses:
+        message += f"\n{response}"
     return message
 
 
-def format_subtopics(numbers: list[str], subtopics: list[str] | None) -> str:
+def format_subtopics(numbers: list[QNum], subtopics: list[str] | None) -> str:
     if subtopics is None:
         return "\n"
     else:
@@ -112,7 +126,7 @@ def format_subtopics(numbers: list[str], subtopics: list[str] | None) -> str:
         return message
 
 
-def batch_messages(user_prompts: list[str], config: ModelConfig) -> list[Messages]:
+def batch_messages(user_prompts: list[Prompt], config: ModelConfig) -> list[Messages]:
     """
     takes a list of user prompts and returns a list of alternative Messages
     e.g. [user1, user2] -> [message1, message2, message1, message2, message1, message2]
@@ -126,7 +140,7 @@ def batch_messages(user_prompts: list[str], config: ModelConfig) -> list[Message
     return messages * (config.sample_size // len(user_prompts))
 
 
-def format_messages(user_prompt: str, config: ModelConfig) -> Messages:
+def format_messages(user_prompt: Prompt, config: ModelConfig) -> Messages:
     if config.is_phi_model:
         return [{"role": "user", "content": f"{config.system_prompt}\n{user_prompt}"}]
     else:

@@ -7,6 +7,7 @@ print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
+from src.prompting.messages import Survey
 from src.simulation.models import adapters, ModelConfig, load_model, change_subgroup
 from src.simulation.run import run_single
 from src.simulation.utils import (
@@ -67,8 +68,8 @@ def main(
 
 
 def run_phi_instruct(
-    survey_questions: dict[str, str],
-    survey_flipped: dict[str, str],
+    survey_questions: Survey,
+    survey_flipped: Survey,
     shared_config_vars: dict,
     run_id: str,
 ):
@@ -90,8 +91,8 @@ def run_phi_instruct(
 
 
 def run_opinion_gpt(
-    survey_questions: dict[str, str],
-    survey_flipped: dict[str, str],
+    survey_questions: Survey,
+    survey_flipped: Survey,
     shared_config_vars: dict,
     run_id: str,
 ):

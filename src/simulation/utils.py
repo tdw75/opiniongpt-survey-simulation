@@ -5,7 +5,11 @@ from typing import Any, Generator
 
 import pandas as pd
 
-from src.prompting.messages import extract_user_prompts_from_survey_grouped, Messages
+from src.prompting.messages import (
+    extract_user_prompts_from_survey_grouped,
+    Messages,
+    Survey,
+)
 from src.prompting.messages import extract_user_prompts_from_survey_individual
 from src.simulation.models import ModelConfig
 
@@ -29,7 +33,7 @@ def load_survey(
     question_format: str,
     subset_name: str,
     is_reverse: bool,
-) -> dict[str, str]:
+) -> Survey:
 
     survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
     if subset_name:
@@ -46,7 +50,9 @@ def load_survey(
     else:
         raise ValueError(f"Invalid question format: {question_format}")
 
-    print(f"Successfully loaded survey in {'reverse' if is_reverse else 'normal'} order!")
+    print(
+        f"Successfully loaded survey in {'reverse' if is_reverse else 'normal'} order!"
+    )
     return survey
 
 

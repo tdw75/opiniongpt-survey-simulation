@@ -13,6 +13,7 @@ from src.prompting.messages import (
     extract_user_prompts_from_survey_individual,
     format_messages,
 )
+from utils import Survey
 
 
 def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
@@ -47,17 +48,17 @@ def test_build_user_prompt_message_grouped(expected_messages_grouped):
     question = survey.loc[0]
     subjects = survey.loc[0:5, "subtopic"].values
     numbers = survey.loc[0:5, "number"].values
-    responses = {
-        1: "Very important",
-        2: "Rather important",
-        3: "Not very important",
-        4: "Not at all important",
-    }
+    responses = [
+        "1: Very important",
+        "2: Rather important",
+        "3: Not very important",
+        "4: Not at all important",
+    ]
 
     message = build_user_prompt_message_grouped(
         question["item_stem"], responses, numbers, subjects
     )
-    assert message == expected_messages_grouped["Q1-Q6"]
+    assert message == expected_messages_grouped["Q1-Q6"][0]
 
 
 @pytest.mark.parametrize("idx, number", [(0, "Q1"), (3, "Q4")])
@@ -66,17 +67,17 @@ def test_build_user_prompt_message_individual(
 ):
     survey = pd.read_csv("test_data_files/sample_variables_not_split.csv")
     question = survey.loc[idx]
-    responses = {
-        1: "Very important",
-        2: "Rather important",
-        3: "Not very important",
-        4: "Not at all important",
-    }
+    responses = [
+        "1: Very important",
+        "2: Rather important",
+        "3: Not very important",
+        "4: Not at all important",
+    ]
 
     message = build_user_prompt_message_individual(
         f"{question['item_stem']}", responses, question["number"]
     )
-    assert message == expected_messages_individual[False][number]
+    assert message == expected_messages_individual[False][number][0]
 
 
 def test_format_subtopics():
@@ -112,7 +113,13 @@ def load_page(num: int, directory: str = "test_data_files/pages"):
 
 
 @pytest.fixture
-def expected_messages_grouped() -> dict[str, str]:
+def expected_messages_grouped() -> Survey:
+    r1_6 = [
+        "1: Very important",
+        "2: Rather important",
+        "3: Not very important",
+        "4: Not at all important",
+    ]
     q1_q6 = """
 For each of the following aspects, indicate how important it is in your life. Would you 
 say it is very important, rather important, not very important or not important at all?
@@ -133,6 +140,7 @@ The possible responses are:
 
 Your response:
 """
+    r22_26 = ["1: Mentioned", "2: Not mentioned"]
     # todo: wording of neighbours question doesn't really make sense, might need to change manually
     q22_q26 = """
 On this list are various groups of people. Could you please mention any that you would 
@@ -150,6 +158,12 @@ The possible responses are:
 
 Your response:
 """
+    r27 = [
+        "1: Agree strongly",
+        "2: Agree",
+        "3: Disagree",
+        "4: Strongly disagree",
+    ]
     q27 = """
 For each of the following statements I read out, can you tell me how much you agree 
 with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my 
@@ -166,11 +180,17 @@ The possible responses are:
 
 Your response:
 """
-    return {"Q1-Q6": q1_q6, "Q22-Q26": q22_q26, "Q27": q27}
+    return {"Q1-Q6": (q1_q6, r1_6), "Q22-Q26": (q22_q26, r22_26), "Q27": (q27, r27)}
 
 
 @pytest.fixture
-def expected_messages_individual() -> dict[bool, dict[str, str]]:
+def expected_messages_individual() -> dict[bool, Survey]:
+    r1 = [
+        "1: Very important",
+        "2: Rather important",
+        "3: Not very important",
+        "4: Not at all important",
+    ]
     q1 = """
 Q1: For each of the following aspects, indicate how important it is in your life. Would you 
 say it is very important, rather important, not very important or not important at all? –
@@ -184,6 +204,12 @@ The possible responses are:
 
 Your response:
 """
+    r1_fl = [
+        "1: Not at all important",
+        "2: Not very important",
+        "3: Rather important",
+        "4: Very important",
+    ]
     q1_fl = """
 Q1: For each of the following aspects, indicate how important it is in your life. Would you 
 say it is very important, rather important, not very important or not important at all? –
@@ -223,6 +249,7 @@ The possible responses are:
 
 Your response:
 """
+    r23 = ["1: Mentioned", "2: Not mentioned"]
     q23 = """
 Q23: On this list are various groups of people. Could you please mention any that you would
 not like to have as neighbors? – People of a different religion
@@ -233,6 +260,7 @@ The possible responses are:
 
 Your response:
 """
+    r23_fl = ["1: Not mentioned", "2: Mentioned"]
     q23_fl = """
 Q23: On this list are various groups of people. Could you please mention any that you would
 not like to have as neighbors? – People of a different religion
@@ -243,6 +271,12 @@ The possible responses are:
 
 Your response:
 """
+    r27 = [
+        "1: Agree strongly",
+        "2: Agree",
+        "3: Disagree",
+        "4: Strongly disagree",
+    ]
     q27 = """
 Q27: For each of the following statements I read out, can you tell me how much you agree
 with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my
@@ -256,6 +290,12 @@ The possible responses are:
 
 Your response:
 """
+    r27_fl = [
+        "1: Strongly disagree",
+        "2: Disagree",
+        "3: Agree",
+        "4: Agree strongly",
+    ]
     q27_fl = """
 Q27: For each of the following statements I read out, can you tell me how much you agree
 with each. Do you agree strongly, agree, disagree, or disagree strongly? - One of my
@@ -271,6 +311,16 @@ Your response:
 """
 
     return {
-        False: {"Q1": q1, "Q4": q4, "Q23": q23, "Q27": q27},
-        True: {"Q1": q1_fl, "Q4": q4_fl, "Q23": q23_fl, "Q27": q27_fl},
+        False: {
+            "Q1": (q1, r1),
+            "Q4": (q4, r1),
+            "Q23": (q23, r23),
+            "Q27": (q27, r27),
+        },
+        True: {
+            "Q1": (q1_fl, r1_fl),
+            "Q4": (q4_fl, r1_fl),
+            "Q23": (q23_fl, r23_fl),
+            "Q27": (q27_fl, r27_fl),
+        },
     }
