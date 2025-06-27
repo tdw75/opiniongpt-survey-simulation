@@ -1,11 +1,12 @@
-import outlines
+from typing import Any, Generator
+
 import torch
+from outlines import Generator as OutlinesGenerator
 from outlines.models import Transformers
 from tqdm import tqdm
 
 from src.prompting.messages import batch_messages, Messages, Prompt, ResponseList
 from src.simulation.models import ModelConfig
-from src.simulation.utils import get_batches
 
 
 class BaseDecoder:
@@ -15,7 +16,7 @@ class BaseDecoder:
         self.tokenizer = tokenizer
         self.config = config
 
-    def generate(self) -> list[str]:
+    def generate_responses(self) -> list[str]:
         raise NotImplementedError
 
     def simulate_question(
@@ -26,7 +27,7 @@ class BaseDecoder:
         raise NotImplementedError
 
 
-class HFDecoder(BaseDecoder):
+class UnconstrainedDecoder(BaseDecoder):
 
     def simulate_question(
         self,
@@ -39,9 +40,9 @@ class HFDecoder(BaseDecoder):
         )
 
         for batch in tqdm(
-            get_batches(messages_batched, self.config.batch_size), desc="batch"
+            self._get_batches(messages_batched), desc="batch", leave=False
         ):
-            batch_kwargs = self.init_generation_params(batch)
+            batch_kwargs = self._init_generation_params(batch)
             batch_kwargs["num_return_sequences"] = 1  # todo: might be redundant
             response_batch = self.generate_responses(batch_kwargs)
             responses.extend(response_batch)
@@ -59,7 +60,7 @@ class HFDecoder(BaseDecoder):
                 outputs[:, input_len:], skip_special_tokens=True
             )
 
-    def init_generation_params(self, messages: Messages | list[Messages]):
+    def _init_generation_params(self, messages: Messages | list[Messages]):
 
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -74,8 +75,14 @@ class HFDecoder(BaseDecoder):
         inputs = {k: v.to(self.config.device) for k, v in inputs.items()}
         return {**inputs, **self.config.hyperparams}
 
+    def _get_batches(
+        self, messages: list[Messages]
+    ) -> Generator[list[Messages], Any, None]:
+        for i in range(0, len(messages), self.config.batch_size):
+            yield messages[i : i + self.config.batch_size]
 
-class OutlinesDecoder(BaseDecoder):
+
+class ConstrainedDecoder(BaseDecoder):
 
     def __init__(self, model, tokenizer, config: ModelConfig):
         super().__init__(model, tokenizer, config)
@@ -86,23 +93,39 @@ class OutlinesDecoder(BaseDecoder):
         question: tuple[Prompt, ResponseList],
         question_flipped: tuple[Prompt, ResponseList],
     ) -> list[str]:
-        responses_per_prompt = []
 
-        for prompt, choices in [question, question_flipped]:
-            prompt = self.tokenizer.apply_chat_template(
-                prompt, tokenize=False, add_generation_prompt=True
-            )
-            prompt_responses = self.generate(prompt, choices)
-            responses_per_prompt.extend(prompt_responses)
-        return responses_per_prompt
+        prompts = [
+            self._prepare_inputs(question[0]),
+            self._prepare_inputs(question_flipped[0]),
+        ]
+        choices_list = [question[1], question_flipped[1]]
+        responses_per_prompt = [
+            self.generate_responses(prompt, choices)
+            for prompt, choices in zip(prompts, choices_list)
+        ]
+        return self._interleave(responses_per_prompt)
 
-    def generate(self, prompt: Prompt, choices: ResponseList) -> list[str]:
-        generate = outlines.generate.choice(self.model, choices)
-        n_remaining = self.config.sample_size // 2
+    def generate_responses(self, prompt: Prompt, choices: ResponseList) -> list[str]:
+        generator = OutlinesGenerator(self.model, choices)
         prompt_responses = []
-        while n_remaining > 0:
-            n = min(self.config.batch_size, n_remaining)
-            batch_responses = generate(prompt, n=n, **self.config.hyperparams)
+        for n in tqdm(self._get_batch_sizes(), desc="batch", leave=False):
+            batch_responses = generator(prompt, n=n, **self.config.hyperparams)
             prompt_responses.extend(batch_responses)
-            n_remaining -= self.config.batch_size
+
         return prompt_responses
+
+    def _prepare_inputs(self, prompt: Prompt) -> str:
+        return self.tokenizer.apply_chat_template(
+            prompt, tokenize=False, add_generation_prompt=True
+        )
+
+    def _get_batch_sizes(self) -> list[int]:
+        total = self.config.sample_size // 2
+        batch_size = self.config.batch_size
+        last_batch_size = total % batch_size
+        last_batch = [last_batch_size] if last_batch_size > 0 else []
+        return [batch_size] * (total // batch_size) + last_batch
+
+    @staticmethod
+    def _interleave(responses_per_prompt: list[list[str]]) -> list[str]:
+        return [resp for pair in zip(*responses_per_prompt) for resp in pair]

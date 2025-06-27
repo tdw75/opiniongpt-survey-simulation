@@ -4,7 +4,7 @@ from tqdm import tqdm
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from src.prompting.messages import Survey
-from src.simulation.decoders import OutlinesDecoder, HFDecoder, BaseDecoder
+from src.simulation.decoders import ConstrainedDecoder, UnconstrainedDecoder, BaseDecoder
 from src.simulation.models import ModelConfig
 
 logger = logging.getLogger(__name__)
@@ -37,8 +37,8 @@ def get_decoder(
     model: PreTrainedModel, tokenizer: PreTrainedTokenizer, config: ModelConfig
 ) -> BaseDecoder:
     if config.decoding_style == "constrained":
-        return OutlinesDecoder(model, tokenizer, config)
+        return ConstrainedDecoder(model, tokenizer, config)
     elif config.decoding_style == "unconstrained":
-        return HFDecoder(model, tokenizer, config)
+        return UnconstrainedDecoder(model, tokenizer, config)
     else:
         raise ValueError(f"Unknown decoding style: {config.decoding_style}")
