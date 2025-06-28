@@ -199,7 +199,7 @@ class ConstrainedDecoder(BaseDecoder):
         :returns: List of integer batch sizes to use for generation.
         """
         total = self.config.sample_size // 2
-        batch_size = self.config.batch_size
+        batch_size = min(self.config.batch_size, total)
         last_batch_size = total % batch_size
         last_batch = [last_batch_size] if last_batch_size > 0 else []
         return [batch_size] * (total // batch_size) + last_batch
