@@ -30,12 +30,20 @@ def run_single(
             "execution_time": end - start,
             **config.model_dump(),
         },
-        "questions": [prompt for prompt, _ in survey_questions],
-        "choices": [ch for _, ch in survey_questions],
-        "questions_flipped": [prompt for prompt, _ in survey_flipped],
-        "choices_flipped": [ch for _, ch in survey_flipped],
+        "questions": extract_prompts(survey_questions),
+        "choices": extract_choices(survey_questions),
+        "questions_flipped": extract_prompts(survey_flipped),
+        "choices_flipped": extract_choices(survey_flipped),
         "outputs": outputs,
         "is_scale_flipped": {
             num: mark_is_scale_flipped(resp) for num, resp in outputs.items()
         },
     }
+
+
+def extract_prompts(survey: Survey) -> dict[str, str]:
+    return {qnum: prompt for qnum, (prompt, _) in survey.items()}
+
+
+def extract_choices(survey: Survey) -> dict[str, list[str]]:
+    return {qnum: choices for qnum, (_, choices) in survey.items()}
