@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from typing import Any, Generator
+
 
 import pandas as pd
 
@@ -85,13 +85,6 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     """debugging function: selects a single question from the survey"""
     single_question = list(survey.items())[idx]
     return {single_question[0]: single_question[1]}
-
-
-def get_batches(
-    messages: list[Messages], batch_size: int
-) -> Generator[list[Messages], Any, None]:
-    for i in range(0, len(messages), batch_size):
-        yield messages[i : i + batch_size]
 
 
 def mark_is_scale_flipped(responses: list[str]):
