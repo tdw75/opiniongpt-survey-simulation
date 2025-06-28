@@ -4,7 +4,7 @@ from timeit import default_timer as timer
 from peft import PeftModel
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from messages import Survey
+from src.prompting.messages import Survey
 from src.simulation.inference import simulate_whole_survey
 from src.simulation.models import ModelConfig
 from src.simulation.utils import mark_is_scale_flipped
