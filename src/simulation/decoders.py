@@ -3,6 +3,7 @@ from typing import Any, Generator
 
 import outlines
 import torch
+from jsonformer import Jsonformer
 from outlines.types import Regex
 from tqdm import tqdm
 from transformers import PreTrainedTokenizer, PreTrainedModel
@@ -177,16 +178,17 @@ class ConstrainedDecoder(BaseDecoder):
         :returns: Interleaved list of generated responses.
         """
         prompts = [self._prepare_inputs(pr) for pr, _ in [question, question_flipped]]
-        choices_list = [
-            self._prepare_choices(qnum, ch) for _, ch in [question, question_flipped]
-        ]
+        # choices_list = [
+        #     self._prepare_choices(qnum, ch) for _, ch in [question, question_flipped]
+        # ]
+        choices_list = [question[1], question_flipped[1]]
         responses_per_prompt = [
             self.generate_responses(prompt, choices)
             for prompt, choices in zip(prompts, choices_list)
         ]
         return self._interleave(responses_per_prompt)
 
-    def generate_responses(self, prompt: Prompt, choices: str) -> list[str]:
+    def generate_responses(self, prompt: Prompt, choices: ResponseList) -> list[str]:
         """
         Generate a batch of responses from the model using Outlines constrained decoding.
 
@@ -194,7 +196,7 @@ class ConstrainedDecoder(BaseDecoder):
         :param choices: regex for valid response choices for constrained decoding.
         :returns: List of generated responses.
         """
-        generator = outlines.Generator(self.llm, Regex(choices))
+        generator = outlines.Generator(self.llm, choices)
         prompt_responses = []
         for _ in tqdm(range(self.config.sample_size // 2), desc="batch", leave=False):
             prompt_responses.append(generator(prompt, **self.config.hyperparams))
