@@ -194,7 +194,7 @@ class ConstrainedDecoder(BaseDecoder):
         :param choices: regex for valid response choices for constrained decoding.
         :returns: List of generated responses.
         """
-        generator = outlines.Generator(self.llm, Regex(choices, flags=re.IGNORECASE))
+        generator = outlines.Generator(self.llm, Regex(choices))
         prompt_responses = []
         for n in tqdm(self._get_batch_sizes(), desc="batch", leave=False):
             batch_responses = generator(prompt, n=n, **self.config.hyperparams)
@@ -228,7 +228,7 @@ class ConstrainedDecoder(BaseDecoder):
         patterns = [
             rf"^\s*{prefix_pattern}{re.escape(choice)}\s*$" for choice in choices
         ]
-        return "|".join(patterns)
+        return r"(?i)" + "|".join(patterns)
 
     def _get_batch_sizes(self) -> list[int]:
         """
