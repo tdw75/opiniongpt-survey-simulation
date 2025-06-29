@@ -3,8 +3,6 @@ from typing import Any, Generator
 
 import outlines
 import torch
-from jsonformer import Jsonformer
-from outlines.types import Regex
 from tqdm import tqdm
 from transformers import PreTrainedTokenizer, PreTrainedModel
 
