@@ -178,7 +178,7 @@ class ConstrainedDecoder(BaseDecoder):
         """
         prompts = [self._prepare_inputs(pr) for pr, _ in [question, question_flipped]]
         choices_list = [
-            self._prepare_choices(ch) for _, ch in [question, question_flipped]
+            self._prepare_choices(qnum, ch) for _, ch in [question, question_flipped]
         ]
         responses_per_prompt = [
             self.generate_responses(prompt, choices)
