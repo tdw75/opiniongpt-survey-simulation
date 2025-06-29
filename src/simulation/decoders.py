@@ -226,7 +226,7 @@ class ConstrainedDecoder(BaseDecoder):
         prefixes = [r"your response:", r"response:", rf"{qnum}:"]
         prefix_pattern = r"(?:" + "|".join([re.escape(p) for p in prefixes]) + r")?\s*"
         patterns = [
-            rf"\s*{prefix_pattern}{re.escape(choice)}\s*$" for choice in choices
+            rf"\s*{prefix_pattern}{re.escape(choice)}\s*" for choice in choices
         ]
         return r"(?i)" + "|".join(patterns)
 
