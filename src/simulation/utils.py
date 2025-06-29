@@ -1,11 +1,15 @@
 import json
 import os
 from datetime import datetime
-from typing import Any, Generator
+
 
 import pandas as pd
 
-from src.prompting.messages import extract_user_prompts_from_survey_grouped, Messages
+from src.prompting.messages import (
+    extract_user_prompts_from_survey_grouped,
+    Messages,
+    Survey,
+)
 from src.prompting.messages import extract_user_prompts_from_survey_individual
 from src.simulation.models import ModelConfig
 
@@ -29,7 +33,7 @@ def load_survey(
     question_format: str,
     subset_name: str,
     is_reverse: bool,
-) -> dict[str, str]:
+) -> Survey:
 
     survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
     if subset_name:
@@ -46,7 +50,9 @@ def load_survey(
     else:
         raise ValueError(f"Invalid question format: {question_format}")
 
-    print(f"Successfully loaded survey in {'reverse' if is_reverse else 'normal'} order!")
+    print(
+        f"Successfully loaded survey in {'reverse' if is_reverse else 'normal'} order!"
+    )
     return survey
 
 
@@ -79,13 +85,6 @@ def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
     """debugging function: selects a single question from the survey"""
     single_question = list(survey.items())[idx]
     return {single_question[0]: single_question[1]}
-
-
-def get_batches(
-    messages: list[Messages], batch_size: int
-) -> Generator[list[Messages], Any, None]:
-    for i in range(0, len(messages), batch_size):
-        yield messages[i : i + batch_size]
 
 
 def mark_is_scale_flipped(responses: list[str]):

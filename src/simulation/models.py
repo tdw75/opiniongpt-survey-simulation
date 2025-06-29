@@ -47,20 +47,20 @@ class ModelConfig(BaseModel):
     is_persona: bool = False
     device: str = "cuda:2"
     aggregation_by: Literal["questions", "respondent"] = "questions"
+    decoding_style: Literal["constrained", "unconstrained"] = "unconstrained"
     sample_size: int = 500
-    batch_size: int = 50,
+    batch_size: int = 50
     hyperparams: dict = {}
     system_prompt: str = None
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
-            # todo: maybe change as longer answers or not needed/valid (maybe only [1, 30] tokens needed)
-            min_new_tokens=2,
-            max_new_tokens=16,
-            do_sample=True,
-            top_p=0.9,
-            temperature=0.6,
+            max_new_tokens=16, top_p=0.9, temperature=0.6
         )
+        sampling_param = (
+            "sampling" if self.decoding_style == "constrained" else "do_sample"
+        )
+        default_hyperparams[sampling_param] = True
         self.hyperparams = {**default_hyperparams, **self.hyperparams}
         self.system_prompt = self.system_prompt or build_survey_context_message()
 
