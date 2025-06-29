@@ -3,7 +3,6 @@ from typing import Any, Generator
 
 import outlines
 import torch
-from outlines.types import Regex
 from tqdm import tqdm
 from transformers import PreTrainedTokenizer, PreTrainedModel
 
@@ -194,10 +193,13 @@ class ConstrainedDecoder(BaseDecoder):
         :param choices: regex for valid response choices for constrained decoding.
         :returns: List of generated responses.
         """
-        generator = outlines.Generator(self.llm, Regex(choices))
+        generate = outlines.generate.regex(self.llm, choices)
         prompt_responses = []
         for n in tqdm(self._get_batch_sizes(), desc="batch", leave=False):
-            batch_responses = generator(prompt, n=n, **self.config.hyperparams)
+            sampling = self.config.hyperparams["do_sample"]
+            batch_responses = generate(
+                prompt, n=n, sampling=sampling, **self.config.hyperparams
+            )
             prompt_responses.extend(batch_responses)
 
         return prompt_responses
@@ -225,9 +227,7 @@ class ConstrainedDecoder(BaseDecoder):
         """
         prefixes = [r"your response:", r"response:", rf"{qnum}:"]
         prefix_pattern = r"(?:" + "|".join([re.escape(p) for p in prefixes]) + r")?\s*"
-        patterns = [
-            rf"\s*{prefix_pattern}{re.escape(choice)}\s*" for choice in choices
-        ]
+        patterns = [rf"\s*{prefix_pattern}{re.escape(choice)}\s*" for choice in choices]
         return r"(?i)" + "|".join(patterns)
 
     def _get_batch_sizes(self) -> list[int]:
