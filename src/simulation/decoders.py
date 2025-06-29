@@ -1,5 +1,5 @@
 import re
-from typing import Any, Generator
+from typing import Any, Generator, Literal
 
 import outlines
 import torch
@@ -194,7 +194,7 @@ class ConstrainedDecoder(BaseDecoder):
         :param choices: regex for valid response choices for constrained decoding.
         :returns: List of generated responses.
         """
-        generator = outlines.Generator(self.llm, choices)
+        generator = outlines.Generator(self.llm, Literal[*choices])
         prompt_responses = []
         for _ in tqdm(range(self.config.sample_size // 2), desc="batch", leave=False):
             prompt_responses.append(generator(prompt, **self.config.hyperparams))
