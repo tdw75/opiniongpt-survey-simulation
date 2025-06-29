@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -6,6 +7,7 @@ from src.analysis.invalid_responses import (
     extract_first_response_instance,
     mark_multiple_responses,
     mark_is_correct_key_value,
+    mark_is_correct_key_value,
 )
 from src.data.variables import ResponseMap
 
@@ -13,8 +15,12 @@ from src.data.variables import ResponseMap
 def test_flip_keys_back(mock_response_results, responses, responses_flipped):
     results_out = flip_keys_back(mock_response_results, responses, responses_flipped)
 
-    expected = pd.Series([1, 2, 2, 1, 1, 1] + [2, 2, 3, 3, 2, -1], name="response_key")
-    pd.testing.assert_series_equal(results_out["response_key"], expected)
+    expected = pd.Series(
+        [1, 2, 2, pd.NA, 1, 1, pd.NA, 2, 3, 3, -1, -1],
+        name="response_key"
+    ).astype("Int64")
+
+    pd.testing.assert_series_equal(results_out["response_key"], expected, check_dtype=False)
 
 
 def test_extract_first_response_instance():
@@ -126,16 +132,21 @@ def test_mark_multiple_responses():
     pd.testing.assert_frame_equal(out, expected)
 
 
+
 def test_mark_is_correct_key_value(mock_response_results, responses):
     mock_response_results["reason_invalid"] = ""
-    reason = "wrong key;"
+    reason1 = "key text mismatch;"
+    reason2 = "invalid response;"
+    reason3 = "invalid key;"
 
     # last response hardcoded as -1, missing
     results_out = mark_is_correct_key_value(mock_response_results, responses)
     expected_reason = pd.Series(
-        ["", "", reason, "", reason, reason] + ["", reason, "", reason, "", ""],
+        ["", "", reason1, "", "", reason2]
+        + [reason2, reason2, "", reason1, reason1+reason3, reason1+reason3],
         name="reason_invalid",
     )
+    print(results_out[["response_key", "response_text", "reason_invalid"]])
     pd.testing.assert_series_equal(results_out["reason_invalid"], expected_reason)
 
 
@@ -144,16 +155,16 @@ def mock_response_results() -> pd.DataFrame:
     results = pd.DataFrame(
         {
             "number": ["Q1"] * 6 + ["Q2"] * 6,
-            "response_key": [1, 2, 1, 1, 2, 1] + [2, 2, 3, 1, 2, -1],
+            "response_key": [1, 2, 1, pd.NA, 2, 1] + [pd.NA, 2, 3, 1, 5, -1],
             "response_text": [
                 "agree",
                 "disagree",
                 "disagree",
-                "key without response",
                 "agree",
+                "key without response",
                 "",
             ]
-            + ["2", "potato", "3", "3", "2", "missing"],
+            + ["", "potato", "3", "3", "2", "3"],
             "is_scale_flipped": [False, False, True, False, True, False]
             + [False, False, False, True, True, True],
         }

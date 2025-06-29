@@ -5,19 +5,6 @@ import pandas as pd
 
 from src.data.variables import split_response_string
 
-# todo: check that keyless responses are considered and not automatically deemed invalid
-
-"""
-                                                   0.934590
-wrong key;                                         0.036502
-no response given;wrong key;                       0.027766
-multiple responses;                                0.000703
-no response given;multiple responses;wrong key;    0.000299  # todo: should not be both - double check
-multiple responses;wrong key;                      0.000115  
-no response given;                                 0.000022
-no response given;multiple responses;              0.000001  # todo: should not be both - double check
-Name: proportion, dtype: float64"""
-
 
 def clean_generated_responses(results: pd.DataFrame) -> pd.DataFrame:
     responses = results["response"]
@@ -61,8 +48,8 @@ def split_response_into_key_value(response):
     pattern = re.compile(r"^\s*(\d+)\s*[:\-\.]+\s*(.*)$", re.DOTALL)
     try:
         return split_response_string(response, pattern)
-    except AttributeError:  # assign key -1 if no key found
-        return -1, response
+    except AttributeError:  # assign nan key if no key found
+        return np.nan, response
 
 
 def mark_missing(results: pd.DataFrame) -> pd.DataFrame:
