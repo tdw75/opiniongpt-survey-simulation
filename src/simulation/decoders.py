@@ -1,12 +1,21 @@
+import re
 from typing import Any, Generator
 
 import torch
 from outlines import Generator as OutlinesGenerator
 from outlines.models import Transformers
+from outlines.types import Regex
 from tqdm import tqdm
-from transformers import PreTrainedTokenizer
+from transformers import PreTrainedTokenizer, PreTrainedModel
 
-from src.prompting.messages import batch_messages, Messages, Prompt, ResponseList, format_messages
+from src.prompting.messages import (
+    batch_messages,
+    Messages,
+    Prompt,
+    ResponseList,
+    format_messages,
+    QNum,
+)
 from src.simulation.models import ModelConfig
 
 
@@ -18,7 +27,12 @@ class BaseDecoder:
     either with unconstrained (free-form) or constrained (format-restricted) decoding.
     """
 
-    def __init__(self, model, tokenizer: PreTrainedTokenizer, config: ModelConfig):
+    def __init__(
+        self,
+        model: PreTrainedModel,
+        tokenizer: PreTrainedTokenizer,
+        config: ModelConfig,
+    ):
         """
         Initialise the decoder
 
@@ -41,12 +55,14 @@ class BaseDecoder:
 
     def simulate_question(
         self,
+        qnum: QNum,
         question: tuple[Prompt, ResponseList],
         question_flipped: tuple[Prompt, ResponseList],
     ) -> list[str]:
         """
         Simulate a set of responses for a single question, using both original and flipped response orderings.
 
+        :param qnum: string containing the question number, e.g. Q1.
         :param question: (prompt, choices) for the original order.
         :param question_flipped: (prompt, choices) for the flipped order.
         :returns: Interleaved list of generated responses.
@@ -58,8 +74,10 @@ class UnconstrainedDecoder(BaseDecoder):
     """
     Decoder for unconstrained (free-form) generation using HuggingFace models.
     """
+
     def simulate_question(
         self,
+        qnum: QNum,
         question: tuple[Prompt, ResponseList],
         question_flipped: tuple[Prompt, ResponseList],
     ) -> list[str]:
@@ -69,7 +87,7 @@ class UnconstrainedDecoder(BaseDecoder):
         )
 
         for batch in tqdm(
-            self._get_batches(messages_batched), desc="batch", leave=False
+            self._get_batches(messages_batched), desc=f"{qnum}-batch", leave=False
         ):
             batch_kwargs = self._init_generation_params(batch)
             batch_kwargs["num_return_sequences"] = 1  # todo: might be redundant
@@ -129,7 +147,13 @@ class ConstrainedDecoder(BaseDecoder):
     """
     Transformer decoder that restricts the format of responses using constrained decoding with 'outlines'.
     """
-    def __init__(self, model, tokenizer, config: ModelConfig):
+
+    def __init__(
+        self,
+        model: PreTrainedModel,  # huggingface object
+        tokenizer: PreTrainedTokenizer,
+        config: ModelConfig,
+    ):
         """
         Initialize the constrained decoder with Outlines.
 
@@ -138,10 +162,11 @@ class ConstrainedDecoder(BaseDecoder):
         :param config: Configuration object with generation parameters.
         """
         super().__init__(model, tokenizer, config)
-        self.model = Transformers(self.model, self.tokenizer)
+        self.llm = Transformers(self.model, self.tokenizer)
 
     def simulate_question(
         self,
+        qnum: QNum,
         question: tuple[Prompt, ResponseList],
         question_flipped: tuple[Prompt, ResponseList],
     ) -> list[str]:
@@ -152,26 +177,25 @@ class ConstrainedDecoder(BaseDecoder):
         :param question_flipped: Tuple (prompt, choices) for the flipped order.
         :returns: Interleaved list of generated responses.
         """
-        prompts = [
-            self._prepare_inputs(question[0]),
-            self._prepare_inputs(question_flipped[0]),
+        prompts = [self._prepare_inputs(pr) for pr, _ in [question, question_flipped]]
+        choices_list = [
+            self._prepare_choices(ch) for _, ch in [question, question_flipped]
         ]
-        choices_list = [question[1], question_flipped[1]]
         responses_per_prompt = [
             self.generate_responses(prompt, choices)
             for prompt, choices in zip(prompts, choices_list)
         ]
         return self._interleave(responses_per_prompt)
 
-    def generate_responses(self, prompt: Prompt, choices: ResponseList) -> list[str]:
+    def generate_responses(self, prompt: Prompt, choices: str) -> list[str]:
         """
         Generate a batch of responses from the model using Outlines constrained decoding.
 
         :param prompt: The formatted prompt string.
-        :param choices: List of valid response choices for constrained decoding.
+        :param choices: regex for valid response choices for constrained decoding.
         :returns: List of generated responses.
         """
-        generator = OutlinesGenerator(self.model, choices)
+        generator = OutlinesGenerator(self.llm, Regex(choices, flags=re.IGNORECASE))
         prompt_responses = []
         for n in tqdm(self._get_batch_sizes(), desc="batch", leave=False):
             batch_responses = generator(prompt, n=n, **self.config.hyperparams)
@@ -190,6 +214,22 @@ class ConstrainedDecoder(BaseDecoder):
         return self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
+
+    @staticmethod
+    def _prepare_choices(qnum: QNum, choices: ResponseList) -> str:
+        """
+        Build a regex pattern to match choices with optional prefixes and whitespace.
+
+        :param qnum: The question number (used as a prefix).
+        :param choices: List of valid choice strings (e.g., ["1: agree", "2: not sure"]).
+        :returns: Regex pattern string for use with outlines.
+        """
+        prefixes = [r"your response:", r"response:", rf"{qnum}:"]
+        prefix_pattern = r"(?:" + "|".join([re.escape(p) for p in prefixes]) + r")?\s*"
+        patterns = [
+            rf"^\s*{prefix_pattern}{re.escape(choice)}\s*$" for choice in choices
+        ]
+        return "|".join(patterns)
 
     def _get_batch_sizes(self) -> list[int]:
         """
@@ -213,3 +253,6 @@ class ConstrainedDecoder(BaseDecoder):
         :returns: Interleaved flat list of responses.
         """
         return [resp for pair in zip(*responses_per_prompt) for resp in pair]
+
+
+outlines.generate.regex
