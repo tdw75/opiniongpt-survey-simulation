@@ -55,12 +55,8 @@ class ModelConfig(BaseModel):
 
     def model_post_init(self, context: Any, /) -> None:
         default_hyperparams: dict[str, Any] = dict(
-            max_new_tokens=16, top_p=0.9, temperature=0.6
+            max_new_tokens=16, top_p=0.9, temperature=0.6, do_sample=True
         )
-        sampling_param = (
-            "sampling" if self.decoding_style == "constrained" else "do_sample"
-        )
-        default_hyperparams[sampling_param] = True
         self.hyperparams = {**default_hyperparams, **self.hyperparams}
         self.system_prompt = self.system_prompt or build_survey_context_message()
 
