@@ -197,8 +197,7 @@ class ConstrainedDecoder(BaseDecoder):
         generator = outlines.Generator(self.llm, Regex(choices))
         prompt_responses = []
         for n in tqdm(self._get_batch_sizes(), desc="batch", leave=False):
-            sampling = self.config.hyperparams["do_sample"]
-            batch_responses = generator(prompt, n=n, sampling=sampling, **self.config.hyperparams)
+            batch_responses = generator(prompt, n=n, **self.config.hyperparams)
             prompt_responses.extend(batch_responses)
 
         return prompt_responses
