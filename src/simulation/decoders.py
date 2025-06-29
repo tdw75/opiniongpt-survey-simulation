@@ -1,9 +1,8 @@
 import re
 from typing import Any, Generator
 
+import outlines
 import torch
-from outlines import Generator as OutlinesGenerator
-from outlines.models import Transformers
 from outlines.types import Regex
 from tqdm import tqdm
 from transformers import PreTrainedTokenizer, PreTrainedModel
@@ -162,7 +161,7 @@ class ConstrainedDecoder(BaseDecoder):
         :param config: Configuration object with generation parameters.
         """
         super().__init__(model, tokenizer, config)
-        self.llm = Transformers(self.model, self.tokenizer)
+        self.llm = outlines.from_transformers(self.model, self.tokenizer)
 
     def simulate_question(
         self,
@@ -195,7 +194,7 @@ class ConstrainedDecoder(BaseDecoder):
         :param choices: regex for valid response choices for constrained decoding.
         :returns: List of generated responses.
         """
-        generator = OutlinesGenerator(self.llm, Regex(choices, flags=re.IGNORECASE))
+        generator = outlines.Generator(self.llm, Regex(choices, flags=re.IGNORECASE))
         prompt_responses = []
         for n in tqdm(self._get_batch_sizes(), desc="batch", leave=False):
             batch_responses = generator(prompt, n=n, **self.config.hyperparams)
@@ -253,6 +252,3 @@ class ConstrainedDecoder(BaseDecoder):
         :returns: Interleaved flat list of responses.
         """
         return [resp for pair in zip(*responses_per_prompt) for resp in pair]
-
-
-outlines.generate.regex
