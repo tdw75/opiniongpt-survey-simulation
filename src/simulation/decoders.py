@@ -181,12 +181,12 @@ class ConstrainedDecoder(BaseDecoder):
         # ]
         choices_list = [question[1], question_flipped[1]]
         responses_per_prompt = [
-            self.generate_responses(prompt, choices)
-            for prompt, choices in zip(prompts, choices_list)
+            self.generate_responses(prompt, choices, f"{qnum}-batch-{'orig'if i==0 else 'flipped'}")
+            for i, (prompt, choices) in enumerate(zip(prompts, choices_list))
         ]
         return self._interleave(responses_per_prompt)
 
-    def generate_responses(self, prompt: Prompt, choices: ResponseList) -> list[str]:
+    def generate_responses(self, prompt: Prompt, choices: ResponseList, desc: str) -> list[str]:
         """
         Generate a batch of responses from the model using Outlines constrained decoding.
 
@@ -196,7 +196,7 @@ class ConstrainedDecoder(BaseDecoder):
         """
         generator = outlines.Generator(self.llm, Literal[*choices])
         prompt_responses = []
-        for _ in tqdm(range(self.config.sample_size // 2), desc="batch", leave=False):
+        for _ in tqdm(range(self.config.sample_size // 2), desc=desc, leave=False):
             prompt_responses.append(generator(prompt, **self.config.hyperparams))
 
         return prompt_responses
