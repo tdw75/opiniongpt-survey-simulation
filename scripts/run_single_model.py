@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Literal
 
 import fire
 
@@ -7,7 +8,7 @@ print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
-from src.simulation.run import run_single
+from src.simulation.inference import run_single
 from src.simulation.models import ModelConfig, load_model, change_subgroup
 from src.simulation.utils import (
     huggingface_login,
@@ -18,14 +19,15 @@ from src.simulation.utils import (
 
 
 def main(
-    base_model_name: str,
-    directory: str,
-    subgroup: str,
-    is_lora: bool,
+    base_model_name: str = "phi",
+    directory: str = "../data_files",
+    subgroup: str = None,
+    is_lora: bool = False,
     sample_size: int = 1000,
     batch_size: int = 50,
     filename: str = "variables.csv",
-    subset_file: str = None,
+    subset_file: str = "final_subset.json",
+    decoding_style: Literal["constrained", "unconstrained"] = "unconstrained",
     simulation_name: str = None,
     question_format: str = "individual",
     device: str = "cuda:2",
@@ -42,6 +44,7 @@ def main(
         aggregation_by="questions",  # todo: parametrise
         sample_size=sample_size,
         batch_size=batch_size,
+        decoding_style=decoding_style,
         hyperparams=kwargs,
     )
     run_id = generate_run_id(base_model_name)
