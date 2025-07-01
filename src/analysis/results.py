@@ -5,24 +5,47 @@ import os
 import pandas as pd
 
 
+def load_survey_results_batch(files_folder: str, directory: str) -> list[dict[str, dict]]:
+    results = []
+    folder_path = os.path.join(directory, "results", files_folder)
+    for path in glob.glob(os.path.join(folder_path, "*.json")):
+        with open(path) as f:
+            results.append(json.load(f))
+    return results
+
+
 def load_survey_results(file_name: str, directory: str) -> dict[str, dict]:
     path = os.path.join(directory, "results", file_name)
     with open(path) as f:
         return json.load(f)
 
 
-def survey_results_to_df(survey_results: dict[str, dict], variables: pd.DataFrame) -> pd.DataFrame:
+def survey_results_to_df_batch(
+    survey_results: list[dict], variables: pd.DataFrame
+) -> pd.DataFrame:
+    dfs = []
+    for results in survey_results:
+        dfs.append(survey_results_to_df(results, variables))
+    df = pd.concat(dfs)
+    return df.reset_index(drop=True)
+
+
+def survey_results_to_df(
+    survey_results: dict[str, dict], variables: pd.DataFrame
+) -> pd.DataFrame:
     rows = []
-    for subgroup, results in survey_results.items():
+    for model, results in survey_results.items():
         for num, responses in results["responses"].items():
-            variable = variables[variables["number"]==num]
-            for response in responses:
+            variable = variables[variables["number"] == num]
+            for response, is_flipped in zip(responses, results["is_scale_flipped"][num]):
                 row = {
+                    "model": model,
                     "number": num,
                     "group": variable["group"].item(),
                     "subtopic": variable["subtopic"].item(),
                     "question": results["questions"][num],
                     "response": response,
+                    "is_scale_flipped": is_flipped,
                     **results["metadata"],
                 }
                 rows.append(row)
@@ -50,7 +73,8 @@ def print_results_single(results: dict[str, dict], title: str):
     print(SUBHEADER_PRINTOUT.format(title="RESULTS"))
     for num, question in results["questions"].items():
         print(f"{question}")
-        for i, response in enumerate(results["responses"][num]):
+        key = "responses" if "responses" in results else "outputs"
+        for i, response in enumerate(results[key][num]):
             print(f"* {i}. {response}")
 
 
