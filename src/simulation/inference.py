@@ -28,8 +28,8 @@ def simulate_whole_survey(
     logger.debug(model)
     decoder = get_decoder(model, tokenizer, config)
     responses: dict[str, list[str]] = {}
-    for number, question in tqdm(survey.items(), desc=decoder.config.run_name):
-        responses[number] = decoder.simulate_question(survey[number], flipped[number])
+    for qnum, question in tqdm(survey.items(), desc=decoder.config.run_name):
+        responses[qnum] = decoder.simulate_question(qnum, survey[qnum], flipped[qnum])
     return responses
 
 

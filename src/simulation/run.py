@@ -34,7 +34,7 @@ def run_single(
         "choices": extract_choices(survey_questions),
         "questions_flipped": extract_prompts(survey_flipped),
         "choices_flipped": extract_choices(survey_flipped),
-        "outputs": outputs,
+        "responses": outputs,
         "is_scale_flipped": {
             num: mark_is_scale_flipped(resp) for num, resp in outputs.items()
         },

@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Literal
 
 import fire
 
@@ -24,8 +25,8 @@ def main(
     filename: str = "variables.csv",
     subset_file: str = "final_subset.json",
     simulation_name: str = None,
-    question_format: str = "individual",
-    device: str = "cuda:2",
+    decoding_style: Literal["constrained", "unconstrained"] = "unconstrained",
+    device: str = "cuda:0",
     sample_size: int = 500,
     batch_size: int = None,
     run_id: str = None,
@@ -40,15 +41,16 @@ def main(
         "sample_size": sample_size,
         "batch_size": batch_size or max(sample_size // 2, 50),
         "device": device,
+        "decoding_style": decoding_style,
         "hyperparams": kwargs,
     }
 
     # todo: clear cache in loop
     survey_questions = load_survey(
-        directory, filename, question_format, subset_file, False
+        directory, filename, "individual", subset_file, False
     )
     survey_flipped = load_survey(
-        directory, filename, question_format, subset_file, True
+        directory, filename, "individual", subset_file, True
     )
     phi_instruct_surveys = run_phi_instruct(
         survey_questions, survey_flipped, shared_config_vars, run_id
