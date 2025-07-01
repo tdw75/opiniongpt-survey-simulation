@@ -2,16 +2,13 @@ import json
 import os
 from datetime import datetime
 
-
 import pandas as pd
 
 from src.prompting.messages import (
     extract_user_prompts_from_survey_grouped,
-    Messages,
+    extract_user_prompts_from_survey_individual,
     Survey,
 )
-from src.prompting.messages import extract_user_prompts_from_survey_individual
-from src.simulation.models import ModelConfig
 
 
 def huggingface_login() -> None:
@@ -81,22 +78,8 @@ def generate_run_id(model_name: str) -> str:
     return f"{timestamp}-{model_name}"
 
 
-def get_single_question(survey: dict[str, str], idx: int = 0) -> dict[str, str]:
-    """debugging function: selects a single question from the survey"""
-    single_question = list(survey.items())[idx]
-    return {single_question[0]: single_question[1]}
-
-
 def mark_is_scale_flipped(responses: list[str]):
     """
     responses : list of generated responses for a single survey question
     """
     return [i % 2 == 1 for i in range(len(responses))]
-
-
-def get_batch_size(config: ModelConfig):
-    full_batches = config.sample_size // config.batch_size
-    for _ in range(full_batches):
-        yield config.batch_size
-    if remainder := config.sample_size % config.batch_size:
-        yield remainder

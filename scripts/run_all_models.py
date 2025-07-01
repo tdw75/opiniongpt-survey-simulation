@@ -10,7 +10,7 @@ sys.path.append(os.getcwd())
 
 from src.prompting.messages import Survey
 from src.simulation.models import adapters, ModelConfig, load_model, change_subgroup
-from src.simulation.run import run_single
+from src.simulation.inference import run_single
 from src.simulation.utils import (
     huggingface_login,
     generate_run_id,
