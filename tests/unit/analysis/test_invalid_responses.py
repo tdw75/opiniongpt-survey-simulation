@@ -2,12 +2,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from cleaning import PLACEHOLDER_TEXT
 from src.analysis.invalid_responses import (
     flip_keys_back,
     extract_first_response_instance,
     mark_multiple_responses,
-    mark_is_correct_key_value,
-    mark_is_correct_key_value,
+    mark_key_value_valid_mismatch,
+    recover_keys_from_text_only,
+    pipeline_identify_invalid_responses,
 )
 from src.data.variables import ResponseMap
 
@@ -16,11 +18,12 @@ def test_flip_keys_back(mock_response_results, responses, responses_flipped):
     results_out = flip_keys_back(mock_response_results, responses, responses_flipped)
 
     expected = pd.Series(
-        [1, 2, 2, pd.NA, 1, 1, pd.NA, 2, 3, 3, -1, -1],
-        name="response_key"
+        [1, 2, 2, pd.NA, 1, 1, pd.NA, 2, 3, 3, -1, -1], name="response_key"
     ).astype("Int64")
 
-    pd.testing.assert_series_equal(results_out["response_key"], expected, check_dtype=False)
+    pd.testing.assert_series_equal(
+        results_out["response_key"], expected, check_dtype=False
+    )
 
 
 def test_extract_first_response_instance():
@@ -132,22 +135,38 @@ def test_mark_multiple_responses():
     pd.testing.assert_frame_equal(out, expected)
 
 
-
-def test_mark_is_correct_key_value(mock_response_results, responses):
+def test_mark_is_key_value_valid_match(mock_response_results, responses):
     mock_response_results["reason_invalid"] = ""
     reason1 = "key text mismatch;"
     reason2 = "invalid response;"
     reason3 = "invalid key;"
 
     # last response hardcoded as -1, missing
-    results_out = mark_is_correct_key_value(mock_response_results, responses)
+    results_out = mark_key_value_valid_mismatch(mock_response_results, responses)
     expected_reason = pd.Series(
         ["", "", reason1, "", "", reason2]
-        + [reason2, reason2, "", reason1, reason1+reason3, reason1+reason3],
+        + [reason2, reason2, "", reason1, reason1 + reason3, reason1 + reason3],
         name="reason_invalid",
     )
-    print(results_out[["response_key", "response_text", "reason_invalid"]])
+    results_out["reason_expected"] = expected_reason
     pd.testing.assert_series_equal(results_out["reason_invalid"], expected_reason)
+
+
+def test_recover_keys_from_text_only():
+    responses = {"Q1": {1: "agree", 2: "disagree"}, "Q2": {1: "1", 2: "2", 3: "3"}}
+    df = pd.DataFrame(
+        {
+            "number": ["Q1", "Q1", "Q1", "Q2", "Q2", "Q2", "Q2"],
+            "response_key": [np.nan, np.nan, 1, np.nan, np.nan, np.nan, 2],
+            "response_text": ["agree", "invalid", "agree", "2", "3", "maybe", "2"],
+        }
+    )
+
+    expected_keys = pd.Series(
+        [1, np.nan, 1, 2, 3, np.nan, 2], dtype="Int64", name="response_key"
+    )
+    output_df = recover_keys_from_text_only(df, responses)
+    pd.testing.assert_series_equal(output_df["response_key"], expected_keys)
 
 
 @pytest.fixture
@@ -161,7 +180,7 @@ def mock_response_results() -> pd.DataFrame:
                 "disagree",
                 "disagree",
                 "agree",
-                "key without response",
+                "<no_text>",
                 "",
             ]
             + ["", "potato", "3", "3", "2", "3"],
@@ -172,17 +191,72 @@ def mock_response_results() -> pd.DataFrame:
     return results
 
 
+def test_pipeline_comprehensive_invalid_reasons(mock_df, responses, responses_flipped):
+    out = pipeline_identify_invalid_responses(
+        mock_df.copy(), responses, responses_flipped
+    )
+    expected_keys = pd.Series(
+        [-1, 2, -1, -1, -1, 1, 2, -1, 1, -1] + [2, -1, -1, 3, 2],
+        name="final_response",
+    )
+    expected_reasons = pd.Series([
+        "key text mismatch;",
+        "",
+        "key text mismatch;invalid key;",
+        "invalid text;",
+        "ambiguous response;",
+        "",
+        "",
+        "key text mismatch;",
+        "",
+        "ambiguous response;"] +
+        ["",
+        "ambiguous response;",
+        "key text mismatch;invalid key;",
+        "",
+        ""
+    ], name="reason_invalid"
+    )
+    pd.testing.assert_series_equal(out["final_response"], expected_keys)
+    pd.testing.assert_series_equal(out["reason_invalid"], expected_reasons)
+
+
 @pytest.fixture
 def responses() -> dict[str, ResponseMap]:
     return {
-        "Q1": {1: "agree", 2: "disagree", -1: "missing"},
-        "Q2": {1: "1", 2: "2", 3: "3", -1: "missing"},
+        "Q1": {1: "agree", 2: "disagree"},
+        "Q2": {1: "1", 2: "2", 3: "3"},
     }
 
 
 @pytest.fixture
 def responses_flipped() -> dict[str, ResponseMap]:
     return {
-        "Q1": {1: "disagree", 2: "agree", -1: "missing"},
-        "Q2": {1: "3", 2: "2", 3: "1", -1: "missing"},
+        "Q1": {1: "disagree", 2: "agree"},
+        "Q2": {1: "3", 2: "2", 3: "1"},
     }
+
+
+@pytest.fixture
+def mock_df() -> pd.DataFrame:
+    c = ["number", "response_key", "response_text", "is_scale_flipped"]
+    data = [
+        # --- Q1 valid & invalid pairs ---
+        {c[0]: "Q1", c[1]: 2, c[2]: "agree", c[3]: False},  # -1
+        {c[0]: "Q1", c[1]: 2, c[2]: "disagree", c[3]: False},  # 2
+        {c[0]: "Q1", c[1]: 3, c[2]: "agree", c[3]: False},  # -1
+        {c[0]: "Q1", c[1]: 1, c[2]: "nonsense", c[3]: False},  # -1
+        {c[0]: "Q1", c[1]: 1, c[2]: "agree  2: disagree", c[3]: False},  # -1
+        {c[0]: "Q1", c[1]: np.nan, c[2]: "agree", c[3]: False},  # 1
+        {c[0]: "Q1", c[1]: 1, c[2]: "disagree", c[3]: True},  # 2
+        {c[0]: "Q1", c[1]: 1, c[2]: "agree", c[3]: True},  # -1
+        {c[0]: "Q1", c[1]: 1, c[2]: "agree because reasons", c[3]: False},  # 1
+        {c[0]: "Q1", c[1]: 1, c[2]: "agree and I also agree", c[3]: False},  # -1
+        # --- Q2 valid & invalid pairs ---
+        {c[0]: "Q2", c[1]: 2, c[2]: "2", c[3]: False},  # 2
+        {c[0]: "Q2", c[1]: 2, c[2]: "2  then also 3", c[3]: False},  # -1
+        {c[0]: "Q2", c[1]: 4, c[2]: "3", c[3]: True},  # -1
+        {c[0]: "Q2", c[1]: 1, c[2]: "3", c[3]: True},  # 1
+        {c[0]: "Q1", c[1]: 2, c[2]: PLACEHOLDER_TEXT, c[3]: False},  # 2
+    ]
+    return pd.DataFrame(data, dtype="object").astype({"response_key": "Int64"})

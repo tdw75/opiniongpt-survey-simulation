@@ -3,47 +3,45 @@ import pandas as pd
 import pytest
 
 from src.analysis.cleaning import (
-    strip_leading_response_prompt_qnum,
+    remove_prompt_prefixes,
     split_response_into_key_value,
-    identify_bare_key,
+    detect_bare_key_without_text,
     add_separate_key_and_text_columns,
+    pipeline_clean_generated_responses,
 )
 
 
 @pytest.mark.parametrize(
-    "string, exp1, exp2",
+    "string, exp",
     [
-        ("Your response: 1: value", "1: value", None),
-        ("Response:   9: 9", "9: 9", None),
-        ("Your response: 10: value value", "10: value value", None),
-        ("Your response: 10 ", "10 ", None),
-        ("10: 10 ", "10: 10 ", None),
-        ("Q10: Your response: 1: value", "Your response: 1: value", "1: value"),
-        ("response:  Q10:  value", "Q10:  value", "value"),
-        ("Q10: value", "value", None),
+        ("Your response: 1: Value", "1: Value"),
+        ("Response:   9: 9", "9: 9"),
+        ("Your response: 10: value value", "10: value value"),
+        ("Your response: 10 ", "10"),
+        ("10: 10 ", "10: 10"),
+        ("Q10: Your response: 1: value", "1: value"),
+        ("response:  Q10:  value", "value"),
+        ("Q10: value", "value"),
     ],
 )
-def test_strip_response_prompt_qnum(string, exp1, exp2):
-    once = strip_leading_response_prompt_qnum(string)
-    twice = strip_leading_response_prompt_qnum(once)
-    exp2 = exp2 or exp1
-    assert once == exp1
-    assert twice == exp2
+def test_strip_response_prompt_qnum(string, exp):
+    output = remove_prompt_prefixes(string)
+    assert output == exp
 
 
 @pytest.mark.parametrize(
     "response, expected",
     [
         ("1: value", "1: value"),
-        ("1: ", "1: key without response"),
-        (" 1 ", "1: key without response"),
+        ("1: ", "1: <no_text>"),
+        (" 1 ", "1: <no_text>"),
         (" ksdf ", " ksdf "),
         ("Q1", "Q1"),
         ("Q1: ", "Q1: "),
     ],
 )
-def test_identify_bare_key(response, expected):
-    assert identify_bare_key(response) == expected
+def test_detect_bare_key_without_text(response, expected):
+    assert detect_bare_key_without_text(response) == expected
 
 
 def test_split_response_into_key_value():
@@ -91,3 +89,43 @@ def test_separate_key_text_columns():
         pd.Series(["agree", "disagree", "2", "1"]),
         check_names=False,
     )
+
+
+def test_clean_generated_responses():
+    responses = [
+        "Your response: 1: vAlue",
+        "Response:   9: 9",
+        "Your response: 10: Value Value",
+        "10: value value",
+        "Your response: 10 ",
+        "10",
+        "10: 10 ",
+        "Q10: Your response: 1: value",
+        "response:  Q10:  value",
+        "Q10: value",
+        "2: Disagree \n\n\nQ42: Do you agree",
+        " ksdf ",
+    ]
+    results = pd.DataFrame({"response": responses})
+    results_clean = pipeline_clean_generated_responses(results)
+    expected = pd.DataFrame(
+        {
+            "response": responses,
+            "response_key": [1, 9, 10, 10, 10, 10, 10, 1, np.nan, np.nan, 2, np.nan],
+            "response_text": [
+                "value",
+                "9",
+                "value value",
+                "value value",
+                "<no_text>",
+                "<no_text>",
+                "10",
+                "value",
+                "value",
+                "value",
+                """disagree q42: do you agree""",
+                "ksdf",
+            ],
+        }
+    )
+    pd.testing.assert_frame_equal(results_clean, expected, check_dtype=False)
