@@ -5,8 +5,6 @@ import pandas as pd
 
 from src.data.variables import split_response_string
 
-# todo: check that keyless responses are considered and not automatically deemed invalid
-
 PLACEHOLDER_TEXT = "<no_text>"  # standardised placeholder for bare key responses
 
 
@@ -76,14 +74,3 @@ def add_separate_key_and_text_columns(
     """
     results[["response_key", "response_text"]] = pd.DataFrame(responses.tolist())
     return results
-
-
-
-# def mark_missing(results: pd.DataFrame) -> pd.DataFrame:
-#     # todo: not used anywhere
-#     name_map = {"response_key": "raw_key", "response_text": "raw_text"}
-#     results.rename(columns=name_map)
-#     is_valid = results["is_response_valid"]
-#     results["response_key"] = np.where(is_valid, results["raw_key"], -1)
-#     results["response_text"] = np.where(is_valid, results["raw_text"], "missing")
-#     return results
