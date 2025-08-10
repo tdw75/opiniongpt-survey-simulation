@@ -12,8 +12,8 @@ from src.prompting.messages import (
     Prompt,
     ResponseList,
     format_messages,
-    QNum,
 )
+from variables import QNum
 from src.simulation.models import ModelConfig
 
 

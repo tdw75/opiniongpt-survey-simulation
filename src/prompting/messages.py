@@ -4,12 +4,11 @@ import pandas as pd
 
 from src.data.variables import responses_to_map, ResponseMap
 from src.simulation.models import ModelConfig
-
+from variables import QNum
 
 Prompt = str
 Messages = list[dict[str, Prompt]]
 ResponseList = list[str]
-QNum = str
 Survey = dict[QNum, tuple[Prompt, ResponseList]]
 
 
