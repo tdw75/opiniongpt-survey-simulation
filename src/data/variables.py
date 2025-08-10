@@ -5,11 +5,12 @@ from typing import Any
 ResponseMap = dict[int, str]
 ResponseReverseMap = dict[str, int]
 ResponseTuple = tuple[int, str]
+QNum = str
 
 
 @dataclass
 class Question:
-    number: str
+    number: QNum
     name: str
     group: str
     subtopic: str
