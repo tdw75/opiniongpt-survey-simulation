@@ -1,8 +1,6 @@
-from abc import ABC
 from dataclasses import dataclass
 
 from src.demographics.base import BaseSubGroup, classproperty
-
 
 column = "Q260"
 
@@ -46,3 +44,5 @@ class Female(BaseSubGroup):
     def PERSONA(cls) -> str:
         return "a person that identifies as female"
 
+
+ALL_SEXES = [Male, Female]

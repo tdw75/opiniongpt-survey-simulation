@@ -84,7 +84,7 @@ class LatinAmerica(BaseSubGroup):
 
     @classproperty
     def ADAPTER(cls) -> str:
-        return "latin_american"
+        return "latin_america"
 
     @classproperty
     def VALUES(cls) -> set[str]:
@@ -107,3 +107,6 @@ class LatinAmerica(BaseSubGroup):
     @classproperty
     def PERSONA(cls) -> str:
         return "a person born and raised in a Latin American country"
+
+
+ALL_COUNTRIES = [Germany, UnitedStates, MiddleEast, LatinAmerica]
