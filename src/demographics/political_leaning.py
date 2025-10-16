@@ -1,11 +1,7 @@
-from abc import ABC
-from dataclasses import dataclass
-
 from src.demographics.base import BaseSubGroup, classproperty
 
 
-
-column = ""  #todo: add column number
+column = "Q240"  # todo: add column number
 
 
 class Liberal(BaseSubGroup):
@@ -19,8 +15,8 @@ class Liberal(BaseSubGroup):
         return "liberal"
 
     @classproperty
-    def VALUES(cls) -> set[str]:
-        return {"Left", "2", "3"}
+    def VALUES(cls) -> set[int]:
+        return {1, 2, 3}
 
     @classproperty
     def PERSONA(cls) -> str:
@@ -38,9 +34,14 @@ class Conservative(BaseSubGroup):
         return "conservative"
 
     @classproperty
-    def VALUES(cls) -> set[str]:
-        return {"8", "9", "Right"}
+    def VALUES(cls) -> set[int]:
+        return {8, 9, 10}
 
     @classproperty
     def PERSONA(cls) -> str:
-        return "a person with a conservative or politically right-wing view of the world"
+        return (
+            "a person with a conservative or politically right-wing view of the world"
+        )
+
+
+ALL_LEANINGS = [Liberal, Conservative]
