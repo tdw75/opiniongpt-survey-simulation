@@ -13,7 +13,7 @@ from src.data.variables import (
     Question,
     responses_to_map,
     HeaderPatterns,
-    split_response_string,
+    remap_response_maps,
 )
 
 
@@ -184,7 +184,6 @@ def test_responses_to_map(is_only_valid, is_reverse, expected):
     assert response_map == expected
 
 
-
 def test_integration():
     pages = {i: load_page(i) for i in range(10, 13)}
     questions = pipeline(pages)
@@ -195,3 +194,39 @@ def test_integration():
         "Q12 Important child qualities: Tolerance and respect for other people"
     )
     assert pd.Series(questions).str.match("Q\d+").all()
+
+
+def test_remap_response_maps():
+    q1_map = {
+        1: "Very important",
+        2: "Rather important",
+        3: "Not very important",
+        4: "Not at all important",
+    }
+    q2_map = {1: "Agree", 2: "Disagree", 3: "Not sure"}
+    response_maps = {
+        "Q1": q1_map,
+        "Q2": q2_map,
+        "Q56": {1: "Better off", 2: "Worse off", 3: "Or about the same"},
+        "Q119": {
+            0: "Hard to say",
+            1: "Strongly agree",
+            2: "Agree",
+            3: "Disagree",
+            4: "Strongly disagree",
+        },
+    }
+    expected = {
+        "Q1": q1_map,
+        "Q2": q2_map,
+        "Q56": {1: "Better off", 2: "Or about the same", 3: "Worse off"},
+        "Q119": {
+            1: "Strongly agree",
+            2: "Agree",
+            3: "Hard to say",
+            4: "Disagree",
+            5: "Strongly disagree",
+        },
+    }
+    out = remap_response_maps(response_maps)
+    assert out == expected
