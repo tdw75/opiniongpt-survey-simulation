@@ -5,9 +5,11 @@ import os
 import pandas as pd
 
 
-def load_survey_results_batch(files_folder: str, directory: str) -> list[dict[str, dict]]:
+def load_survey_results_batch(
+    files_folder: str, directory: str
+) -> list[dict[str, dict]]:
     results = []
-    folder_path = os.path.join(directory, "results", files_folder)
+    folder_path = os.path.join(directory, files_folder)
     for path in glob.glob(os.path.join(folder_path, "*.json")):
         with open(path) as f:
             results.append(json.load(f))
@@ -15,7 +17,7 @@ def load_survey_results_batch(files_folder: str, directory: str) -> list[dict[st
 
 
 def load_survey_results(file_name: str, directory: str) -> dict[str, dict]:
-    path = os.path.join(directory, "results", file_name)
+    path = os.path.join(directory, file_name)
     with open(path) as f:
         return json.load(f)
 
@@ -37,13 +39,17 @@ def survey_results_to_df(
     for model, results in survey_results.items():
         for num, responses in results["responses"].items():
             variable = variables[variables["number"] == num]
-            for response, is_flipped in zip(responses, results["is_scale_flipped"][num]):
+            for response, is_flipped in zip(
+                responses, results["is_scale_flipped"][num]
+            ):
+                suffix = "_flipped" if is_flipped else ""
                 row = {
                     "model": model,
                     "number": num,
                     "group": variable["group"].item(),
                     "subtopic": variable["subtopic"].item(),
-                    "question": results["questions"][num],
+                    "question": results[f"questions{suffix}"][num],
+                    "choices": results[f"choices{suffix}"][num],
                     "response": response,
                     "is_scale_flipped": is_flipped,
                     **results["metadata"],
