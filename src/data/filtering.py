@@ -1,9 +1,5 @@
 import pandas as pd
 
-from src.demographics.age import Age
-from src.demographics.config import ALL_COUNTRIES, ALL_AGE, ALL_SEX
-from src.demographics.country import Country
-from src.demographics.sex import Sex
 from src.demographics.base import BaseSubGroup
 
 
@@ -15,8 +11,9 @@ def filter_by_subgroups(df: pd.DataFrame, subgroups: list[type[BaseSubGroup]]):
     return df.loc[mask, :].reset_index(drop=True)
 
 
-def create_filter_condition_for_subgroups(df: pd.DataFrame, subgroups: list[type[BaseSubGroup]]) -> pd.Series:
-
+def create_filter_condition_for_subgroups(
+    df: pd.DataFrame, subgroups: list[type[BaseSubGroup]]
+) -> pd.Series:
     """
     Selects data that belong to any of given subgroups
     """
