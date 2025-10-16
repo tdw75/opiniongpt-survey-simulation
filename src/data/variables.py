@@ -157,7 +157,6 @@ def get_valid_responses(
 
 
 def non_ordinal_qnums() -> list[str]:
-    # definitely not - 7-26, 57, 91-93, 149-150, 152-157, 173-175, 223
     not_ordinal = [
         *range(7, 27),
         57,
@@ -170,9 +169,7 @@ def non_ordinal_qnums() -> list[str]:
         175,
         223,
     ]
-    # binary - 139-141, 144-145, 151, 165-168
     binary = [139, 140, 141, 144, 145, 151, 165, 166, 167, 168]
-    # partially ordinal - 221-222, 254 (also check in generated outputs)
     partially_ordinal = [221, 222, 254]
     # ordinal but not equidistant - 94-105, 171-172
     return [f"Q{i}" for i in not_ordinal + binary + partially_ordinal]
