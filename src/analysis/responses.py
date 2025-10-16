@@ -1,38 +1,75 @@
 import pandas as pd
 
+from src.data.variables import QNum, ResponseMap, ordinal_qnums
 from src.demographics.base import BaseSubGroup
-from src.data.variables import ResponseMap
 
 FrequencyDist = dict[int, int] | dict[int, float]
 ResponseSupport = list[int]
+Dimension = list[type[BaseSubGroup]]
 
 
 def get_true_responses_for_subgroup(
-    df: pd.DataFrame, subgroup: type[BaseSubGroup], qnums: list[str]
-) -> dict[str, pd.Series]:
-    is_subgroup = subgroup.filter_true(df)
-    return {qnum: df.loc[is_subgroup, qnum] for qnum in qnums}
+    df: pd.DataFrame, subgroup: type[BaseSubGroup] | Dimension, qnums: list[QNum]
+) -> dict[QNum, pd.Series]:
+    df = df.copy()
+    is_subgroup = _get_subgroup_filter_true(df, subgroup)
+    responses = {
+        qnum: df.loc[is_subgroup, qnum].reset_index(drop=True) for qnum in qnums
+    }
+    responses["weight"] = df.loc[is_subgroup, "W_WEIGHT"].reset_index(drop=True)
+    return responses
 
 
 def get_model_responses_for_subgroup(
-    df: pd.DataFrame, subgroup: type[BaseSubGroup], qnums: list[str]
+    df: pd.DataFrame,
+    subgroup: type[BaseSubGroup] | Dimension,
+    qnums: list[QNum],
+    response_col: str = "final_response",
 ) -> dict[str, pd.Series]:
-    is_subgroup = subgroup.filter_model(df)
+    df = df.copy()
+    is_subgroup = _get_subgroup_filter_model(df, subgroup)
     return {
-        qnum: df.loc[is_subgroup & (df["number"] == qnum), "response_key"]
+        qnum: df.loc[is_subgroup & (df["number"] == qnum), response_col].values
         for qnum in qnums
     }
 
 
+def _get_subgroup_filter_true(
+    df: pd.DataFrame, subgroup: type[BaseSubGroup] | list[type[BaseSubGroup]]
+) -> pd.Series:
+    if subgroup is None:
+        is_subgroup = pd.Series([True] * len(df), index=df.index)
+    elif isinstance(subgroup, list):
+        is_subgroup = pd.Series([False] * len(df), index=df.index)
+        for sg in subgroup:
+            is_subgroup |= sg.filter_true(df)
+    else:
+        is_subgroup = subgroup.filter_true(df)
+    return is_subgroup
+
+
+def _get_subgroup_filter_model(
+    df: pd.DataFrame, subgroup: type[BaseSubGroup] | list[type[BaseSubGroup]]
+) -> pd.Series:
+    if isinstance(subgroup, list):
+        is_subgroup = pd.Series([False] * len(df), index=df.index)
+        for sg in subgroup:
+            is_subgroup |= sg.filter_model(df)
+    else:
+        is_subgroup = subgroup.filter_model(df)
+    return is_subgroup
+
+
 def get_response_distribution(
-    responses: dict[str, pd.Series],
-    response_maps: dict[str, ResponseMap],
+    responses: pd.DataFrame,
+    response_maps: dict[QNum, ResponseMap],
     is_normalize: bool = True,
     is_include_invalid: bool = False,
-) -> dict[str, FrequencyDist]:
+) -> dict[QNum, FrequencyDist]:
 
     dists = {}
-    for qnum, observations in responses.items():
+    for qnum in set(responses.columns).intersection(response_maps.keys()):
+        observations = responses[qnum]
         support = list(response_maps[qnum].keys())
 
         if not is_include_invalid:
@@ -46,3 +83,83 @@ def get_response_distribution(
         }
 
     return dists
+
+
+def get_response_distribution_weighted(
+    responses: pd.DataFrame,
+    response_maps: dict[QNum, ResponseMap],
+    is_normalize: bool = True,
+    is_include_invalid: bool = False,
+) -> dict[QNum, FrequencyDist]:
+
+    dists = {}
+    weights = responses["weight"]
+    for qnum in set(responses.columns).intersection(response_maps.keys()) - {"weight"}:
+        observations = responses[qnum]
+        support = list(response_maps[qnum].keys())
+
+        if not is_include_invalid:
+            support = [x for x in support if x > -1]
+            mask = observations > -1
+            observations = observations[mask]
+            weights = weights[mask]
+
+        # counts = observations.value_counts(normalize=is_normalize, sort=False)
+        counts = get_weighted_value_counts(observations, weights, is_normalize)
+        counts = counts.reindex(support, fill_value=0)
+        dists[qnum] = {
+            int(k): float(v) if is_normalize else int(v) for k, v in counts.items()
+        }
+
+    return dists
+
+
+def get_weighted_value_counts(
+    observations: pd.Series, weights: pd.Series, is_normalize: bool
+) -> pd.Series:
+    counts = (
+        pd.DataFrame({"resp": observations, "w": weights}).groupby("resp")["w"].sum()
+    )
+    if is_normalize:
+        counts = counts / counts.sum()
+    return counts
+
+
+def remove_weight_col(qnums: list[str]) -> list[str]:
+    return [q for q in qnums if q != "weight"]
+
+
+def get_support_minimum(
+    response_maps: dict[QNum, ResponseMap], is_just_ordinal: bool = True
+) -> pd.Series:
+    qnums = ordinal_qnums() if is_just_ordinal else response_maps.keys()
+    mins = {}
+    for qnum, response_map in response_maps.items():
+        if qnum in qnums:
+            support = [
+                k for k in response_map.keys() if k >= 0
+            ]  # only consider valid responses
+            mins[qnum] = min(support)
+
+    return sort_by_qnum_index(pd.Series(mins))
+
+
+def get_support_diameter(
+    response_maps: dict[QNum, ResponseMap], is_just_ordinal: bool = True
+) -> pd.Series:
+    qnums = ordinal_qnums() if is_just_ordinal else response_maps.keys()
+    diameters = {}
+    for qnum, response_map in response_maps.items():
+        if qnum in qnums:
+            support = sorted(
+                [k for k in response_map.keys() if k >= 0]
+            )  # only consider valid responses
+            diameters[qnum] = max(support) - min(support)
+
+    return sort_by_qnum_index(pd.Series(diameters))
+
+
+def sort_by_qnum_index(df: pd.DataFrame | pd.Series) -> pd.DataFrame | pd.Series:
+    return df.sort_index(
+        key=lambda x: x.str.extract(r"(\d+)", expand=False).astype(int)
+    )

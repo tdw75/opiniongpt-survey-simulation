@@ -68,7 +68,7 @@ def all_responses():
         "Q1": pd.Series([1, 1, 2, 2, 2, 2]),  # identical to model
         "Q2": pd.Series([1, 1, 1, 4, 4]),  # different from model
     }
-    return model, true
+    return pd.DataFrame(model), pd.DataFrame(true)
 
 
 @pytest.fixture
