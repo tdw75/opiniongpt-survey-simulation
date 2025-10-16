@@ -1,11 +1,16 @@
 import ast
+import json
 import os
 
 import pandas as pd
 
-from src.analysis.cleaning import pipeline_clean_generated_responses
+from src.analysis.cleaning import (
+    pipeline_clean_generated_responses,
+    remap_response_keys,
+)
 from src.analysis.invalid_responses import pipeline_identify_invalid_responses
-from src.data.variables import responses_to_map, ResponseMap
+from src.data.variables import responses_to_map, ResponseMap, QNum
+from src.demographics.config import category_to_question
 
 
 def main(file_root: str, directory: str = "../data_files"):
@@ -19,6 +24,7 @@ def main(file_root: str, directory: str = "../data_files"):
     responses, responses_flipped = load_response_maps(variables)
     df = pipeline_clean_generated_responses(df)
     df = pipeline_identify_invalid_responses(df, responses, responses_flipped)
+    df = remap_response_keys(df, "final_response")
     df.to_csv(os.path.join(results_directory, f"{file_root}-clean.csv"))
 
     reasons = (
@@ -27,12 +33,19 @@ def main(file_root: str, directory: str = "../data_files"):
     reasons.to_json(
         os.path.join(results_directory, f"{file_root}_invalid_summary.json")
     )
-    print(reasons)
+    qnums = set(df["number"])
+    cat_counts = {
+        c: len(qnums.intersection(q)) for c, q in category_to_question.items()
+    }
+    with open(
+        os.path.join(results_directory, f"{file_root}-category-counts.json"), "w"
+    ) as f:
+        json.dump(cat_counts, f)
 
 
 def load_response_maps(
     variables: pd.DataFrame,
-) -> tuple[dict[str, ResponseMap], dict[str, ResponseMap]]:
+) -> tuple[dict[QNum, ResponseMap], dict[QNum, ResponseMap]]:
     responses = {}
     responses_flipped = {}
 
@@ -48,4 +61,4 @@ def load_response_maps(
 
 
 if __name__ == "__main__":
-    main("simulation-500-0_7-unconstrained")
+    main("simulation-500-0_9-unconstrained")
