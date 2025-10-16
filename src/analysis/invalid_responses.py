@@ -26,6 +26,7 @@ def pipeline_identify_invalid_responses(
     results["response_text"] = results["response_text"].apply(normalise_response_text)
     results = flip_keys_back(results, responses, flipped_responses)
     results = extract_first_response_instance(results, responses)
+    results = identify_truncated_response(results, responses)
     results["extra_text"] = clean_extra_text(results)
     results = recover_keys_from_text_only(results, responses)
     results = mark_multiple_responses(results, responses)
@@ -129,6 +130,37 @@ def extract_first_response_instance(
 
         primaries.append(primary.fillna(""))
         extras.append(extra.fillna(""))
+
+    results["response_text"] = pd.concat(primaries).sort_index()
+    results["extra_text"] = pd.concat(extras).sort_index()
+    return results
+
+
+def identify_truncated_response(
+    results: pd.DataFrame, valid_responses: dict[str, ResponseMap]
+):
+    results = results.copy()
+    primaries, extras = [], []
+
+    for qnum, group in results.groupby("number"):
+        labels = [v.lower() for k, v in valid_responses[qnum].items() if k >= 0]
+
+        def _promote(ext: str) -> str | None:
+            if not isinstance(ext, str) or ext == "" or len(ext) < 30:
+                return None
+            cands = [lab for lab in labels if lab.startswith(ext)]
+            return cands[0] if len(cands) == 1 else None  # only promote if unique
+
+        matches = group["extra_text"].apply(_promote)
+        primary = group["response_text"].copy()
+        extra = group["extra_text"].copy()
+
+        mask = matches.notna()
+        primary.loc[mask] = matches.loc[mask]
+        extra.loc[mask] = ""
+
+        primaries.append(primary)
+        extras.append(extra)
 
     results["response_text"] = pd.concat(primaries).sort_index()
     results["extra_text"] = pd.concat(extras).sort_index()
@@ -308,12 +340,13 @@ def _check_key_text_mismatch(
 def _try_recover_key_from_text(
     response_text: str, response_map: dict[int, str]
 ) -> int | None:
-    matches = [k for k, v in response_map.items() if v == response_text]
+    matches = [k for k, v in response_map.items() if v.lower() == response_text]
     return matches[0] if len(matches) == 1 else None
 
 
 def mark_invalid(results: pd.DataFrame) -> pd.DataFrame:
     is_valid = results["reason_invalid"] == ""
     results.loc[is_valid, "reason_invalid"] = "valid"
-    results["final_response"] = np.where(is_valid, results["response_key"], -1)
+    results["final_response"] = results["response_key"].astype("Int64")
+    results["final_response"] = np.where(is_valid, results["final_response"], -1)
     return results
