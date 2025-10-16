@@ -2,6 +2,8 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+import pandas as pd
+
 ResponseMap = dict[int, str]
 ResponseReverseMap = dict[str, int]
 ResponseTuple = tuple[int, str]
@@ -152,3 +154,48 @@ def get_valid_responses(
     """
 
     return [r for r in response_tuples if r[0] >= 0]
+
+
+def non_ordinal_qnums() -> list[str]:
+    not_ordinal = [
+        *range(7, 27),
+        57,
+        *range(91, 94),
+        149,
+        150,
+        *range(152, 158),
+        173,
+        174,
+        175,
+        223,
+    ]
+    binary = [139, 140, 141, 144, 145, 151, 165, 166, 167, 168]
+    partially_ordinal = [221, 222, 254]
+    # ordinal but not equidistant - 94-105, 171-172
+    return [f"Q{i}" for i in not_ordinal + binary + partially_ordinal]
+
+
+def ordinal_qnums() -> list[str]:
+    all_qnums = [f"Q{i}" for i in range(1, 260)]
+    return [qnum for qnum in all_qnums if qnum not in non_ordinal_qnums()]
+
+
+def remap_response_maps(responses: dict[QNum, ResponseMap]) -> dict[QNum, ResponseMap]:
+    """
+    Remaps the response maps for specific questions according to predefined remappings.
+    """
+    return {qnum: _remap_response_map(qnum, resp) for qnum, resp in responses.items()}
+
+
+def _remap_response_map(qnum: QNum, responses: ResponseMap) -> ResponseMap:
+    response_remappings = _response_remappings().get(qnum, {})
+    return {response_remappings.get(k, k): v for k, v in responses.items()}
+
+
+def remap_outputs(qnum: QNum, outputs: pd.Series) -> pd.Series:
+    response_remappings = _response_remappings().get(qnum, {})
+    return outputs.replace(response_remappings)
+
+
+def _response_remappings() -> dict[QNum, dict]:
+    return {"Q56": {3: 2, 2: 3}, "Q119": {0: 3, 3: 4, 4: 5}}
