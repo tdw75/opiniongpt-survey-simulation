@@ -3,7 +3,7 @@ import re
 import numpy as np
 import pandas as pd
 
-from src.data.variables import split_response_string
+from src.data.variables import split_response_string, remap_outputs
 
 PLACEHOLDER_TEXT = "<no_text>"  # standardised placeholder for bare key responses
 
@@ -74,3 +74,13 @@ def add_separate_key_and_text_columns(
     """
     results[["response_key", "response_text"]] = pd.DataFrame(responses.tolist())
     return results
+
+
+def remap_response_keys(
+    df: pd.DataFrame, key_col: str = "response_key"
+) -> pd.DataFrame:
+    df[key_col] = df[key_col]
+    for qnum in ["Q56", "Q119"]:
+        is_qnum = df["number"] == qnum
+        df.loc[is_qnum, key_col] = remap_outputs(qnum, df.loc[is_qnum, key_col])
+    return df

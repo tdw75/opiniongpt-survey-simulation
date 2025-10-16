@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from cleaning import PLACEHOLDER_TEXT
+from src.analysis.cleaning import PLACEHOLDER_TEXT
 from src.analysis.invalid_responses import (
     flip_keys_back,
     extract_first_response_instance,
@@ -192,30 +192,38 @@ def mock_response_results() -> pd.DataFrame:
 
 
 def test_pipeline_comprehensive_invalid_reasons(mock_df, responses, responses_flipped):
+    responses["Q3"] = {1: "a really long response text that may get truncated"}
+    responses_flipped["Q3"] = {1: "a really long response text that may get truncated"}
+
     out = pipeline_identify_invalid_responses(
         mock_df.copy(), responses, responses_flipped
     )
     expected_keys = pd.Series(
-        [-1, 2, -1, -1, -1, 1, 2, -1, 1, -1] + [2, -1, -1, 3, 2],
+        [-1, 2, -1, -1, -1, 1, 2, -1, 1, -1] + [2, -1, -1, 3, 2] + [1, -1],
         name="final_response",
     )
-    expected_reasons = pd.Series([
-        "key text mismatch;",
-        "",
-        "key text mismatch;invalid key;",
-        "invalid text;",
-        "ambiguous response;",
-        "",
-        "",
-        "key text mismatch;",
-        "",
-        "ambiguous response;"] +
-        ["",
-        "ambiguous response;",
-        "key text mismatch;invalid key;",
-        "",
-        ""
-    ], name="reason_invalid"
+    expected_reasons = pd.Series(
+        [
+            "key text mismatch;",
+            "valid",
+            "key text mismatch;invalid key;",
+            "invalid text;",
+            "ambiguous response;",
+            "valid",
+            "valid",
+            "key text mismatch;",
+            "valid",
+            "ambiguous response;",
+        ]
+        + [
+            "valid",
+            "ambiguous response;",
+            "key text mismatch;invalid key;",
+            "valid",
+            "valid",
+        ]
+        + ["valid", "invalid text;"],
+        name="reason_invalid",
     )
     pd.testing.assert_series_equal(out["final_response"], expected_keys)
     pd.testing.assert_series_equal(out["reason_invalid"], expected_reasons)
@@ -258,5 +266,18 @@ def mock_df() -> pd.DataFrame:
         {c[0]: "Q2", c[1]: 4, c[2]: "3", c[3]: True},  # -1
         {c[0]: "Q2", c[1]: 1, c[2]: "3", c[3]: True},  # 1
         {c[0]: "Q1", c[1]: 2, c[2]: PLACEHOLDER_TEXT, c[3]: False},  # 2
+        # --- Q3 valid & invalid pairs ---
+        {
+            c[0]: "Q3",
+            c[1]: 1,
+            c[2]: "a really long response text that may ge",
+            c[3]: False,
+        },  # 1
+        {
+            c[0]: "Q3",
+            c[1]: 1,
+            c[2]: "a really long response text that could ge",
+            c[3]: True,
+        },  # -1
     ]
     return pd.DataFrame(data, dtype="object").astype({"response_key": "Int64"})
