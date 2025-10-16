@@ -16,7 +16,12 @@ from src.prompting.system import (
     build_survey_context_for_persona,
 )
 
-bias_to_subreddit = {
+logger = logging.getLogger(__name__)
+
+ModelName = str
+AdapterName = str
+
+bias_to_subreddit: dict[AdapterName, str] = {
     "liberal": "AskALiberal",
     "conservative": "AskConservatives",
     "german": "AskAGerman",
@@ -29,15 +34,13 @@ bias_to_subreddit = {
     "old_people": "AskOldPeople",
     # "teenager": "AskTeenagers",
 }
-adapters = list(bias_to_subreddit.keys())
+adapters: list[AdapterName] = list(bias_to_subreddit.keys())
 
 
 MODEL_DIRECTORY = {
     "phi": "unsloth/Phi-3-mini-4k-instruct",
     "llama": "meta-llama/Meta-Llama-3-8B-Instruct",
 }
-
-logger = logging.getLogger(__name__)
 
 
 class ModelConfig(BaseModel):
