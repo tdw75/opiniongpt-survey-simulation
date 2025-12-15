@@ -100,7 +100,7 @@ def load_model(
 
 def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
 
-    lora_id = "HU-Berlin-ML-Internal/opiniongpt-phi3-{adapter}"
+    lora_id = _get_lora_id(config.base_model_name)
     default_adapter = adapters[0]
 
     model = PeftModel.from_pretrained(
@@ -112,6 +112,15 @@ def load_opinion_gpt(model: PreTrainedModel, config: ModelConfig) -> PeftModel:
         model.load_adapter(lora_id.format(adapter=adapter), adapter)
 
     return model
+
+
+def _get_lora_id(base_model_name: str) -> str:
+    if base_model_name == "phi":
+        return "HU-Berlin-ML-Internal/opiniongpt-phi3-{adapter}"
+    elif base_model_name == "llama":
+        return "Opinion-GPT/llama2-{adapter}"
+    else:
+        raise ValueError(f"Unknown base model name: {base_model_name}")
 
 
 def load_base(config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
