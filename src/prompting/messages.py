@@ -2,9 +2,8 @@ from ast import literal_eval
 
 import pandas as pd
 
-from src.data.variables import responses_to_map, ResponseMap
+from src.data.variables import responses_to_map, ResponseMap, QNum
 from src.simulation.models import ModelConfig
-from variables import QNum
 
 Prompt = str
 Messages = list[dict[str, Prompt]]
