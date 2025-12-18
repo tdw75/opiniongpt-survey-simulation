@@ -2,11 +2,11 @@ import os
 
 import pandas as pd
 
-from config import subgroups, dimensions, categories
 from src.analysis.visualisations import (
     plot_model_metric_comparison,
     plot_model_metric_comparison_stacked,
 )
+from src.demographics.config import subgroups, dimensions, categories
 from src.simulation.utils import create_subdirectory
 
 models = ["opinion_gpt", "persona", "base"]
