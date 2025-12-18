@@ -1,6 +1,7 @@
 import os
 from textwrap import wrap
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -8,14 +9,7 @@ import seaborn as sns
 from matplotlib.axes import Axes
 from matplotlib.ticker import MaxNLocator
 
-from src.simulation.models import ModelName
 
-# Add at the top of visualisations.py
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-
-
-# Configure matplotlib style globally
 def configure_matplotlib_style():
     """Configure matplotlib for publication-quality figures."""
     plt.style.use("seaborn-v0_8-paper")
@@ -73,6 +67,7 @@ def plot_model_metric_comparison(
 
     fig, ax = plt.subplots(figsize=(8, len(groups) * subplot_scale))
     _plot_metric_on_axis(ax, df, metric_name, xmax)
+    _add_panel_label(ax, "(c) category")
     plt.tight_layout()
 
     if save_directory:
@@ -83,17 +78,19 @@ def plot_model_metric_comparison(
 
     return plt
 
+
 def plot_model_metric_comparison_stacked(
     df1: pd.DataFrame,
     df2: pd.DataFrame,
     metric_name: str,
     save_directory: str = None,
-    subplot_scale: float = 0.7,
+    subplot_scale: float = 0.35,
     xmax: float = None,
 ):
     """Plot two metric comparison charts stacked vertically with shared x-axis and legend."""
     df1 = df1.rename(columns=RENAME_MAP, errors="ignore")
     df2 = df2.rename(columns=RENAME_MAP, errors="ignore")
+
     n_groups_1 = len(df1.index)
     n_groups_2 = len(df2.index)
     total_height = n_groups_1 + n_groups_2
@@ -101,9 +98,9 @@ def plot_model_metric_comparison_stacked(
     fig, (ax1, ax2) = plt.subplots(
         2,
         1,
-        figsize=(8, total_height * subplot_scale),
+        figsize=(7, total_height * subplot_scale),
         sharex=True,
-        gridspec_kw={"height_ratios": [n_groups_1, n_groups_2]},
+        gridspec_kw={"height_ratios": [n_groups_1, n_groups_2], "hspace": 0.15},
     )
 
     _plot_metric_on_axis(
@@ -113,17 +110,18 @@ def plot_model_metric_comparison_stacked(
         ax2, df2, metric_name, xmax, show_legend=False, show_xlabel=True
     )
 
+    _add_panel_label(ax1, "(a) subgroup")
+    _add_panel_label(ax2, "(b) dimension")
     plt.tight_layout()
 
     if save_directory:
         save_path = os.path.join(
             save_directory,
-            f"{metric_name.lower()} stacked comparison demographics.png",
+            f"{metric_name.lower()} stacked comparison demographics.png",  # PDF for publications
         )
-        plt.savefig(save_path)
+        plt.savefig(save_path, dpi=300, bbox_inches="tight", facecolor="white")
 
     return plt
-
 
 
 def _plot_metric_on_axis(
@@ -138,49 +136,57 @@ def _plot_metric_on_axis(
     groups = df.index
     variants = df.columns
 
-    markers = ["o", "s", "^", "D"]
-    colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
-    jitter_amount = 0.035
-
     for i, group in enumerate(groups):
         x = df.loc[group].values
 
         for j, (xi, variant) in enumerate(zip(x, variants)):
-            y = i + (j - (len(variants) - 1) / 2) * jitter_amount
+            y = i + (j - (len(variants) - 1) / 2) * JITTER
             ax.plot(
                 xi,
                 y,
-                marker=markers[j],
-                color=colors[j],
-                markersize=7,
-                markeredgecolor="black",
-                markeredgewidth=0.5,
+                marker=MARKERS[j],
+                color=COLORS[j],
+                markersize=MARKER_SIZE,
+                markeredgecolor="white",
+                markeredgewidth=EDGE_WIDTH,
                 linestyle="None",
                 label=variant if i == 0 else "",
+                alpha=0.9,
+                zorder=3,  # Ensure markers appear above grid
             )
 
     ax.set_yticks(range(len(groups)))
-    ax.set_yticklabels(_wrap_labels(reformat_index(groups), width=22))
+    ax.set_yticklabels(_wrap_labels(reformat_index(groups), width=26))
     ax.margins(y=0.02)
     ax.set_ylim(-0.5, len(groups) - 0.5)
 
     max_x = df.values.max() * 1.05
     ax.set_xlim(-0.005, max(max_x, xmax or max_x))
+    ax.axvline(0, color="#666666", linestyle="--", linewidth=1, alpha=0.5, zorder=1)
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=6, steps=[1, 2, 5, 10]))
+    ax.tick_params(axis="both", which="major", length=4, width=0.8)
 
-    ax.axvline(0, color="gray", linestyle="--", linewidth=1)
-    ax.xaxis.set_major_locator(MaxNLocator(steps=[1, 2, 5, 10]))
-    ax.tick_params(axis="x", labelsize=TICK_FONT_SIZE)
-    ax.tick_params(axis="y", labelsize=TICK_FONT_SIZE)
+    ax.grid(True, axis="x", alpha=0.25, linestyle="--", linewidth=0.5, zorder=0)
+    ax.set_axisbelow(True)
 
     if show_legend:
-        ax.legend(
-            title="Model", loc="lower left" if metric_name == "Misalignment" else "best"
+        legend = ax.legend(
+            title="Model",
+            loc="best",
+            frameon=True,
+            fancybox=False,
+            edgecolor="0.8",
+            framealpha=0.95,
+            title_fontsize=10,
         )
+        legend.get_frame().set_linewidth(0.8)
+
     if show_xlabel:
-        ax.set_xlabel(f"Mean {metric_name}")
+        ax.set_xlabel(f"Mean {metric_name}", fontweight="normal")
 
 
-
+def _add_panel_label(ax: Axes, label: str):
+    ax.text(-0.22, 1.02, label, transform=ax.transAxes, fontsize=10, fontweight="bold")
 
 
 def plot_distance_heatmap(
