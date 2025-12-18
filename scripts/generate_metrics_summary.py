@@ -10,12 +10,11 @@ from scipy.stats import pearsonr
 from sklearn.metrics import root_mean_squared_error as rmse
 
 from src.analysis.metrics import (
-    calculate_total_variation,
     calculate_misalignment,
     calculate_wasserstein,
     calculate_variance,
+    prepare_distributions_single,
 )
-
 from src.analysis.responses import (
     get_support_diameter,
     sort_by_qnum_index,
@@ -23,11 +22,11 @@ from src.analysis.responses import (
     get_true_responses_for_subgroup,
     get_model_responses_for_subgroup,
 )
-
 from src.analysis.visualisations import (
     plot_distance_heatmap,
     plot_model_metric_comparison,
     RENAME_MAP,
+    reformat_index,
 )
 from src.data.variables import (
     QNum,
@@ -44,8 +43,6 @@ from src.demographics.config import (
 )
 from src.simulation.models import ModelName, AdapterName
 from src.simulation.utils import _key_as_int, create_subdirectory
-from src.analysis.visualisations import reformat_index
-
 
 steered_models = ["opinion_gpt", "persona"]
 all_models = steered_models + ["base"]
@@ -120,6 +117,11 @@ def main(filename: str, directory: str = "../data_files"):
         "category": category_data,
     }
 
+    for g, dd in data_dict_map.items():
+        save_response_distributions(
+            dd, create_subdirectory(simulation_directory, "data"), response_map, g
+        )
+
     for grouping, data_dict in data_dict_map.items():
 
         generate_model_comparison_metrics(
@@ -142,36 +144,17 @@ def generate_model_comparison_metrics(
     graph_directory: str,
     grouping: str,
 ):
-    wasserstein = {
-        n: get_metric(d, base, calculate_wasserstein, response_map)
-        for n, d in data_dict.items()
-    }
-    # jensenshannon = {
-    #     n: get_metric(d, base, calculate_jensen_shannon, response_map)
-    #     for n, d in data_dict.items()
-    # }
-
-    total_variation = {
-        n: get_metric(d, base, calculate_total_variation, response_map)
-        for n, d in data_dict.items()
-    }
 
     misalignment = {
-        n: get_metric(d, base, calculate_misalignment, response_map)
+        n: get_metric(d, calculate_misalignment, response_map)
         for n, d in data_dict.items()
     }
-    variances = {n: get_variance(d, base, response_map) for n, d in data_dict.items()}
+    variances = {n: get_variance(d, response_map) for n, d in data_dict.items()}
 
-    flatten_to_df(wasserstein).to_csv(
-        os.path.join(metric_directory, f"{grouping}-wasserstein.csv")
-    )
-    flatten_to_df(variances).to_csv(
+    flatten_to_df_long(variances).to_csv(
         os.path.join(metric_directory, f"{grouping}-variances.csv")
     )
-    flatten_to_df(total_variation).to_csv(
-        os.path.join(metric_directory, f"{grouping}-total-variation.csv")
-    )
-    flatten_to_df(misalignment).to_csv(
+    flatten_to_df_long(misalignment).to_csv(
         os.path.join(metric_directory, f"{grouping}-misalignment.csv")
     )
 
@@ -193,7 +176,6 @@ def generate_cross_comparison(
 
     metric_map = {
         "Wasserstein Distance": (calculate_wasserstein, "Blues"),
-        # "Jensen Shannon Distance": (calculate_jensen_shannon, "Reds"),
         "Misalignment": (calculate_misalignment, "Blues"),
     }
     for name, (fn, cmap) in metric_map.items():
@@ -273,6 +255,21 @@ def _save_latex_table(df: pd.DataFrame, directory: str, name: str, **kwargs):
     #     f.write(latex)
 
 
+def save_response_distributions(
+    data_dict: DataDict,
+    data_directory: str,
+    response_map: dict[QNum, ResponseMap],
+    grouping: str,
+):
+    dists = {
+        n: get_response_distributions(d, response_map) for n, d in data_dict.items()
+    }
+    with open(
+        os.path.join(data_directory, f"{grouping}-response-dists.json"), "w"
+    ) as f:
+        json.dump(dists, f)
+
+
 def generate_modal_collapse_analysis(
     data_dict: DataDict,
     base: pd.DataFrame,
@@ -299,7 +296,6 @@ def generate_modal_collapse_analysis(
 def generate_invalid_response_analysis(
     subgroup_data: DataDict, metrics_directory: str, latex_directory: str
 ):
-
     def _get_invalid_means(df: pd.DataFrame) -> pd.Series:
         return (df == -1).mean()
 
@@ -408,7 +404,9 @@ def get_model_responses(df_sim: pd.DataFrame, qnums: list[QNum]) -> pd.DataFrame
 def find_degenerate_dists(data: dict, base: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
 
     def _find_single(df: pd.DataFrame) -> list[str]:
-        return [qnum for qnum in df.columns if df[qnum].nunique() == 1]
+        return [
+            qnum for qnum in df.columns if df.loc[df[qnum] >= 0, qnum].nunique() == 1
+        ]
 
     degenerate_dists, counts = {"base": _find_single(base)}, {}
     for s, _ in data.items():
@@ -438,16 +436,20 @@ def find_degenerate_questions(
     return degenerate_questions
 
 
+def get_response_distributions(
+    dfs: dict[str, pd.DataFrame], response_map: dict[QNum, ResponseMap]
+):
+    return {
+        "opinion_gpt": prepare_distributions_single(dfs["opinion_gpt"], response_map),
+        "persona": prepare_distributions_single(dfs["persona"], response_map),
+        "base": prepare_distributions_single(dfs["base"], response_map),
+        "true": prepare_distributions_single(dfs["true"], response_map),
+    }
+
+
 def get_metric(
-    dfs: dict[str, pd.DataFrame],
-    base: pd.DataFrame,
-    metric_fn,
-    response_map: dict[QNum, ResponseMap],
+    dfs: dict[str, pd.DataFrame], metric_fn, response_map: dict[QNum, ResponseMap]
 ) -> dict[str, pd.Series]:
-    # if metric_fn == calculate_wasserstein:
-    #     dfs = {n: filter_qnums(df, non_ordinal_qnums()) for n, df in dfs.items()}
-    # elif metric_fn == calculate_jensen_shannon:
-    #     dfs = {n: filter_qnums(df, ordinal_qnums()) for n, df in dfs.items()}
     return {
         "opinion_gpt": pd.Series(
             metric_fn(dfs["opinion_gpt"], dfs["true"], response_map)
@@ -465,10 +467,21 @@ def flatten_to_df(metric_results: dict[str, dict]) -> pd.DataFrame:
     return sort_by_qnum_index(df.round(4))
 
 
+def flatten_to_df_long(metric_results: dict[str, dict]) -> pd.DataFrame:
+    records = []
+    for sg, metrics in metric_results.items():
+        for model, vals in metrics.items():
+            for qnum, value in pd.Series(vals).items():
+                records.append(
+                    {"number": qnum, "group": sg, "model": model, "value": value}
+                )
+    cols = ["number", "group", "model", "value"]
+    df = pd.DataFrame(records)
+    return df[cols].sort_values(cols[1:]).reset_index(drop=True)
+
+
 def get_variance(
-    dfs: dict[str, pd.DataFrame],
-    base: pd.DataFrame,
-    response_map: dict[QNum, ResponseMap],
+    dfs: dict[str, pd.DataFrame], response_map: dict[QNum, ResponseMap]
 ) -> dict[str, pd.Series]:
     return {
         "opinion_gpt": pd.Series(calculate_variance(dfs["opinion_gpt"], response_map)),
@@ -519,7 +532,6 @@ def aggregate_by_category(
     for cat, qnums in category_to_question.items():
         qnums = all_qnums.intersection(qnums)
         for sg, sources in data_dict.items():
-            sources
             for model, df in sources.items():
                 if model == "base":
                     continue
