@@ -5,10 +5,57 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.axes import Axes
 from matplotlib.ticker import MaxNLocator
 
 from src.simulation.models import ModelName
 
+# Add at the top of visualisations.py
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+
+# Configure matplotlib style globally
+def configure_matplotlib_style():
+    """Configure matplotlib for publication-quality figures."""
+    plt.style.use("seaborn-v0_8-paper")
+
+    mpl.rcParams.update(
+        {
+            "font.family": "sans-serif",
+            "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica"],
+            "font.size": 11,
+            "axes.labelsize": 8,
+            "axes.titlesize": 12,
+            "xtick.labelsize": 11,
+            "ytick.labelsize": 11,
+            "legend.fontsize": 8,
+            "figure.titlesize": 12,
+            "text.usetex": False,  # Set to True if LaTeX is available
+            "axes.linewidth": 0.8,
+            "grid.linewidth": 0.5,
+            "lines.linewidth": 1.5,
+            "patch.linewidth": 0.5,
+            "xtick.major.width": 0.8,
+            "ytick.major.width": 0.8,
+            "xtick.minor.width": 0.6,
+            "ytick.minor.width": 0.6,
+            "axes.spines.top": False,
+            "axes.spines.right": False,
+            "axes.grid": True,
+            "grid.alpha": 0.3,
+            "grid.linestyle": "--",
+        }
+    )
+
+
+configure_matplotlib_style()
+
+COLORS = ["#2E86AB", "#F18F01", "#06A77D", "#A23B72"]  # Blue, Orange, Teal, Purple
+MARKERS = ["o", "D", "^", "s"]  # Circle, Diamond, Triangle, Square
+MARKER_SIZE = 7
+EDGE_WIDTH = 0.8
+JITTER = 0.1
 TICK_FONT_SIZE = 14
 
 
@@ -17,14 +64,82 @@ def plot_model_metric_comparison(
     metric_name: str = "Value",
     save_directory: str = None,
     grouping: str = "",
+    subplot_scale: float = 0.7,
+    xmax: float = None,
 ):
+    """Plot a single metric comparison chart."""
     df = df.rename(columns=RENAME_MAP, errors="ignore")
     groups = df.index
-    variants = df.columns
-    fig, ax = plt.subplots(figsize=(8, len(groups) * 0.7))
 
-    markers = ["o", "s", "^", "D"]  # circle, square, triangle, diamond
-    colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]  # blue, orange, green, red
+    fig, ax = plt.subplots(figsize=(8, len(groups) * subplot_scale))
+    _plot_metric_on_axis(ax, df, metric_name, xmax)
+    plt.tight_layout()
+
+    if save_directory:
+        save_path = os.path.join(
+            save_directory, f"{metric_name.lower()} model comparison {grouping}.png"
+        )
+        plt.savefig(save_path)
+
+    return plt
+
+def plot_model_metric_comparison_stacked(
+    df1: pd.DataFrame,
+    df2: pd.DataFrame,
+    metric_name: str,
+    save_directory: str = None,
+    subplot_scale: float = 0.7,
+    xmax: float = None,
+):
+    """Plot two metric comparison charts stacked vertically with shared x-axis and legend."""
+    df1 = df1.rename(columns=RENAME_MAP, errors="ignore")
+    df2 = df2.rename(columns=RENAME_MAP, errors="ignore")
+    n_groups_1 = len(df1.index)
+    n_groups_2 = len(df2.index)
+    total_height = n_groups_1 + n_groups_2
+
+    fig, (ax1, ax2) = plt.subplots(
+        2,
+        1,
+        figsize=(8, total_height * subplot_scale),
+        sharex=True,
+        gridspec_kw={"height_ratios": [n_groups_1, n_groups_2]},
+    )
+
+    _plot_metric_on_axis(
+        ax1, df1, metric_name, xmax, show_legend=True, show_xlabel=False
+    )
+    _plot_metric_on_axis(
+        ax2, df2, metric_name, xmax, show_legend=False, show_xlabel=True
+    )
+
+    plt.tight_layout()
+
+    if save_directory:
+        save_path = os.path.join(
+            save_directory,
+            f"{metric_name.lower()} stacked comparison demographics.png",
+        )
+        plt.savefig(save_path)
+
+    return plt
+
+
+
+def _plot_metric_on_axis(
+    ax: Axes,
+    df: pd.DataFrame,
+    metric_name: str,
+    xmax: float = None,
+    show_legend: bool = True,
+    show_xlabel: bool = True,
+):
+    """Plot metric comparison on a given axis."""
+    groups = df.index
+    variants = df.columns
+
+    markers = ["o", "s", "^", "D"]
+    colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
     jitter_amount = 0.035
 
     for i, group in enumerate(groups):
@@ -42,7 +157,7 @@ def plot_model_metric_comparison(
                 markeredgewidth=0.5,
                 linestyle="None",
                 label=variant if i == 0 else "",
-            )  # Only label once for legend
+            )
 
     ax.set_yticks(range(len(groups)))
     ax.set_yticklabels(_wrap_labels(reformat_index(groups), width=22))
@@ -50,34 +165,22 @@ def plot_model_metric_comparison(
     ax.set_ylim(-0.5, len(groups) - 0.5)
 
     max_x = df.values.max() * 1.05
-    if metric_name == "Jensen Shannon Distance":
-        xmax = 0.36
-    elif metric_name in ["Wasserstein Distance", "Misalignment"]:
-        xmax = 0.37
-    elif metric_name == "Response Variance":
-        xmax = 0.17
-    elif metric_name == "Response Standard Deviation":
-        xmax = 0.25
-    else:
-        xmax = max_x
-    ax.set_xlim(-0.005, max(max_x, xmax))
+    ax.set_xlim(-0.005, max(max_x, xmax or max_x))
 
     ax.axvline(0, color="gray", linestyle="--", linewidth=1)
     ax.xaxis.set_major_locator(MaxNLocator(steps=[1, 2, 5, 10]))
     ax.tick_params(axis="x", labelsize=TICK_FONT_SIZE)
     ax.tick_params(axis="y", labelsize=TICK_FONT_SIZE)
-    ax.legend(
-        title="Model", loc="lower left" if metric_name == "Misalignment" else "best"
-    )
-    ax.set_xlabel(f"Mean {metric_name}")
 
-    plt.tight_layout()
-
-    if save_directory:
-        save_path = os.path.join(
-            save_directory, f"{metric_name.lower()} model comparison {grouping}.png"
+    if show_legend:
+        ax.legend(
+            title="Model", loc="lower left" if metric_name == "Misalignment" else "best"
         )
-        plt.savefig(save_path)
+    if show_xlabel:
+        ax.set_xlabel(f"Mean {metric_name}")
+
+
+
 
 
 def plot_distance_heatmap(
@@ -198,7 +301,7 @@ def _paired_upper_triangle(
     return x[mask], y[mask]
 
 
-def _wrap_labels(labels, width=22):
+def _wrap_labels(labels, width: int):
     return ["\n".join(wrap(label, width)) for label in labels]
 
 
@@ -211,6 +314,6 @@ def reformat_index(index: pd.Index | list) -> pd.Index:
 RENAME_MAP = {
     "opinion_gpt": "OpinionGPT",
     "persona": "Persona Prompting",
+    "base": "Base Phi 3",
     "true": "True Data",
-    "base": "Base Phi 3 Mini",
 }

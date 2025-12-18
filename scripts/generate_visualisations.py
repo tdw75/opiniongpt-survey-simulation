@@ -2,8 +2,12 @@ import os
 
 import pandas as pd
 
-from src.analysis.visualisations import plot_model_metric_comparison
-from src.demographics.config import subgroups, dimensions, categories
+from config import subgroups, dimensions, categories
+from src.analysis.visualisations import (
+    plot_model_metric_comparison,
+    plot_model_metric_comparison_new,
+    plot_model_metric_comparison_stacked,
+)
 from src.simulation.utils import create_subdirectory
 
 models = ["opinion_gpt", "persona", "base"]
@@ -16,18 +20,30 @@ def main(directory: str = "../data_files"):
     read_directory = create_subdirectory(simulation_directory, "metrics")
     save_directory = create_subdirectory(simulation_directory, "graphs")
 
-    for grouping in ["subgroup", "dimension", "category"]:
-        for metric in ["variances", "misalignment"]:
-            means_df = load_and_calculate_metric_means(
-                os.path.join(read_directory, f"{grouping}-{metric}.csv"), grouping
-            )
-            print(means_df)
-            plt = plot_model_metric_comparison(
-                means_df,
-                save_directory=save_directory,
-                **METRIC_CONFIG[metric],
-                **GROUPING_CONFIG[grouping],
-            )
+    for metric in ["variances", "misalignment"]:
+        sg_means = load_and_calculate_metric_means(
+            os.path.join(read_directory, f"subgroup-{metric}.csv"), "subgroup"
+        )
+        dim_means = load_and_calculate_metric_means(
+            os.path.join(read_directory, f"dimension-{metric}.csv"), "dimension"
+        )
+        plot_model_metric_comparison_stacked(
+            sg_means,
+            dim_means,
+            save_directory=save_directory,
+            subplot_scale=0.35,
+            **METRIC_CONFIG[metric],
+        )
+
+        cat_means = load_and_calculate_metric_means(
+            os.path.join(read_directory, f"category-{metric}.csv"), "category"
+        )
+        plot_model_metric_comparison_new(
+            cat_means,
+            save_directory=save_directory,
+            **METRIC_CONFIG[metric],
+            **GROUPING_CONFIG["category"],
+        )
 
 
 def load_and_calculate_metric_means(csv_path: str, grouping: str) -> pd.DataFrame:
