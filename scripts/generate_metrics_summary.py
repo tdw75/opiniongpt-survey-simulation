@@ -24,7 +24,6 @@ from src.analysis.responses import (
 )
 from src.analysis.visualisations import (
     plot_distance_heatmap,
-    plot_model_metric_comparison,
     RENAME_MAP,
     reformat_index,
 )
@@ -160,11 +159,6 @@ def generate_model_comparison_metrics(
 
     means_mis = get_metric_means(misalignment)
     means_var = get_metric_means(variances, keys=all_models + ["true"])
-
-    plot_model_metric_comparison(means_mis, "Misalignment", graph_directory, grouping)
-    plot_model_metric_comparison(
-        means_var, "Response Variance", graph_directory, grouping
-    )
 
 
 def generate_cross_comparison(
