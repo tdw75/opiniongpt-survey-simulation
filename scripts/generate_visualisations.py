@@ -2,12 +2,11 @@ import os
 
 import pandas as pd
 
-from config import subgroups, dimensions, categories
 from src.analysis.visualisations import (
     plot_model_metric_comparison,
-    plot_model_metric_comparison_new,
     plot_model_metric_comparison_stacked,
 )
+from src.demographics.config import subgroups, dimensions, categories
 from src.simulation.utils import create_subdirectory
 
 models = ["opinion_gpt", "persona", "base"]
@@ -38,7 +37,7 @@ def main(directory: str = "../data_files"):
         cat_means = load_and_calculate_metric_means(
             os.path.join(read_directory, f"category-{metric}.csv"), "category"
         )
-        plot_model_metric_comparison_new(
+        plot_model_metric_comparison(
             cat_means,
             save_directory=save_directory,
             **METRIC_CONFIG[metric],
