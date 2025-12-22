@@ -39,7 +39,7 @@ adapters: list[AdapterName] = list(bias_to_subreddit.keys())
 
 MODEL_DIRECTORY = {
     "phi": "unsloth/Phi-3-mini-4k-instruct",
-    "llama": "meta-llama/Llama-2-13b-chat-hf",
+    "llama": "meta-llama/Llama-2-7b-chat-hf",
     # "llama3": "meta-llama/Meta-Llama-3-8B-Instruct",
 }
 
