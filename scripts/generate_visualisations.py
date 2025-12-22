@@ -66,7 +66,7 @@ INDEX_ORDER = {
 
 METRIC_CONFIG = {
     "variances": {"metric_name": "Response Variance", "xmax": 0.15},
-    "misalignment": {"metric_name": "Misalignment", "xmax": 0.28},
+    "misalignment": {"metric_name": "Dissimilarity", "xmax": 0.28},
 }
 
 GROUPING_CONFIG = {

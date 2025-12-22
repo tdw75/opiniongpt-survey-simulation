@@ -157,9 +157,6 @@ def generate_model_comparison_metrics(
         os.path.join(metric_directory, f"{grouping}-misalignment.csv")
     )
 
-    means_mis = get_metric_means(misalignment)
-    means_var = get_metric_means(variances, keys=all_models + ["true"])
-
 
 def generate_cross_comparison(
     data_dict: DataDict,
