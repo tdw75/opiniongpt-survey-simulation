@@ -67,7 +67,7 @@ def plot_model_metric_comparison(
 
     fig, ax = plt.subplots(figsize=(8, len(groups) * subplot_scale))
     _plot_metric_on_axis(ax, df, metric_name, xmax)
-    _add_panel_label(ax, "(c) category")
+    _add_panel_label(ax, "topic")  # todo: hardcoded
     plt.tight_layout()
 
     if save_directory:
@@ -110,14 +110,14 @@ def plot_model_metric_comparison_stacked(
         ax2, df2, metric_name, xmax, show_legend=False, show_xlabel=True
     )
 
-    _add_panel_label(ax1, "(a) subgroup")
-    _add_panel_label(ax2, "(b) dimension")
+    _add_panel_label(ax1, "subgroup")  # todo: hardcoded
+    _add_panel_label(ax2, "dimension")  # todo: hardcoded
     plt.tight_layout()
 
     if save_directory:
         save_path = os.path.join(
             save_directory,
-            f"{metric_name.lower()} stacked comparison demographics.png",  # PDF for publications
+            f"{metric_name.lower()} stacked comparison demographics.png",
         )
         plt.savefig(save_path, dpi=300, bbox_inches="tight", facecolor="white")
 
