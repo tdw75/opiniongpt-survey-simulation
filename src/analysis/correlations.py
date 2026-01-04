@@ -1,0 +1,190 @@
+import os
+from functools import lru_cache
+
+import numpy as np
+import pandas as pd
+from scipy.stats import pearsonr
+from sklearn.metrics import root_mean_squared_error as rmse
+
+from scripts.generate_metrics_summary import (
+    DataDict,
+    get_question_means,
+    get_category_means,
+    steered_models,
+)  # todo: move to a src module
+from src.simulation.utils import save_latex_table
+
+
+def compare_correlation_structures(
+    subgroup_data: DataDict,
+    diameters: pd.Series,
+    minimums: pd.Series,
+    filename: str,
+    root_directory: str = "../data_files",
+):
+    """
+    Compare correlation structures between steered models (persona prompting and OpinionGPT) and true responses.
+    This results in a comparison of question-level and category-level correlation matrices.
+    """
+
+    metrics_directory = os.path.join(root_directory, "results", filename, "metrics")
+
+    question_means: dict[str, pd.DataFrame] = {
+        mod: get_question_means(subgroup_data, mod, diameters, minimums)
+        for mod in steered_models + ["true"]
+    }
+    category_means: dict[str, pd.DataFrame] = {
+        mod: get_category_means(df) for mod, df in question_means.items()
+    }
+    means = {"question": question_means, "category": category_means}
+    corr_metrics = {}
+    for name, data in means.items():
+        corr_matrices = {
+            m: construct_correlation_matrix(df.T) for m, df in data.items()
+        }
+        for m in data.keys():
+            data[m].round(2).to_csv(
+                os.path.join(metrics_directory, f"{name}-means-subgroup-{m}.csv")
+            )
+            corr_matrices[m].to_csv(
+                os.path.join(
+                    metrics_directory, f"{name}-correlation-matrix-subgroup-{m}.csv"
+                )
+            )
+
+        true = np.array(data["true"])
+        iu = get_upper_triangle_from_dim(true.shape[1])
+        corr_metrics[name] = {}
+        for model in steered_models:
+            corr_metrics[name][model] = calculate_correlation_metrics(
+                true, np.array(data[model]), iu
+            )
+    return corr_metrics
+
+
+def save_correlation_metrices(corr_metrics: dict, grouping: str, filename: str, root_directory: str = "../data_files"):
+    corr_metrics = pd.DataFrame(corr_metrics)
+    directory = os.path.join(root_directory, "results", filename, "latex")
+    save_latex_table(
+        corr_metrics,
+        directory,
+        f"{grouping}-correlation_metrics.tex",
+        float_format="%.2f",
+    )
+
+
+def lower_bound(filename: str, root_directory: str = "../data_files") -> tuple:
+
+    directory = os.path.join(root_directory, "results", filename, "metrics")
+
+    def _shuffle_subgroups(df: pd.DataFrame) -> pd.DataFrame:
+        return df.apply(lambda x: x.sample(frac=1).values)
+
+    lb_mean = {}
+    lb_std = {}
+
+    for grouping in ["question", "category"]:
+        metrics = {}
+        # also need category
+        means = pd.read_csv(
+            os.path.join(directory, f"{grouping}-means-subgroup-true.csv"),
+            index_col=0,
+        )
+        corr_wvs = np.array(construct_correlation_matrix(means))
+        iu = get_upper_triangle_from_dim(corr_wvs.shape[1])
+
+        for i in range(1000):
+            means_shuffle = _shuffle_subgroups(means)
+            corr_shuffle = construct_correlation_matrix(means_shuffle)
+            metrics[i] = calculate_correlation_metrics(corr_wvs, np.array(corr_shuffle), iu)
+
+        metrics_df = pd.DataFrame(metrics).T
+
+        lb_mean[grouping] = metrics_df.mean().round(4).to_dict()
+        lb_std[grouping] = metrics_df.std().round(4).to_dict()
+
+    return lb_mean, lb_std
+
+
+def upper_bound(
+    diameters: pd.Series,
+    minimums: pd.Series,
+    subgroup_data: DataDict,
+    # filename: str,
+    # root_directory: str = "../data_files",
+) -> tuple:
+    # directory = os.path.join(root_directory, "results", filename, "data")
+
+    # path_template = os.path.join(directory, "subgroup-true-{sg}-responses.csv")
+    # data = {
+    #     sg: {"true": pd.read_csv(path_template.format(sg=sg), index_col=0)}
+    #     for sg in adapters
+    # }
+
+    ub_mean = {}
+    ub_std = {}
+
+    for grouping in ["question", "category"]:
+        metrics = {}
+        for i in range(100):
+            half_1, half_2 = split_true_data(subgroup_data)
+            metrics[i] = split_half_analysis(half_1, half_2, diameters, minimums, grouping)
+        metrics_df = pd.DataFrame(metrics).T
+        ub_mean[grouping] = metrics_df.mean().round(4).to_dict()
+        ub_std[grouping] = metrics_df.std().round(4).to_dict()
+
+    return ub_mean, ub_std
+    # return pd.DataFrame(metrics["category"]).T
+
+
+@lru_cache(None)
+def get_upper_triangle_from_dim(n: int):
+    """Return upper-triangle indices for an n x n matrix (k=1), cached by n."""
+    return np.triu_indices(n, k=1)
+
+
+def split_true_data(data: DataDict) -> tuple[DataDict, DataDict]:
+    half_1 = {}
+    half_2 = {}
+    for sg, true in data.items():
+        df = true["true"]
+        n = len(df)
+        if n % 2 != 0:
+            n -= 1
+        indices = np.random.permutation(n)
+        mid = n // 2
+        half_1[sg] = {"true": df.iloc[indices[:mid]]}
+        half_2[sg] = {"true": df.iloc[indices[mid:]]}
+    return half_1, half_2
+
+
+def split_half_analysis(half_1: DataDict, half_2: DataDict, diameters, minimums, grouping: str) -> dict[str, float]:
+
+    means_1 = get_question_means(half_1, "true", diameters, minimums)
+    means_2 = get_question_means(half_2, "true", diameters, minimums)
+    if grouping == "category":
+        means_1 = get_category_means(means_1)
+        means_2 = get_category_means(means_2)
+
+    corr_1 = np.array(construct_correlation_matrix(means_1))
+    corr_2 = np.array(construct_correlation_matrix(means_2))
+
+    assert corr_1.shape == corr_2.shape
+    iu = get_upper_triangle_from_dim(means_1.shape[1])
+
+    return calculate_correlation_metrics(corr_1, corr_2, iu)
+
+
+def construct_correlation_matrix(means: pd.DataFrame) -> pd.DataFrame:
+    """Construct correlation matrix from means DataFrame with rows as subgroups and columns as survey items."""
+    return means.corr().round(3)
+
+
+def calculate_correlation_metrics(
+    true_means: np.ndarray, model_means: np.ndarray, iu: np.ndarray
+) -> dict[str, float]:
+    corr_metrics = {}
+    r, _ = pearsonr(true_means[iu], model_means[iu])
+    corr_metrics["pearson_r"] = r.round(3)
+    corr_metrics["rmse"] = np.round(rmse(true_means[iu], model_means[iu]), 3)
+    return corr_metrics
