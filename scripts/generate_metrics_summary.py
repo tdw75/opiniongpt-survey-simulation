@@ -24,8 +24,6 @@ from src.analysis.responses import (
 )
 from src.analysis.visualisations import (
     plot_distance_heatmap,
-    RENAME_MAP,
-    reformat_index,
 )
 from src.data.variables import (
     QNum,
@@ -41,7 +39,7 @@ from src.demographics.config import (
     category_to_question,
 )
 from src.simulation.models import ModelName, AdapterName
-from src.simulation.utils import _key_as_int, create_subdirectory
+from src.simulation.utils import key_as_int, create_subdirectory, save_latex_table
 
 steered_models = ["opinion_gpt", "persona"]
 all_models = steered_models + ["base"]
@@ -72,7 +70,7 @@ def main(filename: str, directory: str = "../data_files"):
     with open(
         os.path.join(directory, "variables/response_map_original.json"), "r"
     ) as f1:
-        response_map = _key_as_int(json.load(f1))
+        response_map = key_as_int(json.load(f1))
         response_map = remap_response_maps(response_map)
         response_map = {k: v for k, v in response_map.items() if k != "Q215"}
     all_qnums = list(response_map.keys())
@@ -81,27 +79,31 @@ def main(filename: str, directory: str = "../data_files"):
     base = get_model_responses(sim[sim["subgroup"] == "none"], all_qnums)
     print(f"Loaded data, {time.time() - start} seconds")
     subgroup_data: DataDict = {
-        n: get_subgroup_data(true, sim, base, s, all_qnums)
+        n: collate_subgroup_data(true, sim, base, s, all_qnums)
         for n, s in subgroups.items()
     }
     dimension_data: DataDict = {
-        n: get_subgroup_data(true, sim, base, s, all_qnums)
+        n: collate_subgroup_data(true, sim, base, s, all_qnums)
         for n, s in dimensions.items()
     }
     category_data = aggregate_by_category(subgroup_data, base, true)
     print(f"Aggregated data, {time.time() - start} seconds")
     metrics_directory = create_subdirectory(simulation_directory, "metrics")
+    data_directory = create_subdirectory(simulation_directory, "data")
     graph_directory = create_subdirectory(simulation_directory, "graphs")
     latex_directory = create_subdirectory(simulation_directory, "latex")
+
+    persist_data_dict(subgroup_data, data_directory, "subgroup")
+    persist_data_dict(dimension_data, data_directory, "dimension")
 
     generate_modal_collapse_analysis(
         subgroup_data, base, metrics_directory, latex_directory
     )
     print(f"Finished modal collapse analysis, {time.time() - start} seconds")
-    generate_correlation_analysis(
-        subgroup_data, metrics_directory, latex_directory, response_map
-    )
-    print(f"Finished correlation analysis, {time.time() - start} seconds")
+    # generate_correlation_analysis(
+    #     subgroup_data, data_directory, latex_directory, response_map
+    # )
+    # print(f"Finished correlation analysis, {time.time() - start} seconds")
     generate_invalid_response_analysis(
         subgroup_data, metrics_directory, latex_directory
     )
@@ -124,7 +126,7 @@ def main(filename: str, directory: str = "../data_files"):
     for grouping, data_dict in data_dict_map.items():
 
         generate_model_comparison_metrics(
-            data_dict, base, response_map, metrics_directory, graph_directory, grouping
+            data_dict, response_map, metrics_directory, grouping
         )
         print(
             f"Finished model comparison metrics for {grouping}, {time.time() - start} seconds"
@@ -137,10 +139,8 @@ def main(filename: str, directory: str = "../data_files"):
 
 def generate_model_comparison_metrics(
     data_dict: DataDict,
-    base: pd.DataFrame,
     response_map: dict[QNum, ResponseMap],
     metric_directory: str,
-    graph_directory: str,
     grouping: str,
 ):
 
@@ -156,9 +156,6 @@ def generate_model_comparison_metrics(
     flatten_to_df_long(misalignment).to_csv(
         os.path.join(metric_directory, f"{grouping}-misalignment.csv")
     )
-
-    means_mis = get_metric_means(misalignment)
-    means_var = get_metric_means(variances, keys=all_models + ["true"])
 
 
 def generate_cross_comparison(
@@ -183,70 +180,60 @@ def generate_cross_comparison(
         )
 
 
-def generate_correlation_analysis(
-    subgroup_data: DataDict,
-    metrics_directory: str,
-    latex_directory: str,
-    response_maps: dict[QNum, ResponseMap],
-):
-    diameters = get_support_diameter(response_maps)
-    minimums = get_support_minimum(response_maps)
-    question_means: dict[str, pd.DataFrame] = {
-        mod: get_question_means(
-            subgroup_data,
-            mod,
-            sort_by_qnum_index(diameters),
-            sort_by_qnum_index(minimums),
-        )
-        for mod in steered_models + ["true"]
-    }
-    category_means: dict[str, pd.DataFrame] = {
-        mod: get_category_means(df) for mod, df in question_means.items()
-    }
-    means = {"question": question_means, "category": category_means}
-    for name, data in means.items():
-        corr_matrices = {m: df.T.corr().round(3) for m, df in data.items()}
-        for m in data.keys():
-            data[m].round(2).to_csv(
-                os.path.join(metrics_directory, f"{name}-means-subgroup-{m}.csv")
-            )
-            corr_matrices[m].to_csv(
-                os.path.join(
-                    metrics_directory, f"{name}-correlation-matrix-subgroup-{m}.csv"
-                )
-            )
-
-        true = np.array(data["true"])
-        iu = np.triu_indices_from(true, k=1)
-        corr_metrics = {m: {} for m in steered_models}
-        for model in steered_models:
-            model_means = np.array(data[model])
-            r, _ = pearsonr(true[iu], model_means[iu])
-            corr_metrics[model]["pearson_r"] = r.round(3)
-            corr_metrics[model]["rmse"] = np.round(rmse(true[iu], model_means[iu]), 3)
-
-        corr_metrics = pd.DataFrame(corr_metrics)
-        _save_latex_table(
-            corr_metrics,
-            latex_directory,
-            f"{name}-correlation_metrics.tex",
-            float_format="%.2f",
-            # label="tab:correlation-metrics",
-            # caption="Correlation Metrics",
-        )
-    # for m in steered_models:
-    #     plot_corr_scatter(corr_matrices, m, save_directory=graph_directory)
-    #     plot_corr_diff_hist(corr_matrices, m, save_directory=graph_directory)
-
-
-def _save_latex_table(df: pd.DataFrame, directory: str, name: str, **kwargs):
-    df = df.rename(columns=RENAME_MAP, errors="ignore")
-    df.index = reformat_index(df.index)
-    df.to_latex(os.path.join(directory, name), **kwargs)
-    # latex = latex.replace("\\begin{table}", "\\begin{table}\n\\centering")
-    #
-    # with open(os.path.join(directory, name), "w") as f:
-    #     f.write(latex)
+# def generate_correlation_analysis(
+#     subgroup_data: DataDict,
+#     data_directory: str,
+#     latex_directory: str,
+#     response_maps: dict[QNum, ResponseMap],
+# ):
+#     diameters = get_support_diameter(response_maps)
+#     minimums = get_support_minimum(response_maps)
+#     question_means: dict[str, pd.DataFrame] = {
+#         mod: get_question_means(
+#             subgroup_data,
+#             mod,
+#             sort_by_qnum_index(diameters),
+#             sort_by_qnum_index(minimums),
+#         )
+#         for mod in steered_models + ["true"]
+#     }
+#     category_means: dict[str, pd.DataFrame] = {
+#         mod: get_category_means(df) for mod, df in question_means.items()
+#     }
+#     means = {"question": question_means, "category": category_means}
+#     for name, data in means.items():
+#         corr_matrices = {m: df.T.corr().round(3) for m, df in data.items()}
+#         for m in data.keys():
+#             data[m].round(2).to_csv(
+#                 os.path.join(data_directory, f"{name}-means-subgroup-{m}.csv")
+#             )
+#             corr_matrices[m].to_csv(
+#                 os.path.join(
+#                     data_directory, f"{name}-correlation-matrix-subgroup-{m}.csv"
+#                 )
+#             )
+#
+#         true = np.array(data["true"])
+#         iu = np.triu_indices_from(true, k=1)
+#         corr_metrics = {m: {} for m in steered_models}
+#         for model in steered_models:
+#             model_means = np.array(data[model])
+#             r, _ = pearsonr(true[iu], model_means[iu])
+#             corr_metrics[model]["pearson_r"] = r.round(3)
+#             corr_metrics[model]["rmse"] = np.round(rmse(true[iu], model_means[iu]), 3)
+#
+#         corr_metrics = pd.DataFrame(corr_metrics)
+#         save_latex_table(
+#             corr_metrics,
+#             latex_directory,
+#             f"{name}-correlation_metrics.tex",
+#             float_format="%.2f",
+#             # label="tab:correlation-metrics",
+#             # caption="Correlation Metrics",
+#         )
+#     # for m in steered_models:
+#     #     plot_corr_scatter(corr_matrices, m, save_directory=graph_directory)
+#     #     plot_corr_diff_hist(corr_matrices, m, save_directory=graph_directory)
 
 
 def save_response_distributions(
@@ -278,7 +265,7 @@ def generate_modal_collapse_analysis(
         qnums = find_degenerate_questions(deg)
         json.dump(qnums, f2)
 
-    _save_latex_table(
+    save_latex_table(
         counts.T,
         latex_directory,
         "degenerate-counts-table.tex",
@@ -303,7 +290,7 @@ def generate_invalid_response_analysis(
         invalid_totals[sg] = {m: _get_invalid_means(dd[m]).mean() for m in dd.keys()}
 
     invalid_totals = pd.DataFrame(invalid_totals).T
-    _save_latex_table(
+    save_latex_table(
         invalid_totals,
         latex_directory,
         "invalid-counts-total.tex",
@@ -330,7 +317,7 @@ def generate_invalid_response_analysis(
         json.dump(common_qnums, f)
 
 
-def get_subgroup_data(
+def collate_subgroup_data(
     df_true: pd.DataFrame,
     df_sim: pd.DataFrame,
     df_base: pd.DataFrame,
@@ -516,6 +503,11 @@ def get_cross_distance(
     return pd.DataFrame(cross).T.round(4)
 
 
+# def aggregate_by_dimension(data_dict: DataDict):
+#     for name, data in data_dict.items():
+
+
+
 def aggregate_by_category(
     data_dict: DataDict, base: pd.DataFrame, true: pd.DataFrame
 ) -> dict:
@@ -541,6 +533,18 @@ def aggregate_by_category(
         for c, models in cat_dict.items()
     }
     return cat_dict
+
+
+def persist_data_dict(data_dict: DataDict, directory: str, grouping: str):
+    for sg, models in data_dict.items():
+        for model, df in models.items():
+            if model != "base":
+                df.to_csv(
+                    os.path.join(directory, f"{grouping}-{model}-{sg}-responses.csv")
+                )
+    data_dict[sg]["base"].to_csv(
+        os.path.join(directory, f"{grouping}-base-responses.csv")
+    )
 
 
 if __name__ == "__main__":

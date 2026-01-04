@@ -113,6 +113,7 @@ def calculate_wasserstein(
                 model_dists[qnum], true_dists[qnum]
             )
         # Check for valid weights
+        # todo: clean up
         if (
             len(model_weights) == 0
             or len(true_weights) == 0
@@ -148,7 +149,7 @@ def calculate_misalignment(
 def calculate_variance0(
     responses: pd.DataFrame, response_maps: dict[QNum, ResponseMap], **kwargs
 ) -> dict[QNum, float]:
-    # todo: vectorise
+    # todo: delete??
     variances = {}
     for qnum in remove_weight_col(responses.columns):
         if qnum in ordinal_qnums():  # only ordinal
@@ -192,6 +193,7 @@ def normalise_responses(
 def calculate_variance1(
     responses: pd.DataFrame, response_maps: dict[QNum, ResponseMap], **kwargs
 ) -> pd.Series:
+    # todo: delete?
     # qnums = [c for c in responses.columns if c in ordinal_qnums()]
     qnums = remove_weight_col(responses.columns)
     responses = normalise_responses(
@@ -225,24 +227,9 @@ def prepare_distributions(
     response_maps: dict[QNum, ResponseMap],
     **kwargs
 ) -> tuple:
-    default_kwargs = dict(is_normalize=True, is_include_invalid=False)
-    kwargs = {**default_kwargs, **kwargs}
 
-    if "weight" in model_responses.columns:
-        model_dists = get_response_distribution_weighted(
-            model_responses, response_maps, **kwargs
-        )
-    else:
-        model_dists = get_response_distribution(
-            model_responses, response_maps, **kwargs
-        )
-
-    if "weight" in true_responses.columns:
-        true_dists = get_response_distribution_weighted(
-            true_responses, response_maps, **kwargs
-        )
-    else:
-        true_dists = get_response_distribution(true_responses, response_maps, **kwargs)
+    model_dists = prepare_distributions_single(model_responses, response_maps, **kwargs)
+    true_dists = prepare_distributions_single(true_responses, response_maps, **kwargs)
 
     return model_dists, true_dists
 

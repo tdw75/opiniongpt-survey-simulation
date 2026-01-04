@@ -1,7 +1,7 @@
 from src.demographics.base import BaseSubGroup, classproperty
 
 
-column = "Q240"  # todo: add column number
+column = "Q240"
 
 
 class Liberal(BaseSubGroup):
