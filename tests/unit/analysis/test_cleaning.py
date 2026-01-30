@@ -116,9 +116,9 @@ def test_clean_generated_responses():
             "response": responses,
             "response_key": [1, 9, 10, 10, 10, 10, 10, 1, np.nan, np.nan, 2, np.nan],
             "response_text": [
-                "value",
+                "vAlue",
                 "9",
-                "value value",
+                "Value Value",
                 "value value",
                 "<no_text>",
                 "<no_text>",
@@ -126,7 +126,7 @@ def test_clean_generated_responses():
                 "value",
                 "value",
                 "value",
-                """disagree q42: do you agree""",
+                "Disagree \n\n\nQ42: Do you agree",
                 "ksdf",
             ],
         }

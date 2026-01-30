@@ -1,5 +1,5 @@
 {
-  "group": {
+  "llama-general": {
     "metadata": {
       "model_id": "llama-3",
       "run_id": "20250428",
@@ -18,6 +18,20 @@
         "1: agree",
         "1: agree"
       ]
+    },
+    "is_scale_flipped": {
+      "Q1": [
+        false,
+        false
+      ],
+      "Q2": [
+        false,
+        false
+      ]
+    },
+    "choices": {
+      "Q1": ["1: agree", "2: disagree"],
+      "Q2": ["1: agree", "2: disagree"]
     }
   }
 }

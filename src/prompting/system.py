@@ -11,7 +11,7 @@ def build_persona_message(subgroup: type[BaseSubGroup]) -> str:
 Please answer all questions as if you are {subgroup.PERSONA}.
 Make sure your responses align as closely as possible to the responses that someone from this 
 demographic is likely to give.
-    """
+"""
 
 
 def build_survey_context_for_persona(subgroup: str) -> str:

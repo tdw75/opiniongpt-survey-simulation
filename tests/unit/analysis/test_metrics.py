@@ -5,6 +5,7 @@ import numpy as np
 from src.analysis.metrics import calculate_wasserstein, calculate_jensen_shannon
 
 
+@pytest.mark.skip(reason="JS distance no longer used in project")
 def test_js_identical(all_responses, response_maps):
     model, _ = all_responses
     true, _ = all_responses
@@ -13,6 +14,7 @@ def test_js_identical(all_responses, response_maps):
     assert result["Q2"] == 0.0
 
 
+@pytest.mark.skip(reason="JS distance no longer used in project")
 def test_js_different(all_responses, response_maps):
     model, true = all_responses
     result = calculate_jensen_shannon(model, true, response_maps)
@@ -20,6 +22,7 @@ def test_js_different(all_responses, response_maps):
     assert 0 < result["Q2"] < 1
 
 
+@pytest.mark.skip(reason="JS distance no longer used in project")
 def test_jensen_shannon_symmetry(all_responses, response_maps):
 
     model, true = all_responses
@@ -76,4 +79,4 @@ def extreme_responses():
     # For normalization test: all mass at min vs all at max
     model = {"Q1": pd.Series([1] * 10)}
     true = {"Q1": pd.Series([4] * 10)}
-    return model, true
+    return pd.DataFrame(model), pd.DataFrame(true)

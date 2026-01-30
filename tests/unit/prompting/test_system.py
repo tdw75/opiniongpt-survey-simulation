@@ -8,7 +8,7 @@ def test_build_persona_message():
 Please answer all questions as if you are a person that identifies as female.
 Make sure your responses align as closely as possible to the responses that someone from this 
 demographic is likely to give.
-    """
+"""
     assert message == expected
 
 
@@ -37,7 +37,9 @@ Do not change spelling or capitalisation.
 For example:
 4: Agree strongly
 
+
 Please answer all questions as if you are a person that identifies as male.
 Make sure your responses align as closely as possible to the responses that someone from this 
-demographic is likely to give."""
+demographic is likely to give.
+"""
     assert message == expected

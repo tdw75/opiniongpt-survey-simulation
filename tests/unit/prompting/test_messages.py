@@ -13,12 +13,12 @@ from src.prompting.messages import (
     extract_user_prompts_from_survey_individual,
     format_messages,
 )
-from utils import Survey
+from src.simulation.utils import Survey
 
 
 def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
     # todo: handle case where no subtopics only a single question; 'group' column is currently empty so it currently skips
-    survey = pd.read_csv("test_data_files/sample_variables.csv")
+    survey = pd.read_csv("test_data_files/sample_variables_split.csv")
     indices = [*range(6)] + [*range(21, 26)]
     messages = extract_user_prompts_from_survey_grouped(survey.loc[indices], False)
     assert messages == expected_messages_grouped
@@ -28,8 +28,8 @@ def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
     "file_name, is_subtopic_separate, is_reverse",
     [
         # ("sample_variables", True),
-        ("sample_variables_not_split", False, True),
-        ("sample_variables_not_split", False, False),
+        ("sample_variables_grouped", False, True),
+        ("sample_variables_grouped", False, False),
     ],
 )
 def test_extract_user_prompts_from_survey_individual(
@@ -44,7 +44,7 @@ def test_extract_user_prompts_from_survey_individual(
 
 
 def test_build_user_prompt_message_grouped(expected_messages_grouped):
-    survey = pd.read_csv("test_data_files/sample_variables.csv")
+    survey = pd.read_csv("test_data_files/sample_variables_split.csv")
     question = survey.loc[0]
     subjects = survey.loc[0:5, "subtopic"].values
     numbers = survey.loc[0:5, "number"].values
@@ -65,7 +65,7 @@ def test_build_user_prompt_message_grouped(expected_messages_grouped):
 def test_build_user_prompt_message_individual(
     expected_messages_individual, idx, number
 ):
-    survey = pd.read_csv("test_data_files/sample_variables_not_split.csv")
+    survey = pd.read_csv("test_data_files/sample_variables_grouped.csv")
     question = survey.loc[idx]
     responses = [
         "1: Very important",
@@ -81,7 +81,7 @@ def test_build_user_prompt_message_individual(
 
 
 def test_format_subtopics():
-    survey = pd.read_csv("test_data_files/sample_variables.csv")
+    survey = pd.read_csv("test_data_files/sample_variables_split.csv")
     numbers = survey.loc[0:5, "number"].values
     subtopics = survey.loc[0:5, "subtopic"].values
     message = format_subtopics(numbers, subtopics)

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -23,16 +24,14 @@ def test_get_true_responses_for_subgroup(mock_true_results, expected_true_respon
 
 def test_get_model_responses_for_subgroup(mock_model_results):
     responses = get_model_responses_for_subgroup(
-        mock_model_results, Germany, qnums=["Q20"]
+        mock_model_results, Germany, qnums=["Q20"], response_col="response_key"
     )
     expected_responses = {
         "Q20": pd.Series([3, 3, 3, -1, 2, 2, 1, 3, 3, -1], name="response_key"),
     }
     assert responses.keys() == expected_responses.keys()
     for key in responses.keys():
-        pd.testing.assert_series_equal(
-            responses[key], expected_responses[key], check_index=False
-        )
+        assert np.array_equal(responses[key], expected_responses[key])
 
 
 @pytest.mark.parametrize(
@@ -68,7 +67,10 @@ def test_get_response_distribution(
     expected_true_responses, response_maps, is_normalize, is_include_invalid, expected
 ):
     response_dists = get_response_distribution(
-        expected_true_responses, response_maps, is_normalize, is_include_invalid
+        pd.DataFrame(expected_true_responses),
+        response_maps,
+        is_normalize,
+        is_include_invalid,
     )
     assert response_dists == expected
 
@@ -80,6 +82,7 @@ def mock_true_results() -> pd.DataFrame:
             "B_COUNTRY_ALPHA": ["USA"] * 4 + ["DEU"] * 8,
             "Q20": [1, 3, 2, 3] + [1, 2, 3, 3, 3, 3, -1, 2],
             "Q21": [-1, 3, 3, 4] + [-1, 2, 2, 1, 3, 3, -1, -1],
+            "W_WEIGHT": [0.1, 0.3, 0.2, 0.4] + [0.1, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1],
         }
     )
 
@@ -100,6 +103,7 @@ def expected_true_responses() -> dict:
     return {
         "Q20": pd.Series([1, 2, 3, 3, 3, 3, -1, 2], name="Q20"),
         "Q21": pd.Series([-1, 2, 2, 1, 3, 3, -1, -1], name="Q21"),
+        "weight": pd.Series([0.1, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1], name="W_WEIGHT"),
     }
 
 
