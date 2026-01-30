@@ -1,6 +1,6 @@
 import pytest
 
-from models import ModelConfig
+from src.simulation.models import ModelConfig
 from src.simulation.decoders import UnconstrainedDecoder
 
 

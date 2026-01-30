@@ -13,7 +13,7 @@ from src.prompting.messages import (
     extract_user_prompts_from_survey_individual,
     format_messages,
 )
-from utils import Survey
+from src.simulation.utils import Survey
 
 
 def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
