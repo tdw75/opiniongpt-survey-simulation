@@ -13,7 +13,7 @@ from src.analysis.results import (
 
 def test_survey_results_to_df():
     survey_results = json.load(open("test_data_files/results/20250428_results.json"))
-    variables = pd.read_csv("test_data_files/sample_variables.csv")
+    variables = pd.read_csv("test_data_files/sample_variables_grouped.csv")
     df = survey_results_to_df(survey_results, variables)
     expected = {
         "model": ["llama-general"] * 4,
@@ -49,4 +49,4 @@ def test_get_nth_newest_file(idx, expected):
 
 def test_print_results():
     results = json.load(open("test_data_files/results/20250429_results.json"))
-    print_results_single(results["group"], "title")
+    print_results_single(results["phi-general"], "title")
