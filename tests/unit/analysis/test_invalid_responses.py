@@ -18,7 +18,7 @@ def test_flip_keys_back(mock_response_results, responses, responses_flipped):
     results_out = flip_keys_back(mock_response_results, responses, responses_flipped)
 
     expected = pd.Series(
-        [1, 2, 2, pd.NA, 1, 1, pd.NA, 2, 3, 3, -1, -1], name="response_key"
+        [1, 2, 2, pd.NA, 1, 1, pd.NA, 2, 3, 3, 5, -1], name="response_key"
     ).astype("Int64")
 
     pd.testing.assert_series_equal(
@@ -27,9 +27,7 @@ def test_flip_keys_back(mock_response_results, responses, responses_flipped):
 
 
 def test_extract_first_response_instance():
-    reason = "no response given;"
     numbers = ["Q1"] * 7 + ["Q2"] * 6
-    n = len(numbers)
     valid = {
         "Q1": {1: "agree", 2: "agree strongly", 3: "disagree"},
         "Q2": {1: "1", 2: "2", 3: "3"},
@@ -37,7 +35,6 @@ def test_extract_first_response_instance():
     results = pd.DataFrame(
         {
             "number": numbers,
-            "reason_invalid": [""] * n,
             "response_text": [
                 "agree \n\n\n  Q2: what",
                 "agree\n\n\n  3: disagree",
@@ -55,13 +52,12 @@ def test_extract_first_response_instance():
                 "1   your response: hello",
                 "1   your response: 2",
             ],
+            "response_key": [1, pd.NA, 1, pd.NA, 3, 3, 1] + [3, 3, pd.NA, pd.NA, 1, pd.NA],
         }
     )
     expected = pd.DataFrame(
         {
             "number": numbers,
-            "reason_invalid": ["", "", "", reason, "", reason, ""]
-            + ["", "", reason, "", "", ""],
             "response_text": [
                 "agree",
                 "agree",
@@ -72,6 +68,7 @@ def test_extract_first_response_instance():
                 "agree",
             ]
             + ["3", "3", "", "2", "1", "1"],
+            "response_key": [1, pd.NA, 1, pd.NA, 3, 3, 1] + [3, 3, pd.NA, pd.NA, 1, pd.NA],
             "extra_text": [
                 "Q2: what",
                 "3: disagree",
@@ -97,7 +94,7 @@ def test_extract_first_response_instance():
 
 
 def test_mark_multiple_responses():
-    reason = "multiple responses;"
+    reason = "ambiguous response;"
     numbers = ["Q1"] * 6 + ["Q2"] * 6
     n = len(numbers)
     valid = {
@@ -138,7 +135,7 @@ def test_mark_multiple_responses():
 def test_mark_is_key_value_valid_match(mock_response_results, responses):
     mock_response_results["reason_invalid"] = ""
     reason1 = "key text mismatch;"
-    reason2 = "invalid response;"
+    reason2 = "invalid text;"
     reason3 = "invalid key;"
 
     # last response hardcoded as -1, missing

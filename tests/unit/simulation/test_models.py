@@ -1,6 +1,7 @@
 import pytest
+from transformers import AutoTokenizer
 
-from src.simulation.models import ModelConfig
+from src.simulation.models import ModelConfig, MODEL_DIRECTORY
 
 
 class TestModelConfig:
@@ -14,7 +15,7 @@ class TestModelConfig:
             is_persona=False,
             device="cuda:2",
             aggregation_by="questions",
-            hyperparams={"new_param": True, "max_new_tokens": 9999},
+            hyperparams={"new_param": True, "min_new_tokens": 2, "max_new_tokens": 9999},
         )
 
         assert config.base_model_name == "phi"
@@ -57,3 +58,44 @@ class TestModelConfig:
         config = ModelConfig(subgroup="german")
         config.change_subgroup("american")
         assert config.subgroup == "american"
+
+
+def test_tokenizer_chat_template():
+    messages = [
+        {"role": "user", "content": "you are a survey participant"},
+        {
+            "role": "user",
+            "content": "What is your favourite colour?\n\nResponses:\nA: red\nB: yellow\nC: blue",
+        },
+        {"role": "assistant", "content": "A: red"},
+        {
+            "role": "user",
+            "content": "What is your favourite cake?\n\nResponses:\nA: chocolate\nB: carrot",
+        },
+    ]
+    tokenizer = AutoTokenizer.from_pretrained(
+        MODEL_DIRECTORY["phi"], padding_side="left"
+    )
+    template = (
+        "{% for message in messages %}"
+            "{% if message['role'] == 'user' %}"
+                "{{ '<|user|>\n' + message['content'] + eos_token }}"
+            "{% elif message['role'] == 'system' %}"
+                "{{ '<|system|>\n' + message['content'] + eos_token }}"
+            "{% elif message['role'] == 'assistant' %}"
+                "{{ '<|assistant|>\n'  + message['content'] + eos_token }}"
+            "{% endif %}"
+            "{% if loop.last and add_generation_prompt %}"
+                "{{ '<|assistant|>' }}"
+            "{% endif %}"
+        "{% endfor %}"
+    )
+    # tokenizer.chat_template = template
+    # tokenizer.chat_template = PHI_CHAT_TEMPLATE
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        return_tensors="pt",
+        add_generation_prompt=True,
+    )
+    print(prompt)

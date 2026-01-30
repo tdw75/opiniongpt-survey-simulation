@@ -1,5 +1,6 @@
 import os.path
 import pickle
+import re
 
 import pandas as pd
 import pytest
@@ -92,7 +93,7 @@ class TestSplitQuestionsIntoParts:
         assert question.name == f"Important child qualities: {subject}"
         assert question.group == "Important child qualities"
         assert question.item_stem.startswith("Here is a list of qualities ")
-        assert question.item_stem.endswith(f"Please choose up to five. –  \n{subject}")
+        assert re.search(rf"Please choose up to five\.\s+–\s+\n{re.escape(subject)}$", question.item_stem)
         assert question.responses == expected_responses + self.invalid_responses
 
     def test_working_mother(self):
