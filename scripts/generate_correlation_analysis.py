@@ -24,7 +24,7 @@ from src.analysis.responses import (
 from src.simulation.utils import load_response_maps, load_data_dict, save_latex_table
 
 
-def main(simulation_name: str, root_dir: str = "../data_files", random_seed: int = 42):
+def main(simulation_name: str, directory: str = "../data_files", random_seed: int = 42):
     np.random.seed(random_seed)
     response_maps = load_response_maps()
     diameters = get_support_diameter(response_maps)
@@ -33,13 +33,13 @@ def main(simulation_name: str, root_dir: str = "../data_files", random_seed: int
     minimums = sort_by_qnum_index(minimums)
 
     subgroup_data = load_data_dict(
-        simulation_name, root_dir, all_models + ["true"], grouping="subgroup"
+        simulation_name, directory, all_models + ["true"], grouping="subgroup"
     )
-    lb = lower_bound(simulation_name, root_dir)
+    lb = lower_bound(simulation_name, directory)
 
     ub = upper_bound(diameters, minimums, subgroup_data)
     corr_metrics = compare_correlation_structures(
-        subgroup_data, diameters, minimums, simulation_name, root_dir
+        subgroup_data, diameters, minimums, simulation_name, directory
     )
     for grouping, metrics in corr_metrics.items():
         metrics["Lower"] = lb[0][grouping]
@@ -47,7 +47,7 @@ def main(simulation_name: str, root_dir: str = "../data_files", random_seed: int
 
         save_latex_table(
             pd.DataFrame(metrics),
-            os.path.join(root_dir, "results", simulation_name, "latex"),
+            os.path.join(directory, "results", simulation_name, "latex"),
             f"{grouping}-correlation_metrics.tex",
             float_format="%.3f",
         )
