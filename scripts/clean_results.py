@@ -18,7 +18,7 @@ from src.demographics.config import category_to_question
 
 def main(simulation_name: str, directory: str = "../data_files"):
     """
-    Clean simulation results ror analysis, identify invalid responses and
+    Clean simulation results for analysis, identify invalid responses and
     remap response keys to original scale.
     """
 
@@ -74,3 +74,4 @@ def save_response_maps(responses: dict[QNum, ResponseMap], directory: str):
 
 if __name__ == "__main__":
     fire.Fire(main)
+

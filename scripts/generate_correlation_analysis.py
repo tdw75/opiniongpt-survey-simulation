@@ -1,6 +1,7 @@
 import os
 import sys
 
+import fire
 import numpy as np
 import pandas as pd
 
@@ -53,6 +54,5 @@ def main(simulation_name: str, root_dir: str = "../data_files", random_seed: int
 
 
 if __name__ == "__main__":
-    import fire
-
     fire.Fire(main)
+

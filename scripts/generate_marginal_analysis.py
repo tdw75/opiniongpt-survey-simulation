@@ -42,6 +42,7 @@ def main(simulation_name: str, directory: str = "../data_files"):
     if "final_response" not in sim.columns:
         sim["final_response"] = sim["response_key"]
     sim = sim.loc[sim["number"] != "Q215"]  # not asked in USA
+    all_qnums = list(sim["number"].unique())
     true = pd.read_csv(
         os.path.join(directory, "WV7/WVS_Cross-National_Wave_7_csv_v6_0.csv"),
         index_col=0,
@@ -53,7 +54,6 @@ def main(simulation_name: str, directory: str = "../data_files"):
         response_map = key_as_int(json.load(f1))
         response_map = remap_response_maps(response_map)
         response_map = {k: v for k, v in response_map.items() if k != "Q215"}
-    all_qnums = list(response_map.keys())
 
     sim["subgroup"].fillna("none", inplace=True)
     base = get_base_model_responses(sim[sim["subgroup"] == "none"], all_qnums)
