@@ -24,12 +24,11 @@ def main(simulation_name: str, directory: str = "../data_files"):
 
     results_directory = os.path.join(directory, "results", simulation_name)
     df = pd.read_csv(os.path.join(results_directory, f"{simulation_name}-results.csv"), index_col=0)
-    variables = pd.read_csv(
-        os.path.join(directory, "variables", "variables.csv"), index_col=0
-    )
+    variables_directory = os.path.join(directory, "variables")
+    variables = pd.read_csv(os.path.join(variables_directory, "variables.csv"), index_col=0)
 
     responses, responses_flipped = get_response_maps_from_variables(variables)
-    save_response_maps(responses, results_directory)
+    save_response_maps(responses, variables_directory)
     df = pipeline_clean_generated_responses(df)
     df = pipeline_identify_invalid_responses(df, responses, responses_flipped)
     df = remap_response_keys(df, "final_response")
