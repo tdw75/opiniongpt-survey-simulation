@@ -17,6 +17,10 @@ from src.demographics.config import category_to_question
 
 
 def main(simulation_name: str, directory: str = "../data_files"):
+    """
+    Clean simulation results ror analysis, identify invalid responses and
+    remap response keys to original scale.
+    """
 
     results_directory = os.path.join(directory, "results", simulation_name)
     df = pd.read_csv(os.path.join(results_directory, f"{simulation_name}-results.csv"), index_col=0)

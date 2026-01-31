@@ -1,7 +1,13 @@
 import os
+import sys
 
 import numpy as np
 import pandas as pd
+
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
+
 
 from src.analysis.aggregations import all_models
 from src.analysis.correlations import (
@@ -17,9 +23,8 @@ from src.analysis.responses import (
 from src.simulation.utils import load_response_maps, load_data_dict, save_latex_table
 
 
-def main(filename: str, root_dir: str = "../data_files", random_seed: int = 42):
+def main(simulation_name: str, root_dir: str = "../data_files", random_seed: int = 42):
     np.random.seed(random_seed)
-
     response_maps = load_response_maps()
     diameters = get_support_diameter(response_maps)
     diameters = sort_by_qnum_index(diameters)
@@ -27,13 +32,13 @@ def main(filename: str, root_dir: str = "../data_files", random_seed: int = 42):
     minimums = sort_by_qnum_index(minimums)
 
     subgroup_data = load_data_dict(
-        filename, root_dir, all_models + ["true"], grouping="subgroup"
+        simulation_name, root_dir, all_models + ["true"], grouping="subgroup"
     )
-    lb = lower_bound(filename, root_dir)
+    lb = lower_bound(simulation_name, root_dir)
 
     ub = upper_bound(diameters, minimums, subgroup_data)
     corr_metrics = compare_correlation_structures(
-        subgroup_data, diameters, minimums, filename, root_dir
+        subgroup_data, diameters, minimums, simulation_name, root_dir
     )
     for grouping, metrics in corr_metrics.items():
         metrics["Lower"] = lb[0][grouping]
@@ -41,7 +46,7 @@ def main(filename: str, root_dir: str = "../data_files", random_seed: int = 42):
 
         save_latex_table(
             pd.DataFrame(metrics),
-            os.path.join(root_dir, "results", filename, "latex"),
+            os.path.join(root_dir, "results", simulation_name, "latex"),
             f"{grouping}-correlation_metrics.tex",
             float_format="%.3f",
         )

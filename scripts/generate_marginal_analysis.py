@@ -1,7 +1,14 @@
 import json
 import os
+import sys
+import time
 
 import pandas as pd
+import fire
+
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
 
 from src.analysis.aggregations import (
     collate_subgroup_data,
@@ -25,11 +32,12 @@ from src.simulation.utils import key_as_int, create_subdirectory
 # todo: currently does two jobs: collates/aggregates and runs marginal dist analysis - split?
 
 
-def main(filename: str, directory: str = "../data_files"):
+def main(simulation_name: str, directory: str = "../data_files"):
+    start = time.time()
 
-    simulation_directory = os.path.join(directory, "results", filename)
+    simulation_directory = os.path.join(directory, "results", simulation_name)
     sim = pd.read_csv(
-        os.path.join(simulation_directory, f"{filename}-clean.csv"), index_col=0
+        os.path.join(simulation_directory, f"{simulation_name}-clean.csv"), index_col=0
     )
     if "final_response" not in sim.columns:
         sim["final_response"] = sim["response_key"]
@@ -49,6 +57,7 @@ def main(filename: str, directory: str = "../data_files"):
 
     sim["subgroup"].fillna("none", inplace=True)
     base = get_base_model_responses(sim[sim["subgroup"] == "none"], all_qnums)
+    print(f"Loaded data, {time.time() - start} seconds")
     subgroup_data: DataDict = {
         n: collate_subgroup_data(true, sim, base, s, all_qnums)
         for n, s in subgroups.items()
@@ -58,6 +67,7 @@ def main(filename: str, directory: str = "../data_files"):
         for n, s in dimensions.items()
     }
     category_data = aggregate_by_category(subgroup_data, base, true)
+    print(f"Aggregated data, {time.time() - start} seconds")
     metrics_directory = create_subdirectory(simulation_directory, "metrics")
     data_directory = create_subdirectory(simulation_directory, "data")
     graph_directory = create_subdirectory(simulation_directory, "graphs")
@@ -69,9 +79,11 @@ def main(filename: str, directory: str = "../data_files"):
     generate_modal_collapse_analysis(
         subgroup_data, base, metrics_directory, latex_directory
     )
+    print(f"Finished modal collapse analysis, {time.time() - start} seconds")
     generate_invalid_response_analysis(
         subgroup_data, metrics_directory, latex_directory
     )
+    print(f"Finished invalid response analysis, {time.time() - start} seconds")
     generate_invalid_response_analysis(
         category_data, metrics_directory, latex_directory
     )
@@ -92,6 +104,9 @@ def main(filename: str, directory: str = "../data_files"):
         compare_marginal_response_dists(
             data_dict, response_map, metrics_directory, grouping
         )
+        print(
+            f"Finished model comparison metrics for {grouping}, {time.time() - start} seconds"
+        )
         if grouping != "category":
             generate_cross_comparison(
                 data_dict, response_map, graph_directory, grouping
@@ -99,6 +114,4 @@ def main(filename: str, directory: str = "../data_files"):
 
 
 if __name__ == "__main__":
-    import fire
-
     fire.Fire(main)
