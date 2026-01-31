@@ -34,6 +34,19 @@ def get_model_responses_for_subgroup(
     }
 
 
+def get_base_model_responses(df_sim: pd.DataFrame, qnums: list[QNum]) -> pd.DataFrame:
+    df = df_sim.loc[df_sim["number"].isin(qnums), ["number", "final_response"]].copy()
+    df["idx"] = df.groupby("number").cumcount()
+
+    out = df.pivot(
+        index="idx",
+        columns="number",
+        values="final_response",
+    )
+
+    return out.reindex(columns=qnums)
+
+
 def _get_subgroup_filter_true(
     df: pd.DataFrame, subgroup: type[BaseSubGroup] | list[type[BaseSubGroup]]
 ) -> pd.Series:

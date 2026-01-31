@@ -78,12 +78,3 @@ def persist_data_dict(data_dict: DataDict, directory: str, grouping: str):
     data_dict[sg]["base"].to_csv(
         os.path.join(directory, f"{grouping}-base-responses.csv")
     )
-
-
-def get_model_responses(df_sim: pd.DataFrame, qnums: list[QNum]) -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            qnum: df_sim.loc[df_sim["number"] == qnum, "final_response"].values
-            for qnum in qnums
-        }
-    )

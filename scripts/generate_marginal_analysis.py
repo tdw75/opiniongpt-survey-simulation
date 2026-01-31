@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 import pandas as pd
 
@@ -9,7 +8,6 @@ from src.analysis.aggregations import (
     aggregate_by_category,
     DataDict,
     persist_data_dict,
-    get_model_responses,
 )
 from src.analysis.marginals import (
     generate_cross_comparison,
@@ -18,6 +16,7 @@ from src.analysis.marginals import (
     generate_invalid_response_analysis,
     compare_marginal_response_dists,
 )
+from src.analysis.responses import get_base_model_responses
 from src.data.variables import remap_response_maps
 from src.demographics.config import dimensions, subgroups
 from src.simulation.utils import key_as_int, create_subdirectory
@@ -49,7 +48,7 @@ def main(filename: str, directory: str = "../data_files"):
     all_qnums = list(response_map.keys())
 
     sim["subgroup"].fillna("none", inplace=True)
-    base = get_model_responses(sim[sim["subgroup"] == "none"], all_qnums)
+    base = get_base_model_responses(sim[sim["subgroup"] == "none"], all_qnums)
     subgroup_data: DataDict = {
         n: collate_subgroup_data(true, sim, base, s, all_qnums)
         for n, s in subgroups.items()
