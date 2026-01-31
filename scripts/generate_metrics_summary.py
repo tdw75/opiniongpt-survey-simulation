@@ -6,8 +6,6 @@ from typing import Callable
 
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr
-from sklearn.metrics import root_mean_squared_error as rmse
 
 from src.analysis.metrics import (
     calculate_misalignment,
@@ -16,9 +14,7 @@ from src.analysis.metrics import (
     prepare_distributions_single,
 )
 from src.analysis.responses import (
-    get_support_diameter,
     sort_by_qnum_index,
-    get_support_minimum,
     get_true_responses_for_subgroup,
     get_model_responses_for_subgroup,
 )
@@ -100,17 +96,13 @@ def main(filename: str, directory: str = "../data_files"):
         subgroup_data, base, metrics_directory, latex_directory
     )
     print(f"Finished modal collapse analysis, {time.time() - start} seconds")
-    # generate_correlation_analysis(
-    #     subgroup_data, data_directory, latex_directory, response_map
-    # )
-    # print(f"Finished correlation analysis, {time.time() - start} seconds")
     generate_invalid_response_analysis(
         subgroup_data, metrics_directory, latex_directory
     )
     print(f"Finished invalid response analysis, {time.time() - start} seconds")
-    # generate_invalid_response_analysis(
-    #     category_data, metrics_directory, latex_directory
-    # )
+    generate_invalid_response_analysis(
+        category_data, metrics_directory, latex_directory
+    )
 
     data_dict_map = {
         "subgroup": subgroup_data,
@@ -178,62 +170,6 @@ def generate_cross_comparison(
             save_directory=graph_directory,
             grouping=grouping,
         )
-
-
-# def generate_correlation_analysis(
-#     subgroup_data: DataDict,
-#     data_directory: str,
-#     latex_directory: str,
-#     response_maps: dict[QNum, ResponseMap],
-# ):
-#     diameters = get_support_diameter(response_maps)
-#     minimums = get_support_minimum(response_maps)
-#     question_means: dict[str, pd.DataFrame] = {
-#         mod: get_question_means(
-#             subgroup_data,
-#             mod,
-#             sort_by_qnum_index(diameters),
-#             sort_by_qnum_index(minimums),
-#         )
-#         for mod in steered_models + ["true"]
-#     }
-#     category_means: dict[str, pd.DataFrame] = {
-#         mod: get_category_means(df) for mod, df in question_means.items()
-#     }
-#     means = {"question": question_means, "category": category_means}
-#     for name, data in means.items():
-#         corr_matrices = {m: df.T.corr().round(3) for m, df in data.items()}
-#         for m in data.keys():
-#             data[m].round(2).to_csv(
-#                 os.path.join(data_directory, f"{name}-means-subgroup-{m}.csv")
-#             )
-#             corr_matrices[m].to_csv(
-#                 os.path.join(
-#                     data_directory, f"{name}-correlation-matrix-subgroup-{m}.csv"
-#                 )
-#             )
-#
-#         true = np.array(data["true"])
-#         iu = np.triu_indices_from(true, k=1)
-#         corr_metrics = {m: {} for m in steered_models}
-#         for model in steered_models:
-#             model_means = np.array(data[model])
-#             r, _ = pearsonr(true[iu], model_means[iu])
-#             corr_metrics[model]["pearson_r"] = r.round(3)
-#             corr_metrics[model]["rmse"] = np.round(rmse(true[iu], model_means[iu]), 3)
-#
-#         corr_metrics = pd.DataFrame(corr_metrics)
-#         save_latex_table(
-#             corr_metrics,
-#             latex_directory,
-#             f"{name}-correlation_metrics.tex",
-#             float_format="%.2f",
-#             # label="tab:correlation-metrics",
-#             # caption="Correlation Metrics",
-#         )
-#     # for m in steered_models:
-#     #     plot_corr_scatter(corr_matrices, m, save_directory=graph_directory)
-#     #     plot_corr_diff_hist(corr_matrices, m, save_directory=graph_directory)
 
 
 def save_response_distributions(
