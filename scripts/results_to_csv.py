@@ -25,10 +25,10 @@ def main(directory: str, simulation_name: str):
         results = load_survey_results_batch(simulation_name, simulation_directory)
         df = survey_results_to_df_batch(results, variables)
     else:
-        results = load_survey_results(f"{simulation_name}.json", simulation_directory)
+        results = load_survey_results(f"{simulation_name}-results.json", simulation_directory)
         df = survey_results_to_df(results, variables)
 
-    df.to_csv(os.path.join(simulation_directory, f"{simulation_name}.csv"))
+    df.to_csv(os.path.join(simulation_directory, f"{simulation_name}-results.csv"))
 
 
 if __name__ == "__main__":
