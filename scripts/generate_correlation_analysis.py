@@ -3,9 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from scripts.generate_metrics_summary import (
-    all_models,
-)
+from src.analysis.aggregations import all_models
 from src.analysis.correlations import (
     lower_bound,
     upper_bound,
@@ -52,5 +50,4 @@ def main(filename: str, root_dir: str = "../data_files"):
 
 if __name__ == "__main__":
     np.random.seed(42)
-
     main(filename="simulation-500-0_9-unconstrained")
