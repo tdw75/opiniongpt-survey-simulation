@@ -28,7 +28,8 @@ def main(simulation_name: str, directory: str = "../data_files"):
         os.path.join(directory, "variables", "variables.csv"), index_col=0
     )
 
-    responses, responses_flipped = load_response_maps(variables)
+    responses, responses_flipped = get_response_maps_from_variables(variables)
+    save_response_maps(responses, results_directory)
     df = pipeline_clean_generated_responses(df)
     df = pipeline_identify_invalid_responses(df, responses, responses_flipped)
     df = remap_response_keys(df, "final_response")
@@ -50,7 +51,7 @@ def main(simulation_name: str, directory: str = "../data_files"):
         json.dump(cat_counts, f)
 
 
-def load_response_maps(
+def get_response_maps_from_variables(
     variables: pd.DataFrame,
 ) -> tuple[dict[QNum, ResponseMap], dict[QNum, ResponseMap]]:
     responses = {}
@@ -65,6 +66,11 @@ def load_response_maps(
         )
 
     return responses, responses_flipped
+
+
+def save_response_maps(responses: dict[QNum, ResponseMap], directory: str):
+    with open(os.path.join(directory, "response_map_original.json"), "w") as f:
+        json.dump(responses, f)
 
 
 if __name__ == "__main__":
