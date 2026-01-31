@@ -172,7 +172,7 @@ def _plot_metric_on_axis(
     if show_legend:
         legend = ax.legend(
             title="Model",
-            loc="best",
+            loc="lower left",
             frameon=True,
             fancybox=False,
             edgecolor="0.8",
