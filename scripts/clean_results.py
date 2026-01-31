@@ -1,22 +1,25 @@
 import ast
 import json
 import os
+import sys
 
+import fire
 import pandas as pd
 
-from src.analysis.cleaning import (
-    pipeline_clean_generated_responses,
-    remap_response_keys,
-)
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
+
+from src.analysis.cleaning import pipeline_clean_generated_responses, remap_response_keys
 from src.analysis.invalid_responses import pipeline_identify_invalid_responses
 from src.data.variables import responses_to_map, ResponseMap, QNum
 from src.demographics.config import category_to_question
 
 
-def main(file_root: str, directory: str = "../data_files" ):
+def main(simulation_name: str, directory: str = "../data_files"):
 
-    results_directory = os.path.join(directory, "results", file_root)
-    df = pd.read_csv(os.path.join(results_directory, f"{file_root}.csv"), index_col=0)
+    results_directory = os.path.join(directory, "results", simulation_name)
+    df = pd.read_csv(os.path.join(results_directory, f"{simulation_name}-results.csv"), index_col=0)
     variables = pd.read_csv(
         os.path.join(directory, "variables", "variables.csv"), index_col=0
     )
@@ -25,20 +28,20 @@ def main(file_root: str, directory: str = "../data_files" ):
     df = pipeline_clean_generated_responses(df)
     df = pipeline_identify_invalid_responses(df, responses, responses_flipped)
     df = remap_response_keys(df, "final_response")
-    df.to_csv(os.path.join(results_directory, f"{file_root}-clean.csv"))
+    df.to_csv(os.path.join(results_directory, f"{simulation_name}-clean.csv"))
 
     reasons = (
         df["reason_invalid"].value_counts(normalize=True).sort_values(ascending=False)
     )
     reasons.to_json(
-        os.path.join(results_directory, f"{file_root}_invalid_summary.json")
+        os.path.join(results_directory, f"{simulation_name}_invalid_summary.json")
     )
     qnums = set(df["number"])
     cat_counts = {
         c: len(qnums.intersection(q)) for c, q in category_to_question.items()
     }
     with open(
-        os.path.join(results_directory, f"{file_root}-category-counts.json"), "w"
+        os.path.join(results_directory, f"{simulation_name}-category-counts.json"), "w"
     ) as f:
         json.dump(cat_counts, f)
 
@@ -61,6 +64,4 @@ def load_response_maps(
 
 
 if __name__ == "__main__":
-    import fire
-
     fire.Fire(main)
