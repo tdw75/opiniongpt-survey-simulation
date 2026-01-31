@@ -6,12 +6,10 @@ import pandas as pd
 from scipy.stats import pearsonr
 from sklearn.metrics import root_mean_squared_error as rmse
 
-from scripts.generate_metrics_summary import (
-    DataDict,
-    get_question_means,
-    get_category_means,
-    steered_models,
-)  # todo: move to a src module
+from src.analysis.aggregations import DataDict, steered_models
+from src.analysis.responses import sort_by_qnum_index
+from src.data.variables import non_ordinal_qnums
+from src.demographics.config import category_to_question
 from src.simulation.utils import save_latex_table
 
 
@@ -62,7 +60,12 @@ def compare_correlation_structures(
     return corr_metrics
 
 
-def save_correlation_metrices(corr_metrics: dict, grouping: str, filename: str, root_directory: str = "../data_files"):
+def save_correlation_metrices(
+    corr_metrics: dict,
+    grouping: str,
+    filename: str,
+    root_directory: str = "../data_files",
+):
     corr_metrics = pd.DataFrame(corr_metrics)
     directory = os.path.join(root_directory, "results", filename, "latex")
     save_latex_table(
@@ -96,7 +99,9 @@ def lower_bound(filename: str, root_directory: str = "../data_files") -> tuple:
         for i in range(1000):
             means_shuffle = _shuffle_subgroups(means)
             corr_shuffle = construct_correlation_matrix(means_shuffle)
-            metrics[i] = calculate_correlation_metrics(corr_wvs, np.array(corr_shuffle), iu)
+            metrics[i] = calculate_correlation_metrics(
+                corr_wvs, np.array(corr_shuffle), iu
+            )
 
         metrics_df = pd.DataFrame(metrics).T
 
@@ -126,9 +131,11 @@ def upper_bound(
 
     for grouping in ["question", "category"]:
         metrics = {}
-        for i in range(100):
+        for i in range(1000):
             half_1, half_2 = split_true_data(subgroup_data)
-            metrics[i] = split_half_analysis(half_1, half_2, diameters, minimums, grouping)
+            metrics[i] = split_half_analysis(
+                half_1, half_2, diameters, minimums, grouping
+            )
         metrics_df = pd.DataFrame(metrics).T
         ub_mean[grouping] = metrics_df.mean().round(4).to_dict()
         ub_std[grouping] = metrics_df.std().round(4).to_dict()
@@ -158,7 +165,9 @@ def split_true_data(data: DataDict) -> tuple[DataDict, DataDict]:
     return half_1, half_2
 
 
-def split_half_analysis(half_1: DataDict, half_2: DataDict, diameters, minimums, grouping: str) -> dict[str, float]:
+def split_half_analysis(
+    half_1: DataDict, half_2: DataDict, diameters, minimums, grouping: str
+) -> dict[str, float]:
 
     means_1 = get_question_means(half_1, "true", diameters, minimums)
     means_2 = get_question_means(half_2, "true", diameters, minimums)
@@ -188,3 +197,36 @@ def calculate_correlation_metrics(
     corr_metrics["pearson_r"] = r.round(3)
     corr_metrics["rmse"] = np.round(rmse(true_means[iu], model_means[iu]), 3)
     return corr_metrics
+
+
+def get_category_means(question_means: pd.DataFrame) -> pd.DataFrame:
+    cat_means = {}
+    for cat, qnums in category_to_question.items():
+        df_loop = question_means.filter(items=qnums, axis=0)
+        cat_means[cat] = df_loop.mean().round(2)
+
+    return pd.DataFrame(cat_means).T
+
+
+def get_question_means(
+    subgroup_dict: DataDict,
+    model_name: str,
+    diameters: pd.Series,
+    minimums: pd.Series,
+    filter_val: str = None,
+) -> pd.DataFrame:
+    """
+    Calculate the mean response for each question across all subgroups, normalised by the response diameter.
+    """
+    means = {}
+    for sg, dd in subgroup_dict.items():
+        df = dd[model_name].drop(
+            columns=non_ordinal_qnums() + ["weight"], errors="ignore"
+        )
+        if filter_val is not None:
+            df = df.filter(like=filter_val)
+        sg_means = df.replace(-1, np.nan).mean().round(2)  # drop invalid responses
+        means[sg] = sort_by_qnum_index(sg_means) - sort_by_qnum_index(minimums)
+        means[sg] = means[sg] / sort_by_qnum_index(diameters)
+
+    return pd.DataFrame(means)
