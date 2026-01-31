@@ -1,6 +1,12 @@
 import os
+import sys
 
 import pandas as pd
+import fire
+
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
 
 from src.analysis.results import (
     survey_results_to_df,
@@ -11,6 +17,7 @@ from src.analysis.results import (
 
 
 def main(directory: str, file_root: str):
+    """Convert survey results from JSON to CSV format for cleaning."""
     simulation_directory = os.path.join(directory, "results", file_root)
     variables = pd.read_csv(os.path.join(directory, "variables", "variables.csv"))
     is_folder = os.path.isdir(os.path.join(simulation_directory, file_root))
@@ -25,6 +32,4 @@ def main(directory: str, file_root: str):
 
 
 if __name__ == "__main__":
-    import fire
-
     fire.Fire(main)
