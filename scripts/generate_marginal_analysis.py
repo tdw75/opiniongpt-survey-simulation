@@ -16,7 +16,7 @@ from src.analysis.marginals import (
     save_response_distributions,
     generate_modal_collapse_analysis,
     generate_invalid_response_analysis,
-    generate_model_comparison_metrics,
+    compare_marginal_response_dists,
 )
 from src.data.variables import remap_response_maps
 from src.demographics.config import dimensions, subgroups
@@ -27,7 +27,6 @@ from src.simulation.utils import key_as_int, create_subdirectory
 
 
 def main(filename: str, directory: str = "../data_files"):
-    start = time.time()
 
     simulation_directory = os.path.join(directory, "results", filename)
     sim = pd.read_csv(
@@ -51,7 +50,6 @@ def main(filename: str, directory: str = "../data_files"):
 
     sim["subgroup"].fillna("none", inplace=True)
     base = get_model_responses(sim[sim["subgroup"] == "none"], all_qnums)
-    print(f"Loaded data, {time.time() - start} seconds")
     subgroup_data: DataDict = {
         n: collate_subgroup_data(true, sim, base, s, all_qnums)
         for n, s in subgroups.items()
@@ -61,7 +59,6 @@ def main(filename: str, directory: str = "../data_files"):
         for n, s in dimensions.items()
     }
     category_data = aggregate_by_category(subgroup_data, base, true)
-    print(f"Aggregated data, {time.time() - start} seconds")
     metrics_directory = create_subdirectory(simulation_directory, "metrics")
     data_directory = create_subdirectory(simulation_directory, "data")
     graph_directory = create_subdirectory(simulation_directory, "graphs")
@@ -73,11 +70,9 @@ def main(filename: str, directory: str = "../data_files"):
     generate_modal_collapse_analysis(
         subgroup_data, base, metrics_directory, latex_directory
     )
-    print(f"Finished modal collapse analysis, {time.time() - start} seconds")
     generate_invalid_response_analysis(
         subgroup_data, metrics_directory, latex_directory
     )
-    print(f"Finished invalid response analysis, {time.time() - start} seconds")
     generate_invalid_response_analysis(
         category_data, metrics_directory, latex_directory
     )
@@ -95,11 +90,8 @@ def main(filename: str, directory: str = "../data_files"):
 
     for grouping, data_dict in data_dict_map.items():
 
-        generate_model_comparison_metrics(
+        compare_marginal_response_dists(
             data_dict, response_map, metrics_directory, grouping
-        )
-        print(
-            f"Finished model comparison metrics for {grouping}, {time.time() - start} seconds"
         )
         if grouping != "category":
             generate_cross_comparison(

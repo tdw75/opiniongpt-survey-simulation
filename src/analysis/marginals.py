@@ -10,7 +10,6 @@ from src.analysis.metrics import (
     calculate_misalignment,
     calculate_variance,
     prepare_distributions_single,
-    calculate_wasserstein,
 )
 from src.analysis.visualisations import plot_distance_heatmap
 from src.data.variables import QNum, ResponseMap
@@ -18,13 +17,14 @@ from src.simulation.models import ModelName, AdapterName
 from src.simulation.utils import save_latex_table
 
 
-def generate_model_comparison_metrics(
+def compare_marginal_response_dists(
     data_dict: DataDict,
     response_map: dict[QNum, ResponseMap],
     metric_directory: str,
     grouping: str,
 ):
 
+    # todo: rename to dissimilarity
     misalignment = {
         n: get_metric(d, calculate_misalignment, response_map)
         for n, d in data_dict.items()
@@ -75,7 +75,28 @@ def flatten_to_df_long(metric_results: dict[str, dict]) -> pd.DataFrame:
     return df[cols].sort_values(cols[1:]).reset_index(drop=True)
 
 
+def generate_modal_collapse_analysis(
+    data_dict: DataDict,
+    base: pd.DataFrame,
+    metrics_directory: str,
+    latex_directory: str,
+):
+    with open(os.path.join(metrics_directory, "degenerate-dists.json"), "w") as f1:
+        deg, counts = find_degenerate_dists(data_dict, base)
+        json.dump(deg, f1)
+
+    with open(os.path.join(metrics_directory, "degenerate-qnums.json"), "w") as f2:
+        qnums = find_degenerate_questions(deg)
+        json.dump(qnums, f2)
+
+    save_latex_table(
+        counts.T, latex_directory,"degenerate-counts-table.tex"
+    )
+
+
 def find_degenerate_dists(data: dict, base: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
+
+    """Identify degenerate distributions across all models."""
 
     def _find_single(df: pd.DataFrame) -> list[str]:
         return [
@@ -94,7 +115,7 @@ def find_degenerate_dists(data: dict, base: pd.DataFrame) -> tuple[dict, pd.Data
 
 
 def find_degenerate_questions(
-    degenerate_dists: dict[ModelName : dict[AdapterName, list[QNum]]],
+    degenerate_dists: dict[ModelName, dict[AdapterName, list[QNum]]],
 ) -> dict[QNum, int]:
     """
     Find questions that have degenerate distributions across all models.
@@ -110,7 +131,7 @@ def find_degenerate_questions(
     return degenerate_questions
 
 
-def get_response_distributions(
+def _get_response_distributions(
     dfs: dict[str, pd.DataFrame], response_map: dict[QNum, ResponseMap]
 ):
     return {
@@ -127,20 +148,35 @@ def generate_cross_comparison(
     graph_directory: str,
     grouping: str,
 ):
+    # todo: rename to dissimilarity
+    name, fn, cmap = ("Misalignment", calculate_misalignment, "Blues")
+    cross = get_cross_distance(data_dict, fn, response_map)
+    plot_distance_heatmap(
+        cross,
+        name,
+        cmap=cmap,
+        save_directory=graph_directory,
+        grouping=grouping
+    )
 
-    metric_map = {
-        "Wasserstein Distance": (calculate_wasserstein, "Blues"),
-        "Misalignment": (calculate_misalignment, "Blues"),
-    }
-    for name, (fn, cmap) in metric_map.items():
-        cross = get_cross_distance(data_dict, fn, response_map)
-        plot_distance_heatmap(
-            cross,
-            name,
-            cmap=cmap,
-            save_directory=graph_directory,
-            grouping=grouping,
-        )
+
+def get_cross_distance(
+    data_dict: dict,
+    metric_fn: Callable,
+    response_map: dict[QNum, ResponseMap],
+    data_name: str = "true",
+) -> pd.DataFrame:
+    cross = {}
+    data_dict = data_dict.copy()
+    # data_dict["Base Phi 3"] = {data_name: base}
+    for s1, d1 in data_dict.items():
+        cross[s1] = {}
+        for s2, d2 in data_dict.items():
+            cross[s1][s2] = pd.Series(
+                metric_fn(d1[data_name], d2[data_name], response_map)
+            ).mean()
+
+    return pd.DataFrame(cross).T.round(4)
 
 
 def save_response_distributions(
@@ -150,35 +186,12 @@ def save_response_distributions(
     grouping: str,
 ):
     dists = {
-        n: get_response_distributions(d, response_map) for n, d in data_dict.items()
+        n: _get_response_distributions(d, response_map) for n, d in data_dict.items()
     }
     with open(
         os.path.join(data_directory, f"{grouping}-response-dists.json"), "w"
     ) as f:
         json.dump(dists, f)
-
-
-def generate_modal_collapse_analysis(
-    data_dict: DataDict,
-    base: pd.DataFrame,
-    metrics_directory: str,
-    latex_directory: str,
-):
-    with open(os.path.join(metrics_directory, "degenerate-dists.json"), "w") as f1:
-        deg, counts = find_degenerate_dists(data_dict, base)
-        json.dump(deg, f1)
-
-    with open(os.path.join(metrics_directory, "degenerate-qnums.json"), "w") as f2:
-        qnums = find_degenerate_questions(deg)
-        json.dump(qnums, f2)
-
-    save_latex_table(
-        counts.T,
-        latex_directory,
-        "degenerate-counts-table.tex",
-        # label="tab:degenerate-counts",
-        # caption="Number of questions with only a single response per model and subgroup",
-    )
 
 
 def generate_invalid_response_analysis(
@@ -222,22 +235,3 @@ def generate_invalid_response_analysis(
         os.path.join(metrics_directory, "common-invalid-questions.json"), "w"
     ) as f:
         json.dump(common_qnums, f)
-
-
-def get_cross_distance(
-    data_dict: dict,
-    metric_fn: Callable,
-    response_map: dict[QNum, ResponseMap],
-    data_name: str = "true",
-) -> pd.DataFrame:
-    cross = {}
-    data_dict = data_dict.copy()
-    # data_dict["Base Phi 3"] = {data_name: base}
-    for s1, d1 in data_dict.items():
-        cross[s1] = {}
-        for s2, d2 in data_dict.items():
-            cross[s1][s2] = pd.Series(
-                metric_fn(d1[data_name], d2[data_name], response_map)
-            ).mean()
-
-    return pd.DataFrame(cross).T.round(4)
