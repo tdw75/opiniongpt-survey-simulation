@@ -13,7 +13,7 @@ from src.data.variables import responses_to_map, ResponseMap, QNum
 from src.demographics.config import category_to_question
 
 
-def main(file_root: str, directory: str = "../data_files"):
+def main(file_root: str, directory: str = "../data_files" ):
 
     results_directory = os.path.join(directory, "results", file_root)
     df = pd.read_csv(os.path.join(results_directory, f"{file_root}.csv"), index_col=0)
@@ -61,4 +61,6 @@ def load_response_maps(
 
 
 if __name__ == "__main__":
-    main("simulation-500-0_9-unconstrained")
+    import fire
+
+    fire.Fire(main)

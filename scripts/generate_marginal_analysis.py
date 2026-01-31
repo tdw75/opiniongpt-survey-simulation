@@ -99,4 +99,6 @@ def main(filename: str, directory: str = "../data_files"):
 
 
 if __name__ == "__main__":
-    main(filename=f"simulation-500-0_9-unconstrained")
+    import fire
+
+    fire.Fire(main)

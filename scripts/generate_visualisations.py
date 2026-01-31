@@ -1,5 +1,6 @@
 import os
 
+import fire
 import pandas as pd
 
 from src.analysis.visualisations import (
@@ -77,4 +78,6 @@ GROUPING_CONFIG = {
 
 
 if __name__ == "__main__":
-    main()
+    import fire
+
+    fire.Fire(main)

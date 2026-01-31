@@ -17,10 +17,9 @@ from src.analysis.responses import (
 from src.simulation.utils import load_response_maps, load_data_dict, save_latex_table
 
 
-# subgroup correlation structure is a lower threshold on performance than complete respondent correlation structure
+def main(filename: str, root_dir: str = "../data_files", random_seed: int = 42):
+    np.random.seed(random_seed)
 
-
-def main(filename: str, root_dir: str = "../data_files"):
     response_maps = load_response_maps()
     diameters = get_support_diameter(response_maps)
     diameters = sort_by_qnum_index(diameters)
@@ -49,5 +48,6 @@ def main(filename: str, root_dir: str = "../data_files"):
 
 
 if __name__ == "__main__":
-    np.random.seed(42)
-    main(filename="simulation-500-0_9-unconstrained")
+    import fire
+
+    fire.Fire(main)

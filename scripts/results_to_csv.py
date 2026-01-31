@@ -25,4 +25,6 @@ def main(directory: str, file_root: str):
 
 
 if __name__ == "__main__":
-    main("../data_files", "simulation-200-0_8-unconstrained")
+    import fire
+
+    fire.Fire(main)
