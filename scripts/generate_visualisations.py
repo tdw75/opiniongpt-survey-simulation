@@ -1,6 +1,13 @@
 import os
+import sys
 
+import fire
 import pandas as pd
+
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
+
 
 from src.analysis.visualisations import (
     plot_model_metric_comparison,
@@ -12,10 +19,8 @@ from src.simulation.utils import create_subdirectory
 models = ["opinion_gpt", "persona", "base"]
 
 
-def main(directory: str = "../data_files"):
-    simulation_directory = os.path.join(
-        directory, "results", "simulation-500-0_9-unconstrained"
-    )
+def main(simulation_name: str, directory: str = "../data_files"):
+    simulation_directory = os.path.join(directory, "results", simulation_name)
     read_directory = create_subdirectory(simulation_directory, "metrics")
     save_directory = create_subdirectory(simulation_directory, "graphs")
 
@@ -36,7 +41,7 @@ def main(directory: str = "../data_files"):
 
         cat_means = load_and_calculate_metric_means(
             os.path.join(read_directory, f"category-{metric}.csv"), "category"
-        )
+        ).dropna(axis=0)
         plot_model_metric_comparison(
             cat_means,
             save_directory=save_directory,
@@ -77,4 +82,4 @@ GROUPING_CONFIG = {
 
 
 if __name__ == "__main__":
-    main()
+    fire.Fire(main)

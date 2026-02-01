@@ -56,6 +56,33 @@ However, neither model steering approach accurately reproduces the correlation s
 ## Setup
 1. Install dependencies in your virtual environment with `pip install -r requirements.txt`
 2. Use the `.env.example` to create an `.env` file with your HF token
+3. Download the file `WVS Cross-National Wave 7 csv v6 0.zip` from the WVS website [here](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp) and, after unzipping, place the csv file in `data_files/WV7`
+
+## Usage
+1. Simulate responses with all models (we used an NVIDIA A100 80GB PCIe GPU)
+```
+python3 scripts/run_all_models.py -filename variables.csv -subset_file final_subset.json -decoding_style unconstrained -temperature 0.9 -sample_size 500 -batch_size 100 -simulation_name <simulation_name>
+```
+2. Convert the json results to csv
+```
+python3 scripts/results_to_csv.py -directory data_files -simulation_name <simulation_name>
+```
+3. Clean simulated outputs
+```
+python3 scripts/clean_results.py -directory data_files -simulation_name <simulation_name>
+```
+4. Run the analysis of marginal response distributions
+```
+python3 scripts/generate_marginal_analysis.py -directory data_files -simulation_name <simulation_name>
+```
+5. Run the analysis of the correlation structures
+```
+python3 scripts/generate_correlation_analysis.py -directory data_files -simulation_name <simulation_name>
+```
+6. Generate visualisations
+```
+python3 scripts/generate_visualisations.py -directory data_files -simulation_name <simulation_name>
+```
 
 ## Citation
 

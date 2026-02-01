@@ -1,7 +1,14 @@
 import os
+import sys
 
+import fire
 import numpy as np
 import pandas as pd
+
+print(sys.path)
+print("Current working directory:", os.getcwd())
+sys.path.append(os.getcwd())
+
 
 from src.analysis.aggregations import all_models
 from src.analysis.correlations import (
@@ -17,37 +24,34 @@ from src.analysis.responses import (
 from src.simulation.utils import load_response_maps, load_data_dict, save_latex_table
 
 
-# subgroup correlation structure is a lower threshold on performance than complete respondent correlation structure
-
-
-def main(filename: str, root_dir: str = "../data_files"):
-    response_maps = load_response_maps()
-    diameters = get_support_diameter(response_maps)
-    diameters = sort_by_qnum_index(diameters)
-    minimums = get_support_minimum(response_maps)
-    minimums = sort_by_qnum_index(minimums)
+def main(simulation_name: str, directory: str = "../data_files", random_seed: int = 42):
+    np.random.seed(random_seed)
+    response_maps = load_response_maps(directory)
+    diameters = sort_by_qnum_index(get_support_diameter(response_maps))
+    minimums = sort_by_qnum_index(get_support_minimum(response_maps))
 
     subgroup_data = load_data_dict(
-        filename, root_dir, all_models + ["true"], grouping="subgroup"
+        simulation_name, directory, all_models + ["true"], grouping="subgroup"
     )
-    lb = lower_bound(filename, root_dir)
-
-    ub = upper_bound(diameters, minimums, subgroup_data)
     corr_metrics = compare_correlation_structures(
-        subgroup_data, diameters, minimums, filename, root_dir
+        subgroup_data, diameters, minimums, simulation_name, directory
     )
+    print("Correlation metrics computed.")
+    lb = lower_bound(simulation_name, directory)
+    print("Lower bound computed.")
+    ub = upper_bound(diameters, minimums, subgroup_data)
+    print("Upper bound computed.")
     for grouping, metrics in corr_metrics.items():
         metrics["Lower"] = lb[0][grouping]
         metrics["Upper"] = ub[0][grouping]
 
         save_latex_table(
             pd.DataFrame(metrics),
-            os.path.join(root_dir, "results", filename, "latex"),
+            os.path.join(directory, "results", simulation_name, "latex"),
             f"{grouping}-correlation_metrics.tex",
             float_format="%.3f",
         )
 
 
 if __name__ == "__main__":
-    np.random.seed(42)
-    main(filename="simulation-500-0_9-unconstrained")
+    fire.Fire(main)

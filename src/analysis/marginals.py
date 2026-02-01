@@ -148,8 +148,7 @@ def generate_cross_comparison(
     graph_directory: str,
     grouping: str,
 ):
-    # todo: rename to dissimilarity
-    name, fn, cmap = ("Misalignment", calculate_misalignment, "Blues")
+    name, fn, cmap = ("Dissimilarity", calculate_misalignment, "Blues")
     cross = get_cross_distance(data_dict, fn, response_map)
     plot_distance_heatmap(
         cross,
