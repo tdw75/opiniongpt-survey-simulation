@@ -4,7 +4,6 @@ import sys
 import pandas as pd
 import fire
 
-print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
@@ -14,21 +13,32 @@ from src.analysis.results import (
     load_survey_results_batch,
     survey_results_to_df_batch,
 )
+from src.simulation.experiment import load_experiment
 
 
-def main(directory: str, simulation_name: str):
+def main(experiment_name: str, root_directory: str = ""):
     """Convert survey results from JSON to CSV format for cleaning."""
-    simulation_directory = os.path.join(directory, "results", simulation_name)
-    variables = pd.read_csv(os.path.join(directory, "variables", "variables.csv"))
-    is_folder = os.path.isdir(os.path.join(simulation_directory, simulation_name))
+    experiment = load_experiment(experiment_name, root_directory)
+
+    simulation_directory = os.path.join(
+        experiment.files["directory"], "results", experiment_name
+    )
+    variables = pd.read_csv(
+        os.path.join(
+            experiment.files["directory"], "variables", experiment.files["variables"]
+        )
+    )
+    is_folder = os.path.isdir(os.path.join(simulation_directory, experiment_name))
     if is_folder:
-        results = load_survey_results_batch(simulation_name, simulation_directory)
+        results = load_survey_results_batch(experiment_name, simulation_directory)
         df = survey_results_to_df_batch(results, variables)
     else:
-        results = load_survey_results(f"{simulation_name}-results.json", simulation_directory)
+        results = load_survey_results(
+            f"{experiment_name}-results.json", simulation_directory
+        )
         df = survey_results_to_df(results, variables)
 
-    df.to_csv(os.path.join(simulation_directory, f"{simulation_name}-results.csv"))
+    df.to_csv(os.path.join(simulation_directory, f"{experiment_name}-results.csv"))
 
 
 if __name__ == "__main__":

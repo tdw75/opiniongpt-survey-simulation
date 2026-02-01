@@ -180,6 +180,7 @@ def construct_correlation_matrix(means: pd.DataFrame) -> pd.DataFrame:
 def calculate_correlation_metrics(
     true_means: np.ndarray, model_means: np.ndarray, iu: np.ndarray
 ) -> dict[str, float]:
+    # fixme: if any question has zero variance across all subgroups, pearsonr fails - handle this
     corr_metrics = {}
     r, _ = pearsonr(true_means[iu], model_means[iu])
     corr_metrics["pearson_r"] = r.round(3)

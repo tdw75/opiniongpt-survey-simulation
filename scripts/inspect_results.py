@@ -10,7 +10,7 @@ from src.analysis.results import get_nth_newest_file, print_results_multiple
 
 
 def main(run_id: str | int = "0", directory: str = "data_files"):
-
+    """Utility script to quickly inspect the results of a simulation run by its ID or by its recency."""
     if str(run_id).isdigit():
         file_name = get_nth_newest_file(int(run_id), directory)
     else:

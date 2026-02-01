@@ -4,7 +4,6 @@ import sys
 import fire
 import pandas as pd
 
-print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
@@ -15,12 +14,17 @@ from src.analysis.visualisations import (
     plot_model_metric_comparison_stacked,
 )
 from src.demographics.config import subgroups, dimensions, categories
+from src.simulation.experiment import load_experiment
 
 models = ["opinion_gpt", "persona", "base"]
 
 
-def main(simulation_name: str, directory: str = "../data_files"):
-    simulation_directory = os.path.join(directory, "results", simulation_name)
+def main(experiment_name: str, root_directory: str = ""):
+    experiment = load_experiment(experiment_name, root_directory)
+
+    simulation_directory = os.path.join(
+        experiment.files["directory"], "results", experiment_name
+    )
     read_directory = create_subdirectory(simulation_directory, "metrics")
     save_directory = create_subdirectory(simulation_directory, "graphs")
 

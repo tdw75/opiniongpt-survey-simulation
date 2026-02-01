@@ -1,0 +1,16 @@
+setup:
+  name: "unit_test"
+  random_seed: 43
+
+files:
+  directory: "test_data_files"
+  variables: "sample_variables.csv"
+  subset: "final_subset.json"
+
+simulation:
+  sample_size: 2000
+  batch_size: 32
+  decoding_style: "unconstrained"
+  base_model_name: "claude"
+  temperature: 0.9
+

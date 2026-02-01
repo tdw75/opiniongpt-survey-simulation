@@ -5,7 +5,6 @@ import fire
 import numpy as np
 import pandas as pd
 
-print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
@@ -23,22 +22,32 @@ from src.analysis.responses import (
     sort_by_qnum_index,
 )
 from src.analysis.results import load_data_dict
+from src.simulation.experiment import load_experiment
 
 
-def main(simulation_name: str, directory: str = "../data_files", random_seed: int = 42):
-    np.random.seed(random_seed)
-    response_maps = load_response_maps(directory)
+def main(experiment_name: str, root_directory: str = ""):
+    experiment = load_experiment(experiment_name, root_directory)
+
+    np.random.seed(experiment.setup["random_seed"])
+    response_maps = load_response_maps(experiment.files["directory"])
     diameters = sort_by_qnum_index(get_support_diameter(response_maps))
     minimums = sort_by_qnum_index(get_support_minimum(response_maps))
 
     subgroup_data = load_data_dict(
-        simulation_name, directory, all_models + ["true"], grouping="subgroup"
+        experiment_name,
+        experiment.files["directory"],
+        all_models + ["true"],
+        grouping="subgroup",
     )
     corr_metrics = compare_correlation_structures(
-        subgroup_data, diameters, minimums, simulation_name, directory
+        subgroup_data,
+        diameters,
+        minimums,
+        experiment_name,
+        experiment.files["directory"],
     )
     print("Correlation metrics computed.")
-    lb = lower_bound(simulation_name, directory)
+    lb = lower_bound(experiment_name, experiment.files["directory"])
     print("Lower bound computed.")
     ub = upper_bound(diameters, minimums, subgroup_data)
     print("Upper bound computed.")
@@ -48,11 +57,14 @@ def main(simulation_name: str, directory: str = "../data_files", random_seed: in
 
         save_latex_table(
             pd.DataFrame(metrics),
-            os.path.join(directory, "results", simulation_name, "latex"),
+            os.path.join(
+                experiment.files["directory"], "results", experiment_name, "latex"
+            ),
             f"{grouping}-correlation_metrics.tex",
             float_format="%.3f",
         )
 
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    # fire.Fire(main)
+    main("test_config", "../")

@@ -1,0 +1,9 @@
+setup:
+  name: "test"
+
+files:
+  subset: "test_subset.json"
+
+simulation:
+  sample_size: 10
+  batch_size: 10

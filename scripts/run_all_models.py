@@ -1,53 +1,39 @@
 import os
 import sys
-from typing import Literal
 
 import fire
 
-print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
 from src.prompting.messages import Survey
-from src.simulation.experiment import generate_run_id, huggingface_login
+from src.simulation.experiment import (
+    generate_run_id,
+    huggingface_login,
+    load_experiment,
+)
 from src.simulation.models import adapters, ModelConfig, load_model, change_subgroup
 from src.simulation.inference import run_single
 from src.simulation.survey import load_survey, save_results
 
 
 def main(
-    base_model_name: str = "phi",
-    directory: str = "data_files",
-    filename: str = "variables.csv",
-    subset_file: str = "final_subset.json",
-    simulation_name: str = None,
-    decoding_style: Literal["constrained", "unconstrained"] = "unconstrained",
-    device: str = "cuda:0",
-    sample_size: int = 500,
-    batch_size: int = None,
+    experiment_name: str,
     run_id: str = None,
-    **kwargs,  # LLM hyperparams
+    root_directory: str = "",
+    **kwargs,  # additional LLM hyperparams
 ):
+    experiment = load_experiment(experiment_name, root_directory)
 
-    run_id = run_id or generate_run_id(base_model_name)
+    run_id = run_id or generate_run_id(experiment.simulation["base_model_name"])
     simulated_surveys = {}
 
-    shared_config_vars = {
-        "base_model_name": base_model_name,
-        "sample_size": sample_size,
-        "batch_size": batch_size or max(sample_size // 2, 50),
-        "device": device,
-        "decoding_style": decoding_style,
-        "hyperparams": kwargs,
-    }
+    shared_config_vars = {**experiment.simulation, "hyperparams": kwargs}
 
     # todo: clear cache in loop
-    survey_questions = load_survey(
-        directory, filename, "individual", subset_file, False
-    )
-    survey_flipped = load_survey(
-        directory, filename, "individual", subset_file, True
-    )
+
+    survey_questions = load_survey(experiment, "individual", False)
+    survey_flipped = load_survey(experiment, "individual", True)
     phi_instruct_surveys = run_phi_instruct(
         survey_questions, survey_flipped, shared_config_vars, run_id
     )
@@ -58,10 +44,7 @@ def main(
     simulated_surveys.update(opinion_gpt_surveys)
 
     save_results(
-        simulated_surveys,
-        directory,
-        run_id,
-        simulation_name,
+        simulated_surveys, experiment.files["directory"], experiment.setup["name"]
     )
 
 

@@ -43,12 +43,14 @@ However, neither model steering approach accurately reproduces the correlation s
 ```text
 ├── data_files
 │   └── variables           # WVS survey items
-├── scripts                 # Helper scripts for running experiments and data processing
+├── experiments             # YAML configuration files for experiments
+├── jobs                    # Orchestration scripts for simulations and evaluations (see below)
+├── scripts                 # Python entry points
 ├── src
 │   ├── analysis            # Representativeness metrics and evaluation logic
 │   ├── data                # Data loading and preprocessing utilities
 │   ├── demographics        # Demographic grouping and conditioning logic
-│   ├── prompting
+│   ├── prompting           # Prompt construction for model simulations
 │   └── simulation          # Model response generation and sampling
 └── tests                   # unit and data integrity tests
 ```
@@ -59,29 +61,16 @@ However, neither model steering approach accurately reproduces the correlation s
 3. Download the file `WVS Cross-National Wave 7 csv v6 0.zip` from the WVS website [here](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp) and, after unzipping, place the csv file in `data_files/WV7`
 
 ## Usage
-1. Simulate responses with all models (we used an NVIDIA A100 80GB PCIe GPU)
+1. Create a new experiment configuration `experiments/<your_experiment>.yaml` (see existing configs for examples). Our configuration is defined in `base.yaml`, all experiments will load this first and then overwrite any parameters specified in your experiment config (see `test.yaml` for an example)
+
+
+2. Simulate responses with all models (we used an NVIDIA A100 80GB PCIe GPU)
 ```
-python3 scripts/run_all_models.py -filename variables.csv -subset_file final_subset.json -decoding_style unconstrained -temperature 0.9 -sample_size 500 -batch_size 100 -simulation_name <simulation_name>
+./jobs/run_simulation.sh <your_experiment>
 ```
-2. Convert the json results to csv
+3. Apply the evaluation framework
 ```
-python3 scripts/results_to_csv.py -directory data_files -simulation_name <simulation_name>
-```
-3. Clean simulated outputs
-```
-python3 scripts/clean_results.py -directory data_files -simulation_name <simulation_name>
-```
-4. Run the analysis of marginal response distributions
-```
-python3 scripts/generate_marginal_analysis.py -directory data_files -simulation_name <simulation_name>
-```
-5. Run the analysis of the correlation structures
-```
-python3 scripts/generate_correlation_analysis.py -directory data_files -simulation_name <simulation_name>
-```
-6. Generate visualisations
-```
-python3 scripts/generate_visualisations.py -directory data_files -simulation_name <simulation_name>
+./jobs/run_evaluation.sh <your_experiment>
 ```
 
 ## Citation

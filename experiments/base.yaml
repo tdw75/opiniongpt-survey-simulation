@@ -1,0 +1,15 @@
+setup:
+  name: "base"
+  random_seed: 42
+
+files:
+  directory: "data_files"
+  variables: "variables.csv"
+  subset: "final_subset.json"
+
+simulation:
+  sample_size: 500
+  batch_size: 100
+  decoding_style: "unconstrained"
+  base_model_name: "phi"
+  temperature: 0.9
