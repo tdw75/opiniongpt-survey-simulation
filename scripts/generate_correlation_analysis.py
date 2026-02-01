@@ -16,12 +16,13 @@ from src.analysis.correlations import (
     upper_bound,
     compare_correlation_structures,
 )
+from src.analysis.io import load_response_maps, save_latex_table
 from src.analysis.responses import (
     get_support_diameter,
     get_support_minimum,
     sort_by_qnum_index,
 )
-from src.simulation.utils import load_response_maps, load_data_dict, save_latex_table
+from src.analysis.results import load_data_dict
 
 
 def main(simulation_name: str, directory: str = "../data_files", random_seed: int = 42):

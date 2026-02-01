@@ -6,6 +6,7 @@ from typing import Callable
 import pandas as pd
 
 from src.analysis.aggregations import DataDict, steered_models
+from src.analysis.io import save_latex_table
 from src.analysis.metrics import (
     calculate_misalignment,
     calculate_variance,
@@ -14,7 +15,6 @@ from src.analysis.metrics import (
 from src.analysis.visualisations import plot_distance_heatmap
 from src.data.variables import QNum, ResponseMap
 from src.simulation.models import ModelName, AdapterName
-from src.simulation.utils import save_latex_table
 
 
 def compare_marginal_response_dists(
@@ -89,13 +89,10 @@ def generate_modal_collapse_analysis(
         qnums = find_degenerate_questions(deg)
         json.dump(qnums, f2)
 
-    save_latex_table(
-        counts.T, latex_directory,"degenerate-counts-table.tex"
-    )
+    save_latex_table(counts.T, latex_directory, "degenerate-counts-table.tex")
 
 
 def find_degenerate_dists(data: dict, base: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
-
     """Identify degenerate distributions across all models."""
 
     def _find_single(df: pd.DataFrame) -> list[str]:
@@ -151,11 +148,7 @@ def generate_cross_comparison(
     name, fn, cmap = ("Dissimilarity", calculate_misalignment, "Blues")
     cross = get_cross_distance(data_dict, fn, response_map)
     plot_distance_heatmap(
-        cross,
-        name,
-        cmap=cmap,
-        save_directory=graph_directory,
-        grouping=grouping
+        cross, name, cmap=cmap, save_directory=graph_directory, grouping=grouping
     )
 
 

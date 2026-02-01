@@ -15,7 +15,11 @@ class TestModelConfig:
             is_persona=False,
             device="cuda:2",
             aggregation_by="questions",
-            hyperparams={"new_param": True, "min_new_tokens": 2, "max_new_tokens": 9999},
+            hyperparams={
+                "new_param": True,
+                "min_new_tokens": 2,
+                "max_new_tokens": 9999,
+            },
         )
 
         assert config.base_model_name == "phi"
@@ -78,16 +82,16 @@ def test_tokenizer_chat_template():
     )
     template = (
         "{% for message in messages %}"
-            "{% if message['role'] == 'user' %}"
-                "{{ '<|user|>\n' + message['content'] + eos_token }}"
-            "{% elif message['role'] == 'system' %}"
-                "{{ '<|system|>\n' + message['content'] + eos_token }}"
-            "{% elif message['role'] == 'assistant' %}"
-                "{{ '<|assistant|>\n'  + message['content'] + eos_token }}"
-            "{% endif %}"
-            "{% if loop.last and add_generation_prompt %}"
-                "{{ '<|assistant|>' }}"
-            "{% endif %}"
+        "{% if message['role'] == 'user' %}"
+        "{{ '<|user|>\n' + message['content'] + eos_token }}"
+        "{% elif message['role'] == 'system' %}"
+        "{{ '<|system|>\n' + message['content'] + eos_token }}"
+        "{% elif message['role'] == 'assistant' %}"
+        "{{ '<|assistant|>\n'  + message['content'] + eos_token }}"
+        "{% endif %}"
+        "{% if loop.last and add_generation_prompt %}"
+        "{{ '<|assistant|>' }}"
+        "{% endif %}"
         "{% endfor %}"
     )
     # tokenizer.chat_template = template

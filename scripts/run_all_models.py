@@ -9,14 +9,10 @@ print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
 from src.prompting.messages import Survey
+from src.simulation.experiment import generate_run_id, huggingface_login
 from src.simulation.models import adapters, ModelConfig, load_model, change_subgroup
 from src.simulation.inference import run_single
-from src.simulation.utils import (
-    huggingface_login,
-    generate_run_id,
-    save_results,
-    load_survey,
-)
+from src.simulation.survey import load_survey, save_results
 
 
 def main(

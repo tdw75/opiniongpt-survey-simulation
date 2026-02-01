@@ -10,12 +10,8 @@ sys.path.append(os.getcwd())
 
 from src.simulation.inference import run_single
 from src.simulation.models import ModelConfig, load_model, change_subgroup
-from src.simulation.utils import (
-    huggingface_login,
-    save_results,
-    generate_run_id,
-    load_survey,
-)
+from src.simulation.experiment import generate_run_id, huggingface_login
+from src.simulation.survey import load_survey, save_results
 
 
 def main(
@@ -33,7 +29,12 @@ def main(
     device: str = "cuda:2",
     **kwargs,  # LLM hyperparams
 ):
-    survey_questions = load_survey(directory, filename, question_format, subset_file)
+    survey_questions = load_survey(
+        directory, filename, question_format, subset_file, False
+    )
+    survey_flipped = load_survey(
+        directory, filename, question_format, subset_file, True
+    )
 
     config = ModelConfig(
         base_model_name=base_model_name,
@@ -51,7 +52,7 @@ def main(
     model, tokenizer = load_model(config)
     model, config = change_subgroup(model, config, subgroup)
 
-    survey_run = run_single(model, tokenizer, config, survey_questions, run_id)
+    survey_run = run_single(model, tokenizer, config, survey_questions, survey_flipped, run_id)
     save_results({config.run_name: survey_run}, directory, run_id, simulation_name)
 
 

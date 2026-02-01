@@ -7,10 +7,10 @@ from scipy.stats import pearsonr
 from sklearn.metrics import root_mean_squared_error as rmse
 
 from src.analysis.aggregations import DataDict, steered_models
+from src.analysis.io import save_latex_table
 from src.analysis.responses import sort_by_qnum_index
 from src.data.variables import non_ordinal_qnums
 from src.demographics.config import category_to_question, question_to_category
-from src.simulation.utils import save_latex_table
 
 
 def compare_correlation_structures(

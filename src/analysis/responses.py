@@ -172,7 +172,9 @@ def get_support_diameter(
     return sort_by_qnum_index(pd.Series(diameters))
 
 
-def sort_by_qnum_index(df: pd.DataFrame | pd.Series, qnums: list[QNum] = None) -> pd.DataFrame | pd.Series:
+def sort_by_qnum_index(
+    df: pd.DataFrame | pd.Series, qnums: list[QNum] = None
+) -> pd.DataFrame | pd.Series:
     if qnums is not None:
         df = df[qnums].copy()
     return df.sort_index(

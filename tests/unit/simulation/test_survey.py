@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.simulation.utils import filter_survey_subset, mark_is_scale_flipped
+from src.simulation.survey import filter_survey_subset
 
 
 def test_filter_survey_subset():
@@ -11,9 +11,3 @@ def test_filter_survey_subset():
     pd.testing.assert_series_equal(
         survey_subset["number"], pd.Series(expected_qnums, name="number")
     )
-
-
-def test_mark_is_scale_flipped():
-    responses = [f"response{i}" for i in range(10)]
-    is_flipped = mark_is_scale_flipped(responses)
-    assert is_flipped == [False, True] * 5

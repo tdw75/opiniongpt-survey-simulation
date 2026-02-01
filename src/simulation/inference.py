@@ -12,7 +12,7 @@ from src.simulation.decoders import (
     BaseDecoder,
 )
 from src.simulation.models import ModelConfig
-from src.simulation.utils import mark_is_scale_flipped
+from src.utils import mark_is_scale_flipped
 
 logger = logging.getLogger(__name__)
 
