@@ -1,0 +1,8 @@
+experiment_setup:
+  simulation_name: "unit_test"
+  subset_file: "unit_test_subset.json"
+
+simulation_params:
+  sample_size: 11
+  batch_size: 11
+

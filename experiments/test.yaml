@@ -1,0 +1,6 @@
+experiment_setup:
+  simulation_name: "test"
+  subset_file: "test_subset.json"
+
+simulation_params:
+  sample_size: 10
