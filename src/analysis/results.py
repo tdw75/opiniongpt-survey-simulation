@@ -4,6 +4,9 @@ import os
 
 import pandas as pd
 
+from src.demographics.config import dimensions
+from src.simulation.models import ModelName, adapters
+
 
 def load_survey_results_batch(
     files_folder: str, directory: str
@@ -20,6 +23,34 @@ def load_survey_results(file_name: str, directory: str) -> dict[str, dict]:
     path = os.path.join(directory, file_name)
     with open(path) as f:
         return json.load(f)
+
+
+def load_data_dict(
+    filename: str,
+    root_directory: str,
+    models: list[ModelName],
+    grouping: str = "subgroup",
+):
+    directory = os.path.join(root_directory, "results", filename, "data")
+    path_template = os.path.join(directory, "{grouping}-{m}-{sg}-responses.csv")
+    groups = adapters if grouping == "subgroup" else dimensions.keys()
+    data = {
+        sg: {
+            m: pd.read_csv(
+                path_template.format(grouping=grouping, m=m, sg=sg), index_col=0
+            )
+            for m in models
+            if m != "base"
+        }
+        for sg in groups
+    }
+    if "base" in models:
+        base = pd.read_csv(
+            os.path.join(directory, f"{grouping}-base-responses.csv"), index_col=0
+        )
+        for sg in groups:
+            data[sg]["base"] = base
+    return data
 
 
 def survey_results_to_df_batch(

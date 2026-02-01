@@ -6,6 +6,7 @@ from typing import Callable
 import pandas as pd
 
 from src.analysis.aggregations import DataDict, steered_models
+from src.analysis.io import save_latex_table
 from src.analysis.metrics import (
     calculate_misalignment,
     calculate_variance,
@@ -14,7 +15,6 @@ from src.analysis.metrics import (
 from src.analysis.visualisations import plot_distance_heatmap
 from src.data.variables import QNum, ResponseMap
 from src.simulation.models import ModelName, AdapterName
-from src.simulation.utils import save_latex_table
 
 
 def compare_marginal_response_dists(

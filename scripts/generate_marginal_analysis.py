@@ -16,6 +16,7 @@ from src.analysis.aggregations import (
     DataDict,
     persist_data_dict,
 )
+from src.analysis.io import create_subdirectory
 from src.analysis.marginals import (
     generate_cross_comparison,
     save_response_distributions,
@@ -26,7 +27,7 @@ from src.analysis.marginals import (
 from src.analysis.responses import get_base_model_responses
 from src.data.variables import remap_response_maps
 from src.demographics.config import dimensions, subgroups
-from src.simulation.utils import key_as_int, create_subdirectory
+from src.utils import key_as_int
 
 
 # todo: currently does two jobs: collates/aggregates and runs marginal dist analysis - split?

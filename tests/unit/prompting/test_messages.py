@@ -1,19 +1,17 @@
+import os
 import pickle
 
 import pandas as pd
-import os
 import pytest
 
-from src.simulation.models import ModelConfig
 from src.prompting.messages import (
     build_user_prompt_message_grouped,
     format_subtopics,
     extract_user_prompts_from_survey_grouped,
     build_user_prompt_message_individual,
     extract_user_prompts_from_survey_individual,
-    format_messages,
-)
-from src.simulation.utils import Survey
+    format_messages, Survey)
+from src.simulation.models import ModelConfig
 
 
 def test_extract_user_prompts_from_survey_grouped(expected_messages_grouped):
