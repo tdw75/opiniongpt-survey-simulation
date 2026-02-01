@@ -54,12 +54,10 @@ def filter_survey_subset(survey: pd.DataFrame, subsets: dict) -> pd.DataFrame:
 def save_results(
     simulated_survey: dict[str, dict], directory: str, experiment_name: str
 ):
-
     results_directory = create_subdirectory(
         os.path.join(directory, "results"), experiment_name
     )
-    with open(
-        os.path.join(results_directory, f"{experiment_name}-results.json"), "w"
-    ) as f:
+    filename = f"{experiment_name}-results.json"
+    with open(os.path.join(results_directory, filename), "w") as f:
         json.dump(simulated_survey, f)
-        print("Successfully saved simulated responses!")
+        print(f"Successfully saved simulated responses as {filename}!")
