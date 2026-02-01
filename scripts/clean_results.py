@@ -6,7 +6,6 @@ import sys
 import fire
 import pandas as pd
 
-print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
 
