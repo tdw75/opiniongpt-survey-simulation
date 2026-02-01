@@ -37,6 +37,7 @@ def load_experiment(experiment_name: str, root_directory: str) -> Experiment:
 
     Returns: merged config dict (base + experiment overrides)
     """
+    # fixme: root_directory is not being fed properly to experiment.files["directory"]
     base_path = os.path.join(root_directory, "experiments", "base.yaml")
     experiment_path = os.path.join(
         root_directory, "experiments", f"{experiment_name}.yaml"
