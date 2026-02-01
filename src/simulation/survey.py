@@ -3,6 +3,7 @@ import os
 
 import pandas as pd
 
+from simulation.experiment import Experiment
 from src.prompting.messages import (
     Survey,
     extract_user_prompts_from_survey_grouped,
@@ -11,18 +12,27 @@ from src.prompting.messages import (
 
 
 def load_survey(
-    directory: str,
-    file_name: str,
+    experiment: Experiment,
+    # directory: str,
+    # file_name: str,
     question_format: str,
-    subset_name: str,
+    # subset_name: str,
     is_reverse: bool,
 ) -> Survey:
 
-    survey_df = pd.read_csv(os.path.join(directory, "variables", file_name))
-    if subset_name:
-        with open(os.path.join(directory, "variables", subset_name), "r") as f:
-            subsets = json.load(f)
-        survey_df = filter_survey_subset(survey_df, subsets)
+    survey_df = pd.read_csv(
+        os.path.join(
+            experiment.files["directory"], "variables", experiment.files["variables"]
+        )
+    )
+    with open(
+        os.path.join(
+            experiment.files["directory"], "variables", experiment.files["subset"]
+        ),
+        "r",
+    ) as f:
+        subsets = json.load(f)
+    survey_df = filter_survey_subset(survey_df, subsets)
 
     if question_format == "grouped":
         survey = extract_user_prompts_from_survey_grouped(survey_df, is_reverse)

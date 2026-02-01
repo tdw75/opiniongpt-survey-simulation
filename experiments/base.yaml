@@ -1,13 +1,15 @@
-experiment_setup:
-  simulation_name: "base"
-  random-seed: 42
-  directory: "../data_files"
-  variables_file: "variables.csv"
-  subset_file: "final_subset.json"
+experiment:
+  name: "base"
+  random_seed: 42
 
-simulation_params:
+files:
+  directory: "../data_files"
+  variables: "variables.csv"
+  subset: "final_subset.json"
+
+simulation:
   sample_size: 500
   batch_size: 100
   decoding_style: "unconstrained"
-  base_model: "phi"
+  base_model_name: "phi"
   temperature: 0.9

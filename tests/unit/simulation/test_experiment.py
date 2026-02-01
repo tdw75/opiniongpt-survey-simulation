@@ -1,6 +1,6 @@
 import pytest
 
-from src.simulation.experiment import load_experiment
+from src.simulation.experiment import load_experiment, Experiment
 
 
 @pytest.mark.parametrize(
@@ -9,18 +9,17 @@ from src.simulation.experiment import load_experiment
         (
             "unit_test",
             {
-                "experiment_setup": {
-                    "random-seed": 43,
+                "setup": {"name": "unit_test", "random_seed": 43},
+                "files": {
                     "directory": "test_data_files",
-                    "simulation_name": "unit_test",
-                    "variables_file": "sample_variables.csv",
-                    "subset_file": "unit_test_subset.json",
+                    "variables": "sample_variables.csv",
+                    "subset": "unit_test_subset.json",
                 },
                 "simulation_params": {
                     "sample_size": 11,
                     "batch_size": 11,
                     "decoding_style": "unconstrained",
-                    "base_model": "claude",
+                    "base_model_name": "claude",
                     "temperature": 0.9,
                 },
             },
@@ -28,18 +27,17 @@ from src.simulation.experiment import load_experiment
         (
             "blank",
             {
-                "experiment_setup": {
-                    "simulation_name": "blank",
-                    "random-seed": 43,
+                "setup": {"name": "blank", "random_seed": 43},
+                "files": {
                     "directory": "test_data_files",
-                    "variables_file": "sample_variables.csv",
-                    "subset_file": "final_subset.json",
+                    "variables": "sample_variables.csv",
+                    "subset": "final_subset.json",
                 },
                 "simulation_params": {
                     "sample_size": 2000,
                     "batch_size": 32,
                     "decoding_style": "unconstrained",
-                    "base_model": "claude",
+                    "base_model_name": "claude",
                     "temperature": 0.9,
                 },
             },
@@ -48,4 +46,4 @@ from src.simulation.experiment import load_experiment
 )
 def test_load_experiment(experiment_name, expected):
     experiment = load_experiment(experiment_name, "test_data_files")
-    assert experiment == expected
+    assert experiment == Experiment(**expected)

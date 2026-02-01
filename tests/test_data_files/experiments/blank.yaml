@@ -1,2 +1,2 @@
-experiment_setup:
-  simulation_name: "blank"
+setup:
+  name: "blank"

@@ -6,6 +6,7 @@ from src.data.read import unpickle_pages
 from src.data.variables import pipeline, split_question_into_parts
 
 def main(read_directory: str, page_nums: list[int], write_directory: str = None):
+    """Convert scraped variable pages to questions and save as CSV."""
     page_directory = os.path.join(read_directory, "pages_raw")
     pages = unpickle_pages(page_directory, page_nums)
     question_strings = pipeline(pages)

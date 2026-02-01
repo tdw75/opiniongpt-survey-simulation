@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 from datetime import datetime
 
 import yaml
@@ -22,7 +23,14 @@ def huggingface_login() -> None:
         print("Token is not set. Please save a token in the .env file.")
 
 
-def load_experiment(experiment_name: str, root_directory: str) -> dict:
+@dataclass
+class Experiment:
+    setup: dict
+    files: dict
+    simulation_params: dict
+
+
+def load_experiment(experiment_name: str, root_directory: str) -> Experiment:
     """Load experiment config with base.yaml as default.
 
     experiment_name: Name of experiment (e.g., 'test' loads experiments/test.yaml)
@@ -37,7 +45,7 @@ def load_experiment(experiment_name: str, root_directory: str) -> dict:
     base = yaml.safe_load(open(base_path))
     experiment = yaml.safe_load(open(experiment_path))
 
-    return _update_config(base, experiment)
+    return Experiment(**_update_config(base, experiment))
 
 
 def _update_config(base: dict, update: dict) -> dict:

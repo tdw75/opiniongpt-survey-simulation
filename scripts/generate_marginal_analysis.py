@@ -3,8 +3,8 @@ import os
 import sys
 import time
 
-import pandas as pd
 import fire
+import pandas as pd
 
 print(sys.path)
 print("Current working directory:", os.getcwd())
@@ -27,30 +27,39 @@ from src.analysis.marginals import (
 from src.analysis.responses import get_base_model_responses
 from src.data.variables import remap_response_maps
 from src.demographics.config import dimensions, subgroups
+from src.simulation.experiment import load_experiment
 from src.utils import key_as_int
-
 
 # todo: currently does two jobs: collates/aggregates and runs marginal dist analysis - split?
 
 
-def main(simulation_name: str, directory: str = "../data_files"):
+def main(experiment_name: str, root_directory: str = ""):
+    experiment = load_experiment(experiment_name, root_directory)
+
     start = time.time()
 
-    simulation_directory = os.path.join(directory, "results", simulation_name)
+    simulation_directory = os.path.join(
+        experiment.files["directory"], "results", experiment_name
+    )
     sim = pd.read_csv(
-        os.path.join(simulation_directory, f"{simulation_name}-clean.csv"), index_col=0
+        os.path.join(simulation_directory, f"{experiment_name}-clean.csv"), index_col=0
     )
     if "final_response" not in sim.columns:
         sim["final_response"] = sim["response_key"]
     sim = sim.loc[sim["number"] != "Q215"]  # not asked in USA
     all_qnums = list(sim["number"].unique())
     true = pd.read_csv(
-        os.path.join(directory, "WV7/WVS_Cross-National_Wave_7_csv_v6_0.csv"),
+        os.path.join(
+            experiment.files["directory"], "WV7/WVS_Cross-National_Wave_7_csv_v6_0.csv"
+        ),
         index_col=0,
     )
 
     with open(
-        os.path.join(directory, "variables/response_map_original.json"), "r"
+        os.path.join(
+            experiment.files["directory"], "variables/response_map_original.json"
+        ),
+        "r",
     ) as f1:
         response_map = key_as_int(json.load(f1))
         response_map = remap_response_maps(response_map)
