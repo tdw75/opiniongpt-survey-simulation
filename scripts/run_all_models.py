@@ -32,13 +32,7 @@ def main(
     shared_config_vars = {**experiment.simulation, "hyperparams": kwargs}
 
     # todo: clear cache in loop
-    # survey_questions = load_survey(
-    #     experiment.files["directory"],
-    #     experiment.files["variables"],
-    #     "individual",
-    #     experiment.files["subset"],
-    #     False,
-    # )
+
     survey_questions = load_survey(experiment, "individual", False)
     survey_flipped = load_survey(experiment, "individual", True)
     phi_instruct_surveys = run_phi_instruct(
@@ -51,10 +45,7 @@ def main(
     simulated_surveys.update(opinion_gpt_surveys)
 
     save_results(
-        simulated_surveys,
-        experiment.files["directory"],
-        run_id,
-        experiment_name,
+        simulated_surveys, experiment.files["directory"], experiment.setup["name"]
     )
 
 

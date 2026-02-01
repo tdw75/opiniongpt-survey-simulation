@@ -48,7 +48,7 @@ class ModelConfig(BaseModel):
     subgroup: Literal[tuple(adapters + [None])] = None
     is_lora: bool = False
     is_persona: bool = False
-    device: str = "cuda:2"
+    device: str = "cuda:0"
     aggregation_by: Literal["questions", "respondent"] = "questions"
     decoding_style: Literal["constrained", "unconstrained"] = "unconstrained"
     sample_size: int = 500

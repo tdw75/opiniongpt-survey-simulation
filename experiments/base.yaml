@@ -3,7 +3,7 @@ setup:
   random_seed: 42
 
 files:
-  directory: "../data_files"
+  directory: "data_files"
   variables: "variables.csv"
   subset: "final_subset.json"
 

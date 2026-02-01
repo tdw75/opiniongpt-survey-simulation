@@ -3,7 +3,6 @@ setup:
   random_seed: 42
 
 files:
-  directory: "data_files"
   subset: "test_subset.json"
 
 simulation:

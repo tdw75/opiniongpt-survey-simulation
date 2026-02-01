@@ -22,7 +22,7 @@ def main(
     subgroup: str = None,
     is_lora: bool = False,
     question_format: str = "individual",
-    device: str = "cuda:2",
+    device: str = "cuda:0",
     root_directory: str = "",
     **kwargs,  # additional LLM hyperparams
 ):
@@ -50,8 +50,7 @@ def main(
     save_results(
         {config.run_name: survey_run},
         experiment.files["directory"],
-        run_id,
-        experiment_name,
+        experiment.setup["name"],
     )
 
 

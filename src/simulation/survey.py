@@ -3,6 +3,7 @@ import os
 
 import pandas as pd
 
+from src.analysis.io import create_subdirectory
 from src.simulation.experiment import Experiment
 from src.prompting.messages import (
     Survey,
@@ -51,14 +52,14 @@ def filter_survey_subset(survey: pd.DataFrame, subsets: dict) -> pd.DataFrame:
 
 
 def save_results(
-    simulated_survey: dict[str, dict], directory: str, run_id: str, simulation_name: str
+    simulated_survey: dict[str, dict], directory: str, experiment_name: str
 ):
-    if simulation_name:
-        results_directory = os.path.join(directory, "results", simulation_name)
-    else:
-        results_directory = os.path.join(directory, "results")
-    if not os.path.exists(results_directory):
-        os.makedirs(results_directory)
-    with open(os.path.join(results_directory, f"{run_id}.json"), "w") as f:
+
+    results_directory = create_subdirectory(
+        os.path.join(directory, "results"), experiment_name
+    )
+    with open(
+        os.path.join(results_directory, f"{experiment_name}-results.json"), "w"
+    ) as f:
         json.dump(simulated_survey, f)
         print("Successfully saved simulated responses!")
