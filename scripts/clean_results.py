@@ -16,7 +16,7 @@ from src.data.variables import responses_to_map, ResponseMap, QNum
 from src.demographics.config import category_to_question
 
 
-def main(simulation_name: str, directory: str = "../data_files"):
+def main(simulation_name: str, directory: str = "data_files"):
     """
     Clean simulation results for analysis, identify invalid responses and
     remap response keys to original scale.

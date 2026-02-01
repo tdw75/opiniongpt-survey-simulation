@@ -9,7 +9,7 @@ from sklearn.metrics import root_mean_squared_error as rmse
 from src.analysis.aggregations import DataDict, steered_models
 from src.analysis.responses import sort_by_qnum_index
 from src.data.variables import non_ordinal_qnums
-from src.demographics.config import category_to_question
+from src.demographics.config import category_to_question, question_to_category
 from src.simulation.utils import save_latex_table
 
 
@@ -35,7 +35,7 @@ def compare_correlation_structures(
         mod: get_category_means(df) for mod, df in question_means.items()
     }
     means = {"question": question_means, "category": category_means}
-    corr_metrics = {}
+    metrics = {}
     for name, data in means.items():
         corr_matrices = {
             m: construct_correlation_matrix(df.T) for m, df in data.items()
@@ -50,17 +50,17 @@ def compare_correlation_structures(
                 )
             )
 
-        true = np.array(data["true"])
+        true = np.array(corr_matrices["true"])
         iu = get_upper_triangle_from_dim(true.shape[1])
-        corr_metrics[name] = {}
+        metrics[name] = {}
         for model in steered_models:
-            corr_metrics[name][model] = calculate_correlation_metrics(
-                true, np.array(data[model]), iu
+            metrics[name][model] = calculate_correlation_metrics(
+                true, np.array(corr_matrices[model]), iu
             )
-    return corr_metrics
+    return metrics
 
 
-def save_correlation_metrices(
+def save_correlation_metrics(
     corr_metrics: dict,
     grouping: str,
     filename: str,
@@ -112,19 +112,8 @@ def lower_bound(filename: str, root_directory: str = "../data_files") -> tuple:
 
 
 def upper_bound(
-    diameters: pd.Series,
-    minimums: pd.Series,
-    subgroup_data: DataDict,
-    # filename: str,
-    # root_directory: str = "../data_files",
+    diameters: pd.Series, minimums: pd.Series, subgroup_data: DataDict
 ) -> tuple:
-    # directory = os.path.join(root_directory, "results", filename, "data")
-
-    # path_template = os.path.join(directory, "subgroup-true-{sg}-responses.csv")
-    # data = {
-    #     sg: {"true": pd.read_csv(path_template.format(sg=sg), index_col=0)}
-    #     for sg in adapters
-    # }
 
     ub_mean = {}
     ub_std = {}
@@ -141,7 +130,6 @@ def upper_bound(
         ub_std[grouping] = metrics_df.std().round(4).to_dict()
 
     return ub_mean, ub_std
-    # return pd.DataFrame(metrics["category"]).T
 
 
 @lru_cache(None)
@@ -201,7 +189,12 @@ def calculate_correlation_metrics(
 
 def get_category_means(question_means: pd.DataFrame) -> pd.DataFrame:
     cat_means = {}
+    qnums = list(question_means.index)
+    categories = set(question_to_category[q] for q in qnums)
+
     for cat, qnums in category_to_question.items():
+        if cat not in categories:
+            continue
         df_loop = question_means.filter(items=qnums, axis=0)
         cat_means[cat] = df_loop.mean().round(2)
 
@@ -223,10 +216,11 @@ def get_question_means(
         df = dd[model_name].drop(
             columns=non_ordinal_qnums() + ["weight"], errors="ignore"
         )
+        qnums = list(df.columns)
         if filter_val is not None:
             df = df.filter(like=filter_val)
         sg_means = df.replace(-1, np.nan).mean().round(2)  # drop invalid responses
-        means[sg] = sort_by_qnum_index(sg_means) - sort_by_qnum_index(minimums)
-        means[sg] = means[sg] / sort_by_qnum_index(diameters)
+        means[sg] = sort_by_qnum_index(sg_means) - sort_by_qnum_index(minimums, qnums)
+        means[sg] = means[sg] / sort_by_qnum_index(diameters, qnums)
 
     return pd.DataFrame(means)
