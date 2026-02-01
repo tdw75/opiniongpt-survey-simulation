@@ -4,8 +4,6 @@ import sys
 import pandas as pd
 import fire
 
-from simulation.experiment import load_experiment
-
 print(sys.path)
 print("Current working directory:", os.getcwd())
 sys.path.append(os.getcwd())
@@ -16,6 +14,7 @@ from src.analysis.results import (
     load_survey_results_batch,
     survey_results_to_df_batch,
 )
+from src.simulation.experiment import load_experiment
 
 
 def main(experiment_name: str, root_directory: str = ""):

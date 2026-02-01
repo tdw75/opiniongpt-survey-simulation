@@ -27,7 +27,7 @@ def huggingface_login() -> None:
 class Experiment:
     setup: dict
     files: dict
-    simulation_params: dict
+    simulation: dict
 
 
 def load_experiment(experiment_name: str, root_directory: str) -> Experiment:

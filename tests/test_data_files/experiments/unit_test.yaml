@@ -4,7 +4,7 @@ setup:
 files:
   subset: "unit_test_subset.json"
 
-simulation_params:
+simulation:
   sample_size: 11
   batch_size: 11
 

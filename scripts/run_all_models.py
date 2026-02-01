@@ -26,10 +26,10 @@ def main(
 ):
     experiment = load_experiment(experiment_name, root_directory)
 
-    run_id = run_id or generate_run_id(experiment.simulation_params["base_model_name"])
+    run_id = run_id or generate_run_id(experiment.simulation["base_model_name"])
     simulated_surveys = {}
 
-    shared_config_vars = {**experiment.simulation_params, "hyperparams": kwargs}
+    shared_config_vars = {**experiment.simulation, "hyperparams": kwargs}
 
     # todo: clear cache in loop
     # survey_questions = load_survey(

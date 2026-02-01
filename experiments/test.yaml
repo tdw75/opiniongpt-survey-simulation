@@ -1,4 +1,4 @@
-experiment:
+setup:
   name: "test"
 
 files:

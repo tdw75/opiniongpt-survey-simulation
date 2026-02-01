@@ -7,7 +7,7 @@ files:
   variables: "sample_variables.csv"
   subset: "final_subset.json"
 
-simulation_params:
+simulation:
   sample_size: 2000
   batch_size: 32
   decoding_style: "unconstrained"

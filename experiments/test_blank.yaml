@@ -1,0 +1,14 @@
+setup:
+  name: "test_blank"
+  random_seed: 42
+
+files:
+  directory: "data_files"
+  subset: "test_subset.json"
+
+simulation:
+  sample_size: 10
+  batch_size: 10
+  decoding_style: "unconstrained"
+  base_model_name: "phi"
+  temperature: 0.9

@@ -32,7 +32,7 @@ def main(
     survey_flipped = load_survey(experiment, question_format, True)
 
     config = ModelConfig(
-        **experiment.simulation_params,
+        **experiment.simulation,
         subgroup=subgroup,
         is_lora=is_lora,
         is_persona=False,  # todo: parametrise
@@ -40,7 +40,7 @@ def main(
         aggregation_by="questions",  # todo: parametrise
         hyperparams=kwargs,
     )
-    run_id = generate_run_id(experiment.simulation_params["base_model_name"])
+    run_id = generate_run_id(experiment.simulation["base_model_name"])
     model, tokenizer = load_model(config)
     model, config = change_subgroup(model, config, subgroup)
 
