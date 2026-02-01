@@ -3,7 +3,7 @@ import os
 
 import pandas as pd
 
-from simulation.experiment import Experiment
+from src.simulation.experiment import Experiment
 from src.prompting.messages import (
     Survey,
     extract_user_prompts_from_survey_grouped,
@@ -12,12 +12,7 @@ from src.prompting.messages import (
 
 
 def load_survey(
-    experiment: Experiment,
-    # directory: str,
-    # file_name: str,
-    question_format: str,
-    # subset_name: str,
-    is_reverse: bool,
+    experiment: Experiment, question_format: str, is_reverse: bool
 ) -> Survey:
 
     survey_df = pd.read_csv(
