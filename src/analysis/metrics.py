@@ -254,7 +254,9 @@ def _get_weights_for_support(a: FrequencyDist, support: list) -> np.ndarray:
     return np.array([a.get(k, 0) for k in support])
 
 
-def normalise_distance(distance: float | pd.Series, support: list[int], order: int = 1) -> float:
+def normalise_distance(
+    distance: float | pd.Series, support: list[int], order: int = 1
+) -> float:
     """
     Normalise a distance metric to [0, 1] by the diameter of the support to the given order.
     """

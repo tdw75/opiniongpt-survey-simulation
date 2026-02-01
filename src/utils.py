@@ -13,5 +13,3 @@ def key_as_int(response_map: dict[QNum, ResponseMap]) -> dict:
         qnum: {int(k): v for k, v in resp.items()}
         for qnum, resp in response_map.items()
     }
-
-

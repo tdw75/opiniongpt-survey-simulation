@@ -3,8 +3,11 @@ import os
 
 import pandas as pd
 
-from src.prompting.messages import Survey, extract_user_prompts_from_survey_grouped, \
-    extract_user_prompts_from_survey_individual
+from src.prompting.messages import (
+    Survey,
+    extract_user_prompts_from_survey_grouped,
+    extract_user_prompts_from_survey_individual,
+)
 
 
 def load_survey(
