@@ -72,7 +72,7 @@ def plot_model_metric_comparison(
 
     if save_directory:
         save_path = os.path.join(
-            save_directory, f"{metric_name.lower()} model comparison {grouping}.png"
+            save_directory, f"{metric_name.lower()}_model_comparison_{grouping}.png"
         )
         plt.savefig(save_path)
 
@@ -117,7 +117,7 @@ def plot_model_metric_comparison_stacked(
     if save_directory:
         save_path = os.path.join(
             save_directory,
-            f"{metric_name.lower()} stacked comparison demographics.png",
+            f"{metric_name.lower()}_stacked_comparison_demographics.png",
         )
         plt.savefig(save_path, dpi=300, bbox_inches="tight", facecolor="white")
 
@@ -255,7 +255,7 @@ def plot_distance_heatmap(
 
     if save_directory:
         save_path = os.path.join(
-            save_directory, f"{metric_name.lower()} cross comparison {grouping}.png"
+            save_directory, f"{metric_name.lower()}_cross_comparison_{grouping}.png"
         )
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
 

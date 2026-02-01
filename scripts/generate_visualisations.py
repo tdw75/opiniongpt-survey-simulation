@@ -41,7 +41,7 @@ def main(simulation_name: str, directory: str = "../data_files"):
 
         cat_means = load_and_calculate_metric_means(
             os.path.join(read_directory, f"category-{metric}.csv"), "category"
-        )
+        ).dropna(axis=0)
         plot_model_metric_comparison(
             cat_means,
             save_directory=save_directory,
