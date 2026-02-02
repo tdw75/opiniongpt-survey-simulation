@@ -61,7 +61,7 @@ However, neither model steering approach accurately reproduces the correlation s
 3. Download the file `WVS Cross-National Wave 7 csv v6 0.zip` from the WVS website [here](https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp) and, after unzipping, place the csv file in `data_files/WV7`
 
 ## Usage
-1. Create a new experiment configuration `experiments/<your_experiment>.yaml` (see existing configs for examples). Our configuration is defined in `base.yaml`, all experiments will load this first and then overwrite any parameters specified in your experiment config (see `test.yaml` for an example)
+1. Create a new experiment configuration `experiments/<your_experiment>.yaml`. Our configuration is defined in `base.yaml` (see below), all experiments will load this first and then overwrite any parameters specified in your experiment config (see `test.yaml` for an example)
 
 
 2. Simulate responses with all models (we used an NVIDIA A100 80GB PCIe GPU)
@@ -73,10 +73,30 @@ However, neither model steering approach accurately reproduces the correlation s
 ./jobs/run_evaluation.sh <your_experiment>
 ```
 
+## Our Experiment Configuration
+
+```yaml
+setup:
+  name: "base"
+  random_seed: 42
+
+files:
+  directory: "data_files"
+  variables: "variables.csv"
+  subset: "final_subset.json"
+
+simulation:
+  sample_size: 500
+  batch_size: 100
+  decoding_style: "unconstrained"
+  base_model_name: "phi"
+  temperature: 0.9
+```
+
 ## Citation
 
 ```bibtex
-@misc{williams2026representativeness,
+@misc{williams2026beyondmarginal,
   title         = {Beyond Marginal Distributions: A Framework to Evaluate the Representativeness of Demographic-Aligned LLMs},
   author        = {Williams, Tristan and Weeber, Franzika and Padó, Sebastian and Akbik, Alan},
   eprint        = {2601.15755},
