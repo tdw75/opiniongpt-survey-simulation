@@ -1,6 +1,6 @@
 # Beyond Marginal Distributions: A Framework to Evaluate the Representativeness of Demographic-Aligned LLMs
 
-This repository accompanies the paper:
+This repository accompanies the paper (link [here](https://arxiv.org/abs/2601.15755)):
 
 > **Beyond Marginal Distributions: A Framework to Evaluate the Representativeness of Demographic-Aligned LLMs**  
 > *Tristan Williams, Franziska Weeber, Sebastian Padó, and Alan Akbik*
